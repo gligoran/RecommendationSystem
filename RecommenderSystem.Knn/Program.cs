@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RecommenderSystem.Data;
+using System.Diagnostics;
+using System.Threading;
 
 namespace RecommenderSystem.Knn
 {
@@ -10,24 +11,40 @@ namespace RecommenderSystem.Knn
     {
         static void Main(string[] args)
         {
-            var users = Manager.DeserializeData<KnnUser>(@"D:\dataset\10ku.xml");
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            var users = Data.LoadData(@"D:\Dataset\no-mbid.tsv").ToList<User>();
+            timer.Stop();
+
+            Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
+
+            /*int count = 0;
             foreach (var user in users)
             {
-                Console.Write("{0}, ", user.PlayCounts.TotalPlays);
-            }
-        }
+                count++;
+                Console.WriteLine("[{0}] {1} {2}, ", count, user.UserId, user.TotalPlays);
+            }*/
 
-        /*static double Similarity(User a, User b)
-        {
-            foreach (var pc in a.PlayCounts)
+            int max = 0;
+
+            timer.Restart();
+            for (int i = 0; i < users.Count(); i++)
             {
-                if (b.PlayCounts.Contains(pc))
+                for (int j = i + 1; j < users.Count(); j++)
                 {
+                    int c = users[i].CompareTo(users[j]);
+                    /*if (c > 20)
+                        Console.WriteLine("[{0}, {1}] = {2}", i, j, c);*/
+
+                    if (c > max)
+                        max = c;
                 }
-
             }
+            timer.Stop();
 
-            return 0.0;
-        }*/
+            Console.WriteLine("Max of {0} found in {1}ms.", max, timer.ElapsedMilliseconds);
+
+            Console.ReadLine();
+        }
     }
 }

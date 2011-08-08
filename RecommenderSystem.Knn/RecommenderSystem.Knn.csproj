@@ -43,15 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KnnUser.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RecommenderSystem.Data\RecommenderSystem.Data.csproj">
-      <Project>{BD71DF1F-4499-4F7C-9E55-FC3ACF9D2F22}</Project>
-      <Name>RecommenderSystem.Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
