@@ -59,6 +59,7 @@ namespace RecommenderSystem.Knn
 
         #region Abstract Methods
         public abstract double CosineSimliarity(User other);
+        public abstract double PearsonSimliarity(User other);
         #endregion
     }
 }

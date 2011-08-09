@@ -20,8 +20,8 @@ namespace RecommenderSystem.Knn
         #region CosineSimliarity
         public override double CosineSimliarity(User other)
         {
-            double r_x, r_y;
-            double sum_num = 0.0f, sum_x = 0.0f, sum_y = 0.0f;
+            double rX, rY;
+            double sumNum = 0.0, sumX = 0.0, sumY = 0.0;
 
             int count = 0;
             foreach (var artist in this.Ratings.Keys)
@@ -30,11 +30,11 @@ namespace RecommenderSystem.Knn
                 {
                     count++;
 
-                    r_x = (double)this.Ratings[artist] / (double)this.TotalPlays;
-                    r_y = (double)other.Ratings[artist] / (double)other.TotalPlays;
-                    sum_num += r_x * r_y;
-                    sum_x += r_x * r_x;
-                    sum_y += r_y * r_y;
+                    rX = (double)this.Ratings[artist] / this.TotalPlays;
+                    rY = (double)other.Ratings[artist] / other.TotalPlays;
+                    sumNum += rX * rY;
+                    sumX += Math.Pow(rX, 2);
+                    sumY += Math.Pow(rY, 2);
                 }
             }
 
@@ -42,7 +42,46 @@ namespace RecommenderSystem.Knn
                 return 0;
 
             double mass = count * 2.0 / (this.Ratings.Count + other.Ratings.Count);
-            return sum_num / (Math.Sqrt(sum_x) * Math.Sqrt(sum_y)) * (mass);
+            return sumNum / (Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
+        }
+        #endregion
+
+        #region PearsonSimliarity
+        public override double PearsonSimliarity(User other)
+        {
+            double rX, rY;
+            double rXavg = 0.0, rYavg = 0.0;
+            double sumNum = 0.0, sumX = 0.0, sumY = 0.0;
+
+            var keys = new List<string>();
+            foreach (var artist in this.Ratings.Keys)
+            {
+                if (other.Ratings.Keys.Contains(artist))
+                {
+                    keys.Add(artist);
+
+                    rXavg += (double)this.Ratings[artist] / this.TotalPlays;
+                    rYavg += (double)other.Ratings[artist] / other.TotalPlays;
+                }
+            }
+            rXavg /= keys.Count;
+            rYavg /= keys.Count;
+
+            foreach (var artist in keys)
+            {
+                rX = (double)this.Ratings[artist] / this.TotalPlays - rXavg;
+                rY = (double)other.Ratings[artist] / other.TotalPlays - rYavg;
+
+                sumNum += rX * rY;
+                sumX += Math.Pow(rX, 2);
+                sumY += Math.Pow(rY, 2);
+            }
+
+            if (keys.Count == 0)
+                return 0;
+
+            double mass = keys.Count * 2.0 / (this.Ratings.Count + other.Ratings.Count);
+            return sumNum / (Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
         }
         #endregion
     }

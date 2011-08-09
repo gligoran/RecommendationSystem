@@ -11,13 +11,19 @@ namespace RecommenderSystem.Knn
     {
         static void Main(string[] args)
         {
+            int t = 0;
+            do
+            {
+                Console.Write("Enter number of users to load (0 for all): ");
+            } while (!int.TryParse(Console.ReadLine(), out t));
+
             Stopwatch timer = new Stopwatch();
             timer.Start();
-            var users = Data.LoadData<PlayCountUser>(@"D:\Dataset\no-mbid.tsv").ToList();
+            var users = Data.LoadData<RatingUser>(@"D:\Dataset\no-mbid.tsv", t).ToList();
             timer.Stop();
 
-            var me = users.Where(u => u.UserId == "cb732aa2abb82e9527716dc9f083110b22265380").First();
-            var meIndex = users.IndexOf(me);
+            /*var me = users.Where(u => u.UserId == "cb732aa2abb82e9527716dc9f083110b22265380").First();
+            var meIndex = users.IndexOf(me);*/
 
             Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
 
@@ -37,12 +43,10 @@ namespace RecommenderSystem.Knn
             }
             timer.Stop();*/
 
-            int t = 0;
-            
             Console.Write("Enter user index: ");
             while (int.TryParse(Console.ReadLine(), out t))
             {
-                double max = 0.0, c;
+                double max = double.MinValue, c;
                 int index = -1;
                 var a = users[t];
                 timer.Restart();
@@ -51,7 +55,7 @@ namespace RecommenderSystem.Knn
                     if (i == t)
                         continue;
 
-                    c = a.CosineSimliarity(users[i]);
+                    c = a.PearsonSimliarity(users[i]);
                     //if (c == 1)
                     //    Console.WriteLine("[{0}, {1}] = {2}", i, j, c);
 
