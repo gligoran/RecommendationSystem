@@ -1,55 +1,64 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
+using System.Text;
+using System.Diagnostics.Contracts;
 
 namespace RecommenderSystem.Knn
 {
-    public class User : IComparable<User>
+    public abstract class User
     {
+        #region Properties
         public string UserId { get; set; }
-        public Dictionary<string, int> Plays { get; set; }
+        public Dictionary<string, int> Ratings { get; set; }
         public int TotalPlays { get; set; }
         public SortedSet<User> Neighbours { get; set; }
+        #endregion
 
+        #region Consturctor
         public User(string userId)
         {
             this.UserId = userId;
             this.TotalPlays = 0;
-            this.Plays = new Dictionary<string, int>();
+            this.Ratings = new Dictionary<string, int>();
             this.Neighbours = new SortedSet<User>();
         }
 
-        public static User CreateFormPlays(List<string[]> plays)
+        public User(List<string[]> lines)
+            : this(lines[0][0])
         {
-            if (plays.Count == 0)
-                return null;
-
-            User user = new User(plays[0][0]);
+            Contract.Requires(lines.Count > 0);
 
             int count;
-            foreach (var play in plays)
+            foreach (var line in lines)
             {
-                count = int.Parse(play[2]);
-                if (user.Plays.ContainsKey(play[1]))
-                    user.Plays[play[1]] += count;
+                count = int.Parse(line[2]);
+                if (this.Ratings.ContainsKey(line[1]))
+                    this.Ratings[line[1]] += count;
                 else
-                    user.Plays.Add(play[1], count);
+                    this.Ratings.Add(line[1], count);
 
-                user.TotalPlays += count;
+                this.TotalPlays += count;
             }
-
-            return user;
         }
+        #endregion
 
-        public int CompareTo(User other)
+        #region ToString
+        public override string ToString()
         {
-            var i = this.Plays.Keys;
-            var j = other.Plays.Keys;
+            string u = UserId + Environment.NewLine;
+            foreach (var play in Ratings)
+            {
+                u += string.Format("- {0} [{1}]{2}", play.Key, play.Value, Environment.NewLine);
+            }
+            u += string.Format("== {0} [{1}]{2}", Ratings.Count, TotalPlays, Environment.NewLine);
 
-            var artists = i.Intersect<string>(j);
-
-            return artists.Count();
+            return u;
         }
+        #endregion
+
+        #region Abstract Methods
+        public abstract double CosineSimliarity(User other);
+        #endregion
     }
 }

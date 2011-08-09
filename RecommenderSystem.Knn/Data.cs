@@ -8,13 +8,13 @@ namespace RecommenderSystem.Knn
 {
     public static class Data
     {
-        public static IEnumerable<User> LoadData(string filename, int limit = 0)
+        public static IEnumerable<T> LoadData<T>(string filename, int limit = 0, bool covertToRatings = false) where T : User
         {
             TextReader reader = new StreamReader(filename);
 
             string line;
             string userId = String.Empty;
-            List<string[]> plays = new List<string[]>();
+            List<string[]> lines = new List<string[]>();
 
             int count = 0;
             while ((line = reader.ReadLine()) != null && (count < limit || limit == 0))
@@ -22,19 +22,19 @@ namespace RecommenderSystem.Knn
                 var parts = line.Split(new string[] { "\t" }, StringSplitOptions.None);
                 if (parts[0] == userId)
                 {
-                    plays.Add(parts);
+                    lines.Add(parts);
                 }
                 else
                 {
-                    if (plays.Count > 0)
+                    if (lines.Count > 0)
                     {
-                        yield return User.CreateFormPlays(plays);
+                        yield return (T)Activator.CreateInstance(typeof(T), new object[] { lines });
                         count++;
                     }
 
                     userId = parts[0];
-                    plays = new List<string[]>();
-                    plays.Add(parts);
+                    lines = new List<string[]>();
+                    lines.Add(parts);
                 }
             }
         }
