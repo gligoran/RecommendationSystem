@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
+using RecommenderSystem.Knn.Similarity;
 
 namespace RecommenderSystem.Knn
 {
-    public abstract class User
+    public class User
     {
         #region Properties
         public string UserId { get; set; }
-        public Dictionary<string, int> Ratings { get; set; }
+        public Dictionary<string, double> Ratings { get; set; }
         public int TotalPlays { get; set; }
-        public SortedSet<User> Neighbours { get; set; }
+        public SortedSet<SimilarityEstimate> Neighbours { get; set; }
         #endregion
 
         #region Consturctor
@@ -20,8 +21,8 @@ namespace RecommenderSystem.Knn
         {
             this.UserId = userId;
             this.TotalPlays = 0;
-            this.Ratings = new Dictionary<string, int>();
-            this.Neighbours = new SortedSet<User>();
+            this.Ratings = new Dictionary<string, double>();
+            this.Neighbours = new SortedSet<SimilarityEstimate>();
         }
 
         public User(List<string[]> lines)
@@ -40,6 +41,8 @@ namespace RecommenderSystem.Knn
 
                 this.TotalPlays += count;
             }
+
+            PreprocessRatings();
         }
         #endregion
 
@@ -57,9 +60,8 @@ namespace RecommenderSystem.Knn
         }
         #endregion
 
-        #region Abstract Methods
-        public abstract double CosineSimliarity(User other);
-        public abstract double PearsonSimliarity(User other);
+        #region Virtual Methods
+        protected virtual void PreprocessRatings() { }
         #endregion
     }
 }

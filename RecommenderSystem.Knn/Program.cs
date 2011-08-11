@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Threading;
+using RecommenderSystem.Knn.Similarity;
 
 namespace RecommenderSystem.Knn
 {
@@ -18,14 +19,25 @@ namespace RecommenderSystem.Knn
             } while (!int.TryParse(Console.ReadLine(), out t));
 
             Stopwatch timer = new Stopwatch();
+
             timer.Start();
-            var users = Data.LoadData<RatingUser>(@"D:\Dataset\no-mbid.tsv", t).ToList();
+            var users = Manager.LoadData<OneToFiveRatingUser>(@"D:\Dataset\no-mbid.tsv", t).ToList<User>();
             timer.Stop();
+            Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
+
+            timer.Restart();
+            Manager.CalculateKNearestNeighbours(users, new PearsonSimilarityEstimator());
+            timer.Stop();
+            Console.WriteLine("KNNs calculated in {0}ms.", timer.ElapsedMilliseconds);
+
+            foreach (var user in users)
+            {
+                if (user.Neighbours.Count < 3)
+                    Console.WriteLine("[{0}] < 3 ({1})", users.IndexOf(user), user.Neighbours.Count);
+            }
 
             /*var me = users.Where(u => u.UserId == "cb732aa2abb82e9527716dc9f083110b22265380").First();
             var meIndex = users.IndexOf(me);*/
-
-            Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
 
             /*double max = 0.0, c;
             timer.Restart();
@@ -43,7 +55,7 @@ namespace RecommenderSystem.Knn
             }
             timer.Stop();*/
 
-            Console.Write("Enter user index: ");
+            /*Console.Write("Enter user index: ");
             while (int.TryParse(Console.ReadLine(), out t))
             {
                 double max = double.MinValue, c;
@@ -69,7 +81,9 @@ namespace RecommenderSystem.Knn
 
                 Console.WriteLine("Max of {0} at {1} found in {2}ms.", max, index, timer.ElapsedMilliseconds);
                 Console.Write("Enter next user index: ");
-            }
+            }*/
+
+            Console.ReadLine();
         }
     }
 }
