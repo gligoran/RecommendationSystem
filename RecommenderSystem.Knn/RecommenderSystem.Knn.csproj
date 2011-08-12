@@ -44,6 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manager.cs" />
+    <Compile Include="Recommendations\AdjustedWeightedSumRatingAggregator.cs" />
+    <Compile Include="Recommendations\IRatingAggregator.cs" />
+    <Compile Include="Recommendations\Recommendation.cs" />
+    <Compile Include="Recommendations\SimpleAverageRatingAggregator.cs" />
+    <Compile Include="Recommendations\WeightedSumRatingAggregator.cs" />
     <Compile Include="Similarity\CosineSimilarityEstimator.cs" />
     <Compile Include="Similarity\PearsonSimilarityEstimator.cs" />
     <Compile Include="Similarity\SimilarityEstimate.cs" />
@@ -54,7 +59,6 @@
     <Compile Include="Similarity\ISimilarityEstimator.cs" />
     <Compile Include="User\User.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

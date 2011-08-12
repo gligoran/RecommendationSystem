@@ -13,7 +13,7 @@ namespace RecommenderSystem.Knn
         public string UserId { get; set; }
         public Dictionary<string, double> Ratings { get; set; }
         public int TotalPlays { get; set; }
-        public SortedSet<SimilarityEstimate> Neighbours { get; set; }
+        public List<SimilarityEstimate> Neighbours { get; set; }
         #endregion
 
         #region Consturctor
@@ -22,7 +22,7 @@ namespace RecommenderSystem.Knn
             this.UserId = userId;
             this.TotalPlays = 0;
             this.Ratings = new Dictionary<string, double>();
-            this.Neighbours = new SortedSet<SimilarityEstimate>();
+            this.Neighbours = new List<SimilarityEstimate>();
         }
 
         public User(List<string[]> lines)
@@ -63,5 +63,7 @@ namespace RecommenderSystem.Knn
         #region Virtual Methods
         protected virtual void PreprocessRatings() { }
         #endregion
+
+        public double AverageRating { get; set; }
     }
 }

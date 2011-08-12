@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using RecommenderSystem.Knn.Similarity;
+using RecommenderSystem.Knn.Recommendations;
 
 namespace RecommenderSystem.Knn
 {
@@ -46,30 +47,75 @@ namespace RecommenderSystem.Knn
         #region CalculateNeighbours
         public static void CalculateKNearestNeighbours(List<User> users, ISimilarityEstimator similarityEstimator, int k = 3)
         {
-            double s;
-
             for (int i = 0; i < users.Count; i++)
             {
-                for (int j = i + 1; j < users.Count; j++)
+                CalculateKNearestNeighboursForUser(users[i], users, similarityEstimator, offset: i + 1);
+            }
+        }
+
+        public static void CalculateKNearestNeighboursForUser(User user, List<User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
+        {
+            double s;
+            for (int i = offset; i < users.Count; i++)
+            {
+                if (user == users[i])
+                    continue;
+
+                s = similarityEstimator.Similarity(user, users[i]);
+
+                if (s > 0.0)
                 {
-                    s = similarityEstimator.Similarity(users[i], users[j]);
+                    user.Neighbours.Add(new SimilarityEstimate(users[i], s));
+                    users[i].Neighbours.Add(new SimilarityEstimate(user, s));
 
-                    if (s > 0.0)
-                    {
-                        users[i].Neighbours.Add(new SimilarityEstimate(users[j], s));
-                        users[j].Neighbours.Add(new SimilarityEstimate(users[i], s));
-
-                        PruneNeighbours(users[i], k);
-                        PruneNeighbours(users[j], k);
-                    }
+                    PruneNeighbours(user, k);
+                    PruneNeighbours(users[i], k);
                 }
             }
         }
 
         public static void PruneNeighbours(User user, int k = 3)
         {
+            user.Neighbours.Sort();
+
             while (user.Neighbours.Count > k)
-                user.Neighbours.Remove(user.Neighbours.Min);
+                user.Neighbours.RemoveAt(user.Neighbours.Count - 1);
+        }
+        #endregion
+
+        #region GetRecommendations
+        public static List<Recommendation> GetRecommendations(User user, IRatingAggregator ratingAggregator, int n = 5)
+        {
+            if (user.Neighbours.Count == 0)
+                return null;
+
+            var recommendations = new List<Recommendation>();
+
+            var artists = new List<string>();
+            foreach (var neighbour in user.Neighbours)
+                artists = artists.Union(neighbour.SimilarUser.Ratings.Keys).ToList();
+
+            artists = artists.Except(user.Ratings.Keys).ToList<string>();
+
+            double r;
+            foreach (var artist in artists)
+            {
+                r = ratingAggregator.Aggregate(user, artist);
+                if (r > 0.0)
+                {
+                    recommendations.Add(new Recommendation(artist, r));
+                    PruneRecommendations(recommendations, n);
+                }
+            }
+
+            return recommendations;
+        }
+
+        private static void PruneRecommendations(List<Recommendation> recommendations, int n = 5)
+        {
+            recommendations.Sort();
+            while (recommendations.Count > n)
+                recommendations.RemoveAt(recommendations.Count - 1);
         }
         #endregion
     }
