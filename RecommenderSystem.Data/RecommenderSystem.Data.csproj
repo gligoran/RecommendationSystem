@@ -45,9 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manager.cs" />
-    <Compile Include="PlayCount.cs" />
-    <Compile Include="PlayCounts.cs" />
-    <Compile Include="User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
