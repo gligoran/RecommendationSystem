@@ -8,8 +8,8 @@ namespace RecommendationSystem.Knn
     public class PlayCountShareUser : User
     {
         #region Constructor
-        public PlayCountShareUser(List<string[]> data)
-            : base(data)
+        public PlayCountShareUser(string userId, List<string[]> data)
+            : base(userId, data)
         { }
         #endregion
 

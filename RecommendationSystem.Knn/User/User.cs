@@ -14,6 +14,7 @@ namespace RecommendationSystem.Knn
         public Dictionary<string, double> Ratings { get; set; }
         public int TotalPlays { get; set; }
         public List<SimilarityEstimate> Neighbours { get; set; }
+        public double AverageRating { get; set; }
         #endregion
 
         #region Consturctor
@@ -25,19 +26,22 @@ namespace RecommendationSystem.Knn
             this.Neighbours = new List<SimilarityEstimate>();
         }
 
-        public User(List<string[]> lines)
-            : this(lines[0][0])
+        /* Line is in format:
+         * <user, mbid, artist, playcount>
+        */
+        public User(string userId, List<string[]> lines)
+            : this(userId)
         {
             Contract.Requires(lines.Count > 0);
 
             int count;
             foreach (var line in lines)
             {
-                count = int.Parse(line[2]);
-                if (this.Ratings.ContainsKey(line[1]))
-                    this.Ratings[line[1]] += count;
+                count = int.Parse(line[3]);
+                if (this.Ratings.ContainsKey(line[2]))
+                    this.Ratings[line[2]] += count;
                 else
-                    this.Ratings.Add(line[1], count);
+                    this.Ratings.Add(line[2], count);
 
                 this.TotalPlays += count;
             }
@@ -64,6 +68,5 @@ namespace RecommendationSystem.Knn
         protected virtual void PreprocessRatings() { }
         #endregion
 
-        public double AverageRating { get; set; }
     }
 }

@@ -8,8 +8,8 @@ namespace RecommendationSystem.Knn
     public class OneToFiveRatingUser : User
     {
         #region Constructor
-        public OneToFiveRatingUser(List<string[]> data)
-            : base(data)
+        public OneToFiveRatingUser(string userId, List<string[]> data)
+            : base(userId, data)
         { }
         #endregion
 

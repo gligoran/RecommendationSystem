@@ -32,7 +32,7 @@ namespace RecommendationSystem.Knn
                 {
                     if (lines.Count > 0)
                     {
-                        yield return (T)Activator.CreateInstance(typeof(T), new object[] { lines });
+                        yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
                         count++;
                     }
 
