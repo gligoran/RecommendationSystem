@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using RecommenderSystem.Knn.Recommendations;
-using RecommenderSystem.Knn.Similarity;
+using RecommendationSystem.Knn.Recommendations;
+using RecommendationSystem.Knn.Similarity;
 
-namespace RecommenderSystem.Knn
+namespace RecommendationSystem.Knn
 {
     class Program
     {

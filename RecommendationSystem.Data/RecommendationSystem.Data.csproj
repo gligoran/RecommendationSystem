@@ -2,20 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{BD71DF1F-4499-4F7C-9E55-FC3ACF9D2F22}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RecommenderSystem.Knn</RootNamespace>
-    <AssemblyName>RecommenderSystem.Knn</AssemblyName>
+    <RootNamespace>RecommendationSystem.Data</RootNamespace>
+    <AssemblyName>RecommendationSystem.Data</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="R.NET, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\OpenSource\R.NET\R.NET\bin\Debug\R.NET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,20 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manager.cs" />
-    <Compile Include="Recommendations\AdjustedWeightedSumRatingAggregator.cs" />
-    <Compile Include="Recommendations\IRatingAggregator.cs" />
-    <Compile Include="Recommendations\Recommendation.cs" />
-    <Compile Include="Recommendations\SimpleAverageRatingAggregator.cs" />
-    <Compile Include="Recommendations\WeightedSumRatingAggregator.cs" />
-    <Compile Include="Similarity\CosineSimilarityEstimator.cs" />
-    <Compile Include="Similarity\PearsonSimilarityEstimator.cs" />
-    <Compile Include="Similarity\SimilarityEstimate.cs" />
-    <Compile Include="User\PlayCountShareUser.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\OneToFiveRatingUser.cs" />
-    <Compile Include="Similarity\ISimilarityEstimator.cs" />
-    <Compile Include="User\User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

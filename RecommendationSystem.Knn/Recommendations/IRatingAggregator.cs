@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RecommenderSystem.Knn.Similarity;
+using RecommendationSystem.Knn.Similarity;
 
-namespace RecommenderSystem.Knn.Recommendations
+namespace RecommendationSystem.Knn.Recommendations
 {
     public interface IRatingAggregator
     {

@@ -6,7 +6,7 @@ using RDotNet;
 using System.Xml.Serialization;
 using System.IO;
 
-namespace RecommenderSystem.Data
+namespace RecommendationSystem.Data
 {
     public static class Manager
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using RecommenderSystem.Knn.Similarity;
-using RecommenderSystem.Knn.Recommendations;
+using RecommendationSystem.Knn.Similarity;
+using RecommendationSystem.Knn.Recommendations;
 
-namespace RecommenderSystem.Knn
+namespace RecommendationSystem.Knn
 {
     public static class Manager
     {

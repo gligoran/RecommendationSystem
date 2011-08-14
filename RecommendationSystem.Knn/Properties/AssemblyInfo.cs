@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RecommenderSystem.Data")]
+[assembly: AssemblyTitle("RecommendationSystem.Knn")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("RecommenderSystem.Data")]
+[assembly: AssemblyProduct("RecommendationSystem.Knn")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cbb842b4-4cd6-4d40-b4b3-c53e37d2a277")]
+[assembly: Guid("8019723e-117f-4474-ac0a-cc2618277f0f")]
 
 // Version information for an assembly consists of the following four values:
 //

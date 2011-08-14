@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics.Contracts;
-using RecommenderSystem.Knn.Similarity;
+using RecommendationSystem.Knn.Similarity;
 
-namespace RecommenderSystem.Knn
+namespace RecommendationSystem.Knn
 {
     public class User
     {

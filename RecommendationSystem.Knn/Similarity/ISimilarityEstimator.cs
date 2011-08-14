@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RecommenderSystem.Knn.Similarity
+namespace RecommendationSystem.Knn.Similarity
 {
     public interface ISimilarityEstimator
     {

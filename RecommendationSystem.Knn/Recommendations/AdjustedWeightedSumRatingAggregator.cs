@@ -1,4 +1,4 @@
-﻿namespace RecommenderSystem.Knn.Recommendations
+﻿namespace RecommendationSystem.Knn.Recommendations
 {
     public class AdjustedWeightedSumRatingAggregator : IRatingAggregator
     {

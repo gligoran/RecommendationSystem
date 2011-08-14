@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 using System.Linq;
 using System;
 
-namespace RecommenderSystem.Knn
+namespace RecommendationSystem.Knn
 {
     public class PlayCountShareUser : User
     {

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommenderSystem.Data", "RecommenderSystem.Data\RecommenderSystem.Data.csproj", "{BD71DF1F-4499-4F7C-9E55-FC3ACF9D2F22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Data", "RecommendationSystem.Data\RecommendationSystem.Data.csproj", "{BD71DF1F-4499-4F7C-9E55-FC3ACF9D2F22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommenderSystem.Knn", "RecommenderSystem.Knn\RecommenderSystem.Knn.csproj", "{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Knn", "RecommendationSystem.Knn\RecommendationSystem.Knn.csproj", "{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
