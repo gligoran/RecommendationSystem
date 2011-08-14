@@ -41,6 +41,10 @@ namespace RecommendationSystem.Knn
                     lines.Add(parts);
                 }
             }
+
+            //add last user if unlimited
+            if (limit == 0)
+                yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
         }
         #endregion
 

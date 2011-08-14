@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics.Contracts;
 using RecommendationSystem.Knn.Similarity;
 
 namespace RecommendationSystem.Knn
@@ -32,8 +31,6 @@ namespace RecommendationSystem.Knn
         public User(string userId, List<string[]> lines)
             : this(userId)
         {
-            Contract.Requires(lines.Count > 0);
-
             int count;
             foreach (var line in lines)
             {
