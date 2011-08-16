@@ -10,10 +10,10 @@ namespace RecommendationSystem.Knn
     {
         #region Properties
         public string UserId { get; set; }
-        public Dictionary<string, double> Ratings { get; set; }
+        public Dictionary<string, float> Ratings { get; set; }
         public int TotalPlays { get; set; }
         public List<SimilarityEstimate> Neighbours { get; set; }
-        public double AverageRating { get; set; }
+        public float AverageRating { get; set; }
         #endregion
 
         #region Consturctor
@@ -21,7 +21,7 @@ namespace RecommendationSystem.Knn
         {
             this.UserId = userId;
             this.TotalPlays = 0;
-            this.Ratings = new Dictionary<string, double>();
+            this.Ratings = new Dictionary<string, float>();
             this.Neighbours = new List<SimilarityEstimate>();
         }
 

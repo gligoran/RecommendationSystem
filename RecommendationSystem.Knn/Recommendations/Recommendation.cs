@@ -8,9 +8,9 @@ namespace RecommendationSystem.Knn.Recommendations
     public class Recommendation : IComparable<Recommendation>
     {
         public string Artist { get; set; }
-        public double Rating { get; set; }
+        public float Rating { get; set; }
 
-        public Recommendation(string artist, double rating)
+        public Recommendation(string artist, float rating)
         {
             this.Artist = artist;
             this.Rating = rating;

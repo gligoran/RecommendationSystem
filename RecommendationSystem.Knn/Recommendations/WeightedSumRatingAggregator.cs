@@ -2,10 +2,10 @@
 {
     public class WeightedSumRatingAggregator : IRatingAggregator
     {
-        public double Aggregate(User user, string artist)
+        public float Aggregate(User user, string artist)
         {
-            double k = 0.0;
-            double r = 0.0;
+            float k = 0.0f;
+            float r = 0.0f;
             foreach (var u in user.Neighbours)
             {
                 k += u.Estimate;
@@ -15,7 +15,7 @@
                     r += u.Estimate * u.SimilarUser.AverageRating;
             }
 
-            return r / k * user.TotalPlays;
+            return (float)(r / k * user.TotalPlays);
         }
     }
 }

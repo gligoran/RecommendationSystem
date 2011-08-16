@@ -11,7 +11,7 @@ namespace RecommendationSystem.Knn
     public static class Manager
     {
         #region LoadData
-        public static IEnumerable<T> LoadData<T>(string filename, int limit = 0, bool covertToRatings = false)
+        public static IEnumerable<T> LoadData<T>(string filename, int limit = int.MaxValue, bool covertToRatings = false)
             where T : User
         {
             TextReader reader = new StreamReader(filename);
@@ -20,10 +20,11 @@ namespace RecommendationSystem.Knn
             string userId = String.Empty;
             List<string[]> lines = new List<string[]>();
 
-            int count = 0;
-            while ((line = reader.ReadLine()) != null && (count < limit || limit == 0))
+            int count = limit;
+            string[] sep = new string[] { "\t" };
+            while ((line = reader.ReadLine()) != null && count > 0)
             {
-                var parts = line.Split(new string[] { "\t" }, StringSplitOptions.None);
+                var parts = line.Split(sep, StringSplitOptions.None);
                 if (parts[0] == userId)
                 {
                     lines.Add(parts);
@@ -33,7 +34,7 @@ namespace RecommendationSystem.Knn
                     if (lines.Count > 0)
                     {
                         yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
-                        count++;
+                        count--;
                     }
 
                     userId = parts[0];
@@ -43,8 +44,10 @@ namespace RecommendationSystem.Knn
             }
 
             //add last user if unlimited
-            if (limit == 0)
+            if (limit == int.MaxValue)
                 yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
+            
+            reader.Close();
         }
         #endregion
 
@@ -59,7 +62,7 @@ namespace RecommendationSystem.Knn
 
         public static void CalculateKNearestNeighboursForUser(User user, List<User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
         {
-            double s;
+            float s;
             for (int i = offset; i < users.Count; i++)
             {
                 if (user == users[i])
@@ -101,11 +104,11 @@ namespace RecommendationSystem.Knn
 
             artists = artists.Except(user.Ratings.Keys).ToList<string>();
 
-            double r;
+            float r;
             foreach (var artist in artists)
             {
                 r = ratingAggregator.Aggregate(user, artist);
-                if (r > 0.0)
+                if (r > 0.0f)
                 {
                     recommendations.Add(new Recommendation(artist, r));
                     PruneRecommendations(recommendations, n);

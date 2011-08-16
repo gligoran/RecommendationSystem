@@ -7,10 +7,10 @@ namespace RecommendationSystem.Knn.Similarity
 {
     public class CosineSimilarityEstimator : ISimilarityEstimator
     {
-        public double Similarity(User first, User second)
+        public float Similarity(User first, User second)
         {
-            double rX, rY;
-            double sumNum = 0.0, sumX = 0.0, sumY = 0.0;
+            float rX, rY;
+            float sumNum = 0.0f, sumX = 0.0f, sumY = 0.0f;
 
             int count = 0;
             foreach (var artist in first.Ratings.Keys)
@@ -19,19 +19,19 @@ namespace RecommendationSystem.Knn.Similarity
                 {
                     count++;
 
-                    rX = (double)first.Ratings[artist];
-                    rY = (double)second.Ratings[artist];
+                    rX = (float)first.Ratings[artist];
+                    rY = (float)second.Ratings[artist];
                     sumNum += rX * rY;
-                    sumX += Math.Pow(rX, 2);
-                    sumY += Math.Pow(rY, 2);
+                    sumX += (float)Math.Pow(rX, 2);
+                    sumY += (float)Math.Pow(rY, 2);
                 }
             }
 
             if (count == 0)
-                return 0;
+                return 0.0f;
 
-            double mass = count * 2.0 / (first.Ratings.Count + second.Ratings.Count);
-            return sumNum / (Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
+            float mass = count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
+            return sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
         }
     }
 }

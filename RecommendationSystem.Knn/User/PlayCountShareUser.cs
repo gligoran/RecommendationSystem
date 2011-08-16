@@ -17,11 +17,11 @@ namespace RecommendationSystem.Knn
         protected override void PreprocessRatings()
         {
             var oldRatings = Ratings;
-            Ratings = new Dictionary<string, double>();
+            Ratings = new Dictionary<string, float>();
             foreach (var artist in oldRatings.Keys)
-                Ratings.Add(artist, oldRatings[artist] / (double)TotalPlays);
+                Ratings.Add(artist, oldRatings[artist] / (float)TotalPlays);
 
-            AverageRating = 1.0 / Ratings.Count;
+            AverageRating = 1.0f / Ratings.Count;
         }
         #endregion
 

@@ -20,12 +20,12 @@ namespace RecommendationSystem.Knn
                         orderby Ratings[k] descending
                         select k).ToList();
 
-            Ratings = new Dictionary<string, double>();
+            Ratings = new Dictionary<string, float>();
             for (int i = 0; i < keys.Count; i++)
                 Ratings.Add(keys[i], 5 - i * 5 / keys.Count);
 
             TotalPlays = 1;
-            AverageRating = 2.5;
+            AverageRating = 2.5f;
         }
         #endregion
 

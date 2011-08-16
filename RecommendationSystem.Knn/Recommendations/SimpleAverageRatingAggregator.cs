@@ -2,9 +2,9 @@
 {
     public class SimpleAverageRatingAggregator : IRatingAggregator
     {
-        public double Aggregate(User user, string artist)
+        public float Aggregate(User user, string artist)
         {
-            double r = 0.0;
+            float r = 0.0f;
             foreach (var u in user.Neighbours)
             {
                 if (u.SimilarUser.Ratings.ContainsKey(artist))

@@ -8,9 +8,9 @@ namespace RecommendationSystem.Knn.Similarity
     public class SimilarityEstimate : IComparable<SimilarityEstimate>
     {
         public User SimilarUser { get; set; }
-        public double Estimate { get; set; }
+        public float Estimate { get; set; }
 
-        public SimilarityEstimate(User user, double estimate)
+        public SimilarityEstimate(User user, float estimate)
         {
             this.SimilarUser = user;
             this.Estimate = estimate;

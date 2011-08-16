@@ -7,11 +7,11 @@ namespace RecommendationSystem.Knn.Similarity
 {
     public class PearsonSimilarityEstimator : ISimilarityEstimator
     {
-        public double Similarity(User first, User second)
+        public float Similarity(User first, User second)
         {
-            double rX, rY;
-            double rXavg = 0.0, rYavg = 0.0;
-            double sumNum = 0.0, sumX = 0.0, sumY = 0.0;
+            float rX, rY;
+            float rXavg = 0.0f, rYavg = 0.0f;
+            float sumNum = 0.0f, sumX = 0.0f, sumY = 0.0f;
 
             var keys = new List<string>();
             foreach (var artist in first.Ratings.Keys)
@@ -26,7 +26,7 @@ namespace RecommendationSystem.Knn.Similarity
             }
 
             if (keys.Count == 0)
-                return 0.0;
+                return 0.0f;
 
             rXavg /= keys.Count;
             rYavg /= keys.Count;
@@ -37,17 +37,17 @@ namespace RecommendationSystem.Knn.Similarity
                 rY = second.Ratings[artist] - rYavg;
 
                 sumNum += rX * rY;
-                sumX += Math.Pow(rX, 2);
-                sumY += Math.Pow(rY, 2);
+                sumX += (float)Math.Pow(rX, 2);
+                sumY += (float)Math.Pow(rY, 2);
             }
 
-            double mass = keys.Count * 2.0 / (first.Ratings.Count + second.Ratings.Count);
-            double r = sumNum / (Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
+            float mass = keys.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
+            float r = sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
 
-            if (double.IsNaN(r))
-                return 0.0;
+            if (float.IsNaN(r))
+                return 0.0f;
 
-            return Math.Abs(r);
+            return (float)Math.Abs(r);
         }
     }
 }

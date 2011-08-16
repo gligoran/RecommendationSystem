@@ -8,6 +8,6 @@ namespace RecommendationSystem.Knn.Recommendations
 {
     public interface IRatingAggregator
     {
-        double Aggregate(User user, string artist);
+        float Aggregate(User user, string artist);
     }
 }
