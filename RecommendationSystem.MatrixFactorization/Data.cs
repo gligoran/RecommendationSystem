@@ -16,7 +16,7 @@ namespace RecommendationSystem.MatrixFactorization
             if (users)
             {
                 Console.WriteLine("Importing users...");
-                var u = GetUsersFromDataset(@"D:\Dataset\users.tsv").ToList();
+                var u = GetUsersFromDataset(@"D:\Dataset\ratings.tsv").ToList();
                 Console.WriteLine("Users imported.");
 
                 Console.WriteLine("Saving users...");
@@ -45,7 +45,7 @@ namespace RecommendationSystem.MatrixFactorization
                 Console.WriteLine("Ratings imported.");
 
                 Console.WriteLine("Saving ratings...");
-                SaveRatings(r, @"d:\Dataset\ratings.rs");
+                SaveRatings(r, @"d:\Dataset\playcounts.rs");
                 Console.WriteLine("Save complete.");
             }
         }
@@ -140,7 +140,6 @@ namespace RecommendationSystem.MatrixFactorization
             Stream stream = File.Open(filename, FileMode.OpenOrCreate);
             BinaryFormatter bformatter = new BinaryFormatter();
 
-            Console.WriteLine("Writing artists to file");
             bformatter.Serialize(stream, users);
             stream.Close();
         }
@@ -151,7 +150,7 @@ namespace RecommendationSystem.MatrixFactorization
         #region Ratings
 
         #region GetRatingsFromDataset
-        public static IEnumerable<Rating> GetRatingsFromDataset(string filename, List<string> users, List<string> artists, int limit = 17559531)
+        public static IEnumerable<Rating> GetRatingsFromDataset(string filename, List<string> users, List<string> artists, int limit = int.MaxValue)
         {
             TextReader reader = new StreamReader(filename);
 
@@ -160,6 +159,10 @@ namespace RecommendationSystem.MatrixFactorization
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
+
+                var u = users.BinarySearch(parts[0]);
+                if (u < 0)
+                    Console.WriteLine("- {0}", parts[0]);
 
                 yield return new Rating(
                     users.BinarySearch(parts[0]),
@@ -175,7 +178,7 @@ namespace RecommendationSystem.MatrixFactorization
         #endregion
 
         #region LoadRatings
-        public static List<Rating> LoadRatings(string filename)
+        public static List<Rating> LoadRatings(string filename, int limit = int.MaxValue)
         {
             TextReader reader = new StreamReader(filename);
 
@@ -183,7 +186,7 @@ namespace RecommendationSystem.MatrixFactorization
 
             string line;
             string[] sep = new string[] { "\t" };
-            while ((line = reader.ReadLine()) != null)
+            while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
 
@@ -192,6 +195,8 @@ namespace RecommendationSystem.MatrixFactorization
                     int.Parse(parts[1]),
                     float.Parse(parts[2])
                 ));
+
+                limit--;
             }
 
             reader.Close();
@@ -205,12 +210,38 @@ namespace RecommendationSystem.MatrixFactorization
             TextWriter writer = new StreamWriter(filename);
 
             for (int i = 0; i < ratings.Count; i++)
-            {
                 writer.WriteLine("{0}\t{1}\t{2}", ratings[i].UserIndex, ratings[i].ArtistIndex, ratings[i].Value);
-            }
 
             writer.Flush();
             writer.Close();
+        }
+        #endregion
+
+        #region ConvertTo1To5Ratings
+        public static List<Rating> ConvertTo1To5Ratings(List<Rating> playCounts, int userCount)
+        {
+            var ratings = new List<Rating>();
+            var users = new List<Rating>[userCount];
+
+            //initiali user groups
+            for (int i = 0; i < userCount; i++)
+                users[i] = new List<Rating>();
+
+            //group ratings and users
+            foreach (var rating in playCounts)
+                users[rating.UserIndex].Add(rating);
+
+            //recalculate play counts into ratings
+            foreach (var user in users)
+            {
+                var u = user.OrderByDescending(r => r.Value).ToList();
+                for (int j = 0; j < user.Count; j++)
+                    user[j].Value = 5 - j * 5 / user.Count;
+
+                ratings.AddRange(user);
+            }
+
+            return ratings;
         }
         #endregion
 

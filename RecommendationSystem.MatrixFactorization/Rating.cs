@@ -6,8 +6,7 @@ using System.Runtime.Serialization;
 
 namespace RecommendationSystem.MatrixFactorization
 {
-    [Serializable]
-    public class Rating : ISerializable
+    public class Rating
     {
         public int UserIndex { get; set; }
         public int ArtistIndex { get; set; }
@@ -20,20 +19,6 @@ namespace RecommendationSystem.MatrixFactorization
             this.UserIndex = userIndex;
             this.ArtistIndex = artistIndex;
             this.Value = value;
-        }
-
-        public Rating(SerializationInfo info, StreamingContext context)
-        {
-            UserIndex = (int)info.GetValue("u", typeof(int));
-            ArtistIndex = (int)info.GetValue("a", typeof(int));
-            Value = (float)info.GetValue("u", typeof(float));
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("u", UserIndex);
-            info.AddValue("a", ArtistIndex);
-            info.AddValue("v", Value);
         }
     }
 }
