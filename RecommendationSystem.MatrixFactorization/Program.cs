@@ -14,10 +14,10 @@ namespace RecommendationSystem.MatrixFactorization
         private static List<string> users = null;
         private static List<string> artists = null;
         private static List<Rating> ratings = null;
-        private static int featureCount = 25;
-        private static float lRate = 0.001f;
-        private static float K = 0.02f;
-        //private static List<float> err = new List<float>();
+        private const int featureCount = 25;
+        private const float lRate = 0.001f;
+        private const float K = 0.02f;
+        private static float[] residual;
         private static float[,] user;
         private static float[,] artist;
 
@@ -56,7 +56,7 @@ namespace RecommendationSystem.MatrixFactorization
             ratings = Data.LoadRatings(@"D:\Dataset\ratings.rs");
             timer.Stop();
             Console.WriteLine("Data loaded in: {0}ms", timer.ElapsedMilliseconds);
-
+            
             //train
             timer.Start();
             SVD(@"D:\Dataset\ratings.tsv");
@@ -85,6 +85,7 @@ namespace RecommendationSystem.MatrixFactorization
             //init
             user = new float[featureCount, users.Count];
             artist = new float[featureCount, artists.Count];
+            residual = new float[ratings.Count];
             user.Populate<float>(0.1f);
             artist.Populate<float>(0.1f);
 
@@ -102,7 +103,7 @@ namespace RecommendationSystem.MatrixFactorization
                 Console.WriteLine("Training feature {0}", f);
 
                 //INNER LOOP - converges features
-                while (rmseDiff > 0.0001f)
+                while (rmseDiff > 0.0001f || count > 100)
                 {
                     rmsePrev = rmse;
                     rmse = TrainingSession(f);
@@ -111,59 +112,38 @@ namespace RecommendationSystem.MatrixFactorization
                     count++;
                     Console.WriteLine("Pass {0}/{1}:\trmse = {2}\trmseDiff = {3}", f, count, rmse, rmseDiff);
                 }
+
+                //cache residuals
+                for (int i = 0; i < ratings.Count; i++)
+                {
+                    residual[i] += user[f, ratings[i].UserIndex] * artist[f, ratings[i].ArtistIndex];
+                }
             }
         }
 
         private static float TrainingSession(int f)
         {
             float e = 0.0f;
-            foreach (var rating in ratings)
+            for (int i = 0; i < ratings.Count; i++)
             {
-                e += Train(rating.UserIndex,
-                           rating.ArtistIndex,
+                e += Train(ratings[i].UserIndex,
+                           ratings[i].ArtistIndex,
                            f,
-                           rating.Value);
-
-#if DEBUG
-                if (float.IsNaN(e))
-                    Console.WriteLine("Error too big");
-#endif
+                           ratings[i].Value,
+                           residual[i]);
             }
 
             e /= ratings.Count;
-            //return e; //MSE
-            return (float)Math.Sqrt(e); //RMSE
+            return (float)Math.Sqrt(e);
         }
 
-        static float Train(int u, int a, int f, float r)
+        static float Train(int u, int a, int f, float r, float residual)
         {
-            float e = r - PredictRating(u, a);
+            float e = r - (residual + user[f, u] * artist[f, a]);
             float uv = user[f, u];
 
-#if DEBUG
-            if (float.IsNaN(uv))
-                Console.WriteLine("NaN: uv (f: {0}, u: {1}, a: {2})", f, u, a);
-
-            float tmp;
-            tmp = user[f, u] + lRate * (e * artist[f, a] - K * user[f, u]);
-            if (float.IsNaN(tmp))
-                Console.WriteLine("NaN: user[{0}, {1}]", f, u);
-            user[f, u] = tmp;
-
-            tmp = artist[f, a] + lRate * (e * uv - K * artist[f, a]);
-            if (float.IsNaN(tmp))
-                Console.WriteLine("NaN: artist[{0}, {1}]", f, a);
-            artist[f, a] = tmp;
-
-            if (float.IsNaN(user[f, u]))
-                Console.WriteLine("NaN: user[{0}, {1}]", f, u);
-
-            if (float.IsNaN(artist[f, a]))
-                Console.WriteLine("NaN: artist[{0}, {1}]", f, a);
-#else
             user[f, u] += lRate * (e * artist[f, a] - K * user[f, u]);
             artist[f, a] += lRate * (e * uv - K * artist[f, a]);
-#endif
 
             return e * e;
         }
@@ -173,11 +153,6 @@ namespace RecommendationSystem.MatrixFactorization
             float rating = 0.0f;
             for (int i = 0; i < featureCount; i++)
                 rating += user[i, u] * artist[i, a];
-
-#if DEBUG
-            if (float.IsNaN(rating))
-                Console.WriteLine("NaN: u: {0}, a: {1}]", u, a);
-#endif
 
             return rating;
         }
