@@ -103,7 +103,7 @@ namespace RecommendationSystem.MatrixFactorization
                 Console.WriteLine("Training feature {0}", f);
 
                 //INNER LOOP - converges features
-                while (rmseDiff > 0.0001f || count > 100)
+                while (rmseDiff > 0.0001f && count < 100)
                 {
                     rmsePrev = rmse;
                     rmse = TrainingSession(f);
