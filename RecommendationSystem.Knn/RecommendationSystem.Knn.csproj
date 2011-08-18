@@ -59,6 +59,12 @@
     <Compile Include="Similarity\ISimilarityEstimator.cs" />
     <Compile Include="User\User.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">
+      <Project>{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}</Project>
+      <Name>RecommendationSystem.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -64,11 +64,15 @@
     <Compile Include="Training\SvdTrainerBase.cs" />
     <Compile Include="Training\TrainingParameters.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Data.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rating.cs" />
     <Compile Include="Training\BasicSvdTrainer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">
+      <Project>{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}</Project>
+      <Name>RecommendationSystem.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

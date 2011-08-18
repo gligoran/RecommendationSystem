@@ -1,4 +1,4 @@
-﻿namespace RecommendationSystem.MatrixFactorization
+﻿namespace RecommendationSystem.Data
 {
     public class Rating
     {

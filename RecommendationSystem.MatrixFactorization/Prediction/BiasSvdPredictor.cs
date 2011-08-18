@@ -19,6 +19,16 @@ namespace RecommendationSystem.MatrixFactorization.Prediction
             return PredictRating(model, Users.BinarySearch(user), Artists.BinarySearch(artist));
         }
 
+        public float PredictRating(IBiasSvdModel model, string user, int artistIndex)
+        {
+            return PredictRating(model, Users.BinarySearch(user), artistIndex);
+        }
+
+        public float PredictRating(IBiasSvdModel model, int userIndex, string artist)
+        {
+            return PredictRating(model, userIndex, Artists.BinarySearch(artist));
+        }
+
         public float PredictRating(IBiasSvdModel model, int userIndex, int artistIndex)
         {
             var rating = 0.0f;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RecommendationSystem.Data;
 using RecommendationSystem.MatrixFactorization.Model;
 
 namespace RecommendationSystem.MatrixFactorization.Training

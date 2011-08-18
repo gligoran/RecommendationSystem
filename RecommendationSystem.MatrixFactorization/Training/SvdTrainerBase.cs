@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RecommendationSystem.Data;
 using RecommendationSystem.MatrixFactorization.Model;
 
 namespace RecommendationSystem.MatrixFactorization.Training

@@ -29,7 +29,7 @@ namespace RecommendationSystem.Knn.User
         #region ToString
         public override string ToString()
         {
-            string u = UserId + Environment.NewLine;
+            var u = UserId + Environment.NewLine;
             u = Ratings.Aggregate(u, (c, p) => c + string.Format("- {0} [{1}]{2}", p.Key, p.Value * TotalPlays, Environment.NewLine));
             u += string.Format("== {0} [{1}]{2}", Ratings.Count, TotalPlays, Environment.NewLine);
 
