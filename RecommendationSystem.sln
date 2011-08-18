@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Knn", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.MatrixFactorization", "RecommendationSystem.MatrixFactorization\RecommendationSystem.MatrixFactorization.csproj", "{80E6B57C-A34D-4442-AE09-181D11DF32E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Data", "RecommendationSystem.Data\RecommendationSystem.Data.csproj", "{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{80E6B57C-A34D-4442-AE09-181D11DF32E6}.Release|x64.ActiveCfg = Release|x86
 		{80E6B57C-A34D-4442-AE09-181D11DF32E6}.Release|x86.ActiveCfg = Release|x86
 		{80E6B57C-A34D-4442-AE09-181D11DF32E6}.Release|x86.Build.0 = Release|x86
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|x64.ActiveCfg = Release|Any CPU
+		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
