@@ -50,17 +50,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Learner\BiasSvdLearner.cs" />
-    <Compile Include="Learner\SvdLearner.cs" />
-    <Compile Include="LearningParameters.cs" />
+    <Compile Include="Model\BiasSvdModel.cs" />
+    <Compile Include="Model\IBiasSvdModel.cs" />
+    <Compile Include="Model\ISvdModel.cs" />
+    <Compile Include="Model\SvdModel.cs" />
+    <Compile Include="Prediction\BiasSvdPredictor.cs" />
+    <Compile Include="Prediction\IBasicSvdPredictor.cs" />
+    <Compile Include="Prediction\IBiasSvdPredictor.cs" />
+    <Compile Include="Prediction\ISvdPredictor.cs" />
+    <Compile Include="Prediction\BasicSvdPredictor.cs" />
+    <Compile Include="Training\BiasSvdTrainer.cs" />
+    <Compile Include="Training\ISvdTrainer.cs" />
+    <Compile Include="Training\SvdTrainerBase.cs" />
+    <Compile Include="Training\TrainingParameters.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rating.cs" />
-    <Compile Include="Learner\BasicSvdLearner.cs" />
+    <Compile Include="Training\BasicSvdTrainer.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

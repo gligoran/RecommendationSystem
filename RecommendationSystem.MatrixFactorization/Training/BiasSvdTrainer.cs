@@ -1,17 +1,34 @@
 ﻿using System.Collections.Generic;
+using RecommendationSystem.MatrixFactorization.Model;
 
-namespace RecommendationSystem.MatrixFactorization.Learner
+namespace RecommendationSystem.MatrixFactorization.Training
 {
-    public class BiasSvdLearner : SvdLearner
+    public class BiasSvdTrainer : SvdTrainerBase<IBiasSvdModel>
     {
         private float globalAverage;
         private float[] userBias;
         private float[] artistBias;
 
-        public BiasSvdLearner(List<Rating> ratings, List<string> users, List<string> artists)
+        public BiasSvdTrainer(List<Rating> ratings, List<string> users, List<string> artists)
             : base(ratings, users, artists)
         {
             ComputeBiases();
+        }
+
+        public override IBiasSvdModel TrainModel(TrainingParameters trainingParameters)
+        {
+            CalculateFeatures(trainingParameters);
+            return new BiasSvdModel(UserFeatures, ArtistFeatures, globalAverage, userBias, artistBias, trainingParameters);
+
+        }
+
+        protected override float PredictRatingUsingResiduals(int rating, int feature)
+        {
+            return ResidualRatingValues[rating] +
+                   UserFeatures[feature, Ratings[rating].UserIndex] * ArtistFeatures[feature, Ratings[rating].ArtistIndex] +
+                   globalAverage +
+                   userBias[Ratings[rating].UserIndex] +
+                   artistBias[Ratings[rating].ArtistIndex];
         }
 
         private void ComputeBiases()
@@ -43,24 +60,6 @@ namespace RecommendationSystem.MatrixFactorization.Learner
 
             for (var i = 0; i < artistBias.Length; i++)
                 artistBias[i] /= artistCount[i];
-        }
-
-        protected override float PredictRatingWithResiduals(int rating, int feature)
-        {
-            return ResidualRatingValues[rating] +
-                   UserFeatures[feature, Ratings[rating].UserIndex] * ArtistFeatures[feature, Ratings[rating].ArtistIndex] +
-                   globalAverage + 
-                   userBias[Ratings[rating].UserIndex] + 
-                   artistBias[Ratings[rating].ArtistIndex];
-        }
-
-        public override float PredictRating(int u, int a)
-        {
-            var rating = 0.0f;
-            for (var i = 0; i < LearningParameters.FeatureCount; i++)
-                rating += UserFeatures[i, u] * ArtistFeatures[i, a];
-
-            return rating + globalAverage + userBias[u] + artistBias[a];
         }
     }
 }
