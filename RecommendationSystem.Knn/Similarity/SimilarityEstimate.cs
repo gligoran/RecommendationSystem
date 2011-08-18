@@ -1,32 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RecommendationSystem.Knn.Similarity
 {
     public class SimilarityEstimate : IComparable<SimilarityEstimate>
     {
-        public User SimilarUser { get; set; }
+        public User.User SimilarUser { get; set; }
         public float Estimate { get; set; }
 
-        public SimilarityEstimate(User user, float estimate)
+        public SimilarityEstimate(User.User user, float estimate)
         {
-            this.SimilarUser = user;
-            this.Estimate = estimate;
+            SimilarUser = user;
+            Estimate = estimate;
         }
 
         public int CompareTo(SimilarityEstimate other)
         {
-            if (this.Estimate > other.Estimate)
-                return -1;
-
-            if (this.Estimate < other.Estimate)
-                return 1;
-
-            return 0;
+            return Estimate > other.Estimate ? -1 : (Estimate < other.Estimate ? 1 : 0);
         }
-        
+
         public override string ToString()
         {
             return string.Format("[{0}] {1}", Estimate, SimilarUser);

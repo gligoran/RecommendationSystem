@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RecommendationSystem.Knn.Recommendations
 {
@@ -12,19 +9,13 @@ namespace RecommendationSystem.Knn.Recommendations
 
         public Recommendation(string artist, float rating)
         {
-            this.Artist = artist;
-            this.Rating = rating;
+            Artist = artist;
+            Rating = rating;
         }
 
         public int CompareTo(Recommendation other)
         {
-            if (this.Rating > other.Rating)
-                return -1;
-
-            if (this.Rating < other.Rating)
-                return 1;
-
-            return 0;
+            return Rating > other.Rating ? -1 : (Rating < other.Rating ? 1 : 0);
         }
 
         public override string ToString()

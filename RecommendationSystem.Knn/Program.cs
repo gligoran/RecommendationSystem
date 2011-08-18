@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
+using RecommendationSystem.Knn.User;
 
 namespace RecommendationSystem.Knn
 {
     class Program
     {
-        private static Stopwatch timer = new Stopwatch();
-        static void Main(string[] args)
+        private static readonly Stopwatch timer = new Stopwatch();
+        static void Main()
         {
-            int t = 0;
+            int t;
             do
             {
                 Console.Write("Enter number of users to load (0 for all): ");
@@ -23,7 +23,7 @@ namespace RecommendationSystem.Knn
 
             // get users
             timer.Start();
-            var users = Manager.LoadData<PlayCountShareUser>(@"D:\Dataset\data-with-mbids.tsv", t).ToList<User>();
+            var users = Manager.LoadData<PlayCountShareUser>(@"D:\Dataset\data-with-mbids.tsv", t).ToList<User.User>();
             timer.Stop();
             Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
             
@@ -57,13 +57,13 @@ namespace RecommendationSystem.Knn
             Console.ReadLine();
         }
 
-        private static void SimilaritiesTester(List<User> users, ISimilarityEstimator similarityEstimator)
+        /*private static void SimilaritiesTester(List<User> users, ISimilarityEstimator similarityEstimator)
         {
-            int t = 0;
+            int t;
             Console.Write("Enter user index: ");
             while (int.TryParse(Console.ReadLine(), out t))
             {
-                float max = float.MinValue, c;
+                float max = float.MinValue;
                 int index = -1;
                 var a = users[t];
                 timer.Restart();
@@ -72,7 +72,7 @@ namespace RecommendationSystem.Knn
                     if (i == t)
                         continue;
 
-                    c = similarityEstimator.Similarity(a, users[i]);
+                    float c = similarityEstimator.Similarity(a, users[i]);
                     //if (c == 1)
                     //    Console.WriteLine("[{0}, {1}] = {2}", i, j, c);
 
@@ -87,6 +87,6 @@ namespace RecommendationSystem.Knn
                 Console.WriteLine("Max of {0} at {1} found in {2}ms.", max, index, timer.ElapsedMilliseconds);
                 Console.Write("Enter next user index: ");
             }
-        }
+        }*/
     }
 }

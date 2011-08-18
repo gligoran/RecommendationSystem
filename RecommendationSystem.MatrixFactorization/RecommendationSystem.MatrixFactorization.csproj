@@ -50,11 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Learner\BiasSvdLearner.cs" />
+    <Compile Include="Learner\SvdLearner.cs" />
+    <Compile Include="LearningParameters.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rating.cs" />
+    <Compile Include="Learner\BasicSvdLearner.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,7 +2,7 @@
 {
     public class AdjustedWeightedSumRatingAggregator : IRatingAggregator
     {
-        public float Aggregate(User user, string artist)
+        public float Aggregate(User.User user, string artist)
         {
             float k = 0.0f;
             float r = 0.0f;

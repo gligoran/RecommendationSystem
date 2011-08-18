@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using RecommendationSystem.Knn.Similarity;
+using System.Linq;
 using RecommendationSystem.Knn.Recommendations;
+using RecommendationSystem.Knn.Similarity;
 
 namespace RecommendationSystem.Knn
 {
@@ -12,16 +11,16 @@ namespace RecommendationSystem.Knn
     {
         #region LoadData
         public static IEnumerable<T> LoadData<T>(string filename, int limit = int.MaxValue, bool covertToRatings = false)
-            where T : User
+            where T : User.User
         {
             TextReader reader = new StreamReader(filename);
 
             string line;
-            string userId = String.Empty;
-            List<string[]> lines = new List<string[]>();
+            var userId = String.Empty;
+            var lines = new List<string[]>();
 
-            int count = limit;
-            string[] sep = new string[] { "\t" };
+            var count = limit;
+            var sep = new[] { "\t" };
             while ((line = reader.ReadLine()) != null && count > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
@@ -38,50 +37,47 @@ namespace RecommendationSystem.Knn
                     }
 
                     userId = parts[0];
-                    lines = new List<string[]>();
-                    lines.Add(parts);
+                    lines = new List<string[]> { parts };
                 }
             }
 
             //add last user if unlimited
             if (limit == int.MaxValue)
                 yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
-            
+
             reader.Close();
         }
         #endregion
 
         #region CalculateNeighbours
-        public static void CalculateKNearestNeighbours(List<User> users, ISimilarityEstimator similarityEstimator, int k = 3)
+        public static void CalculateKNearestNeighbours(List<User.User> users, ISimilarityEstimator similarityEstimator, int k = 3)
         {
-            for (int i = 0; i < users.Count; i++)
+            for (var i = 0; i < users.Count; i++)
             {
-                CalculateKNearestNeighboursForUser(users[i], users, similarityEstimator, offset: i + 1);
+                CalculateKNearestNeighboursForUser(users[i], users, similarityEstimator, i + 1);
             }
         }
 
-        public static void CalculateKNearestNeighboursForUser(User user, List<User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
+        public static void CalculateKNearestNeighboursForUser(User.User user, List<User.User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
         {
-            float s;
-            for (int i = offset; i < users.Count; i++)
+            for (var i = offset; i < users.Count; i++)
             {
                 if (user == users[i])
                     continue;
 
-                s = similarityEstimator.Similarity(user, users[i]);
+                var s = similarityEstimator.Similarity(user, users[i]);
 
-                if (s > 0.0)
-                {
-                    user.Neighbours.Add(new SimilarityEstimate(users[i], s));
-                    users[i].Neighbours.Add(new SimilarityEstimate(user, s));
+                if (s <= 0.0) continue;
 
-                    PruneNeighbours(user, k);
-                    PruneNeighbours(users[i], k);
-                }
+                user.Neighbours.Add(new SimilarityEstimate(users[i], s));
+                users[i].Neighbours.Add(new SimilarityEstimate(user, s));
+
+                PruneNeighbours(user, k);
+                PruneNeighbours(users[i], k);
             }
         }
 
-        public static void PruneNeighbours(User user, int k = 3)
+        public static void PruneNeighbours(User.User user, int k = 3)
         {
             user.Neighbours.Sort();
 
@@ -91,7 +87,7 @@ namespace RecommendationSystem.Knn
         #endregion
 
         #region GetRecommendations
-        public static List<Recommendation> GetRecommendations(User user, IRatingAggregator ratingAggregator, int n = 5)
+        public static List<Recommendation> GetRecommendations(User.User user, IRatingAggregator ratingAggregator, int n = 5)
         {
             if (user.Neighbours.Count == 0)
                 return null;
@@ -99,15 +95,13 @@ namespace RecommendationSystem.Knn
             var recommendations = new List<Recommendation>();
 
             var artists = new List<string>();
-            foreach (var neighbour in user.Neighbours)
-                artists = artists.Union(neighbour.SimilarUser.Ratings.Keys).ToList();
+            artists = user.Neighbours.Aggregate(artists, (current, neighbour) => current.Union(neighbour.SimilarUser.Ratings.Keys).ToList());
 
-            artists = artists.Except(user.Ratings.Keys).ToList<string>();
+            artists = artists.Except(user.Ratings.Keys).ToList();
 
-            float r;
             foreach (var artist in artists)
             {
-                r = ratingAggregator.Aggregate(user, artist);
+                float r = ratingAggregator.Aggregate(user, artist);
                 if (r > 0.0f)
                 {
                     recommendations.Add(new Recommendation(artist, r));

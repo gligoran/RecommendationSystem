@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
-
-namespace RecommendationSystem.MatrixFactorization
+﻿namespace RecommendationSystem.MatrixFactorization
 {
     public class Rating
     {
@@ -16,9 +10,9 @@ namespace RecommendationSystem.MatrixFactorization
 
         public Rating(int userIndex, int artistIndex, float value)
         {
-            this.UserIndex = userIndex;
-            this.ArtistIndex = artistIndex;
-            this.Value = value;
+            UserIndex = userIndex;
+            ArtistIndex = artistIndex;
+            Value = value;
         }
     }
 }

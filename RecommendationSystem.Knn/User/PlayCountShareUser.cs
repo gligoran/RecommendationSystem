@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Serialization;
-using System.Linq;
 using System;
+using System.Linq;
 
-namespace RecommendationSystem.Knn
+namespace RecommendationSystem.Knn.User
 {
-    public class PlayCountShareUser : User
+    public sealed class PlayCountShareUser : User
     {
         #region Constructor
-        public PlayCountShareUser(string userId, List<string[]> data)
+        public PlayCountShareUser(string userId, IEnumerable<string[]> data)
             : base(userId, data)
-        { }
+        {
+            PreprocessRatings();
+        }
         #endregion
 
         #region PreprocessRatings
@@ -19,7 +20,7 @@ namespace RecommendationSystem.Knn
             var oldRatings = Ratings;
             Ratings = new Dictionary<string, float>();
             foreach (var artist in oldRatings.Keys)
-                Ratings.Add(artist, oldRatings[artist] / (float)TotalPlays);
+                Ratings.Add(artist, oldRatings[artist] / TotalPlays);
 
             AverageRating = 1.0f / Ratings.Count;
         }
@@ -29,10 +30,7 @@ namespace RecommendationSystem.Knn
         public override string ToString()
         {
             string u = UserId + Environment.NewLine;
-            foreach (var play in Ratings)
-            {
-                u += string.Format("- {0} [{1}]{2}", play.Key, play.Value * TotalPlays, Environment.NewLine);
-            }
+            u = Ratings.Aggregate(u, (c, p) => c + string.Format("- {0} [{1}]{2}", p.Key, p.Value * TotalPlays, Environment.NewLine));
             u += string.Format("== {0} [{1}]{2}", Ratings.Count, TotalPlays, Environment.NewLine);
 
             return u;

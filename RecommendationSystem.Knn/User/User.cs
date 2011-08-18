@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using RecommendationSystem.Knn.Similarity;
 
-namespace RecommendationSystem.Knn
+namespace RecommendationSystem.Knn.User
 {
     public class User
     {
@@ -19,42 +18,36 @@ namespace RecommendationSystem.Knn
         #region Consturctor
         public User(string userId)
         {
-            this.UserId = userId;
-            this.TotalPlays = 0;
-            this.Ratings = new Dictionary<string, float>();
-            this.Neighbours = new List<SimilarityEstimate>();
+            UserId = userId;
+            TotalPlays = 0;
+            Ratings = new Dictionary<string, float>();
+            Neighbours = new List<SimilarityEstimate>();
         }
 
         /* Line is in format:
          * <user, mbid, artist, playcount>
         */
-        public User(string userId, List<string[]> lines)
+        public User(string userId, IEnumerable<string[]> lines)
             : this(userId)
         {
-            int count;
             foreach (var line in lines)
             {
-                count = int.Parse(line[3]);
-                if (this.Ratings.ContainsKey(line[2]))
-                    this.Ratings[line[2]] += count;
+                var count = int.Parse(line[3]);
+                if (Ratings.ContainsKey(line[2]))
+                    Ratings[line[2]] += count;
                 else
-                    this.Ratings.Add(line[2], count);
+                    Ratings.Add(line[2], count);
 
-                this.TotalPlays += count;
+                TotalPlays += count;
             }
-
-            PreprocessRatings();
         }
         #endregion
 
         #region ToString
         public override string ToString()
         {
-            string u = UserId + Environment.NewLine;
-            foreach (var play in Ratings)
-            {
-                u += string.Format("- {0} [{1}]{2}", play.Key, play.Value, Environment.NewLine);
-            }
+            var u = UserId + Environment.NewLine;
+            u = Ratings.Aggregate(u, (c, p) => c + string.Format("- {0} [{1}]{2}", p.Key, p.Value, Environment.NewLine));
             u += string.Format("== {0} [{1}]{2}", Ratings.Count, TotalPlays, Environment.NewLine);
 
             return u;

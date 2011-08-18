@@ -1,151 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Data.Entity;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace RecommendationSystem.MatrixFactorization
 {
     public static class Data
     {
-        #region ReloadData
-        public static void ReloadData(bool users = false, bool artists = false, bool ratings = false)
+        public static void ReprocessData(bool users = false, bool artists = false, bool ratings = false)
         {
-            if (users)
-            {
-                Console.WriteLine("Importing users...");
-                var u = GetUsersFromDataset(@"D:\Dataset\ratings.tsv").ToList();
-                Console.WriteLine("Users imported.");
+            var u = users ? ReprocessData(@"D:\Dataset\ratings.tsv", 2, @"d:\Dataset\users.rs") : LoadData(@"d:\Dataset\users.rs");
+            var a = artists ? ReprocessData(@"D:\Dataset\ratings.tsv", 3, @"d:\Dataset\artists.rs") : LoadData(@"d:\Dataset\artists.rs");
 
-                Console.WriteLine("Saving users...");
-                SaveUsers(u, @"d:\Dataset\users.rs");
-                Console.WriteLine("Save complete.");
-            }
+            if (!ratings)
+                return;
 
-            if (artists)
-            {
-                Console.WriteLine("Importing artists...");
-                var a = GetArtistsFromDataset(@"D:\Dataset\ratings.tsv").ToList();
-                Console.WriteLine("Artists imported.");
-
-                Console.WriteLine("Saving artists...");
-                SaveArtists(a, @"d:\Dataset\artists.rs");
-                Console.WriteLine("Save complete.");
-            }
-
-            if (ratings)
-            {
-                var u = LoadUsers(@"d:\Dataset\users.rs");
-                var a = LoadArtists(@"d:\Dataset\artists.rs");
-
-                Console.WriteLine("Importing ratings...");
-                var r = GetRatingsFromDataset(@"D:\Dataset\ratings.tsv", u, a).ToList();
-                Console.WriteLine("Ratings imported.");
-
-                Console.WriteLine("Saving ratings...");
-                SaveRatings(r, @"d:\Dataset\playcounts.rs");
-                Console.WriteLine("Save complete.");
-            }
+            var r = GetRatingsFromDataset(@"D:\Dataset\ratings.tsv", u, a).ToList();
+            SaveRatings(r, @"d:\Dataset\playcounts.rs");
         }
-        #endregion
 
-        #region Artists
-
-        #region GetArtistsFromDataset
-        public static SortedSet<string> GetArtistsFromDataset(string filename)
+        private static List<string> ReprocessData(string source, int column, string destination)
         {
-            TextReader reader = new StreamReader(filename);
-
-            var a = new SortedSet<string>();
-
-            string line;
-            string[] sep = new string[] { "\t" };
-            while ((line = reader.ReadLine()) != null)
-            {
-                var parts = line.Split(sep, StringSplitOptions.None);
-                a.Add(parts[2]);
-            }
-
-            reader.Close();
-            return a;
-        }
-        #endregion
-
-        #region LoadArtists
-        public static List<string> LoadArtists(string filename)
-        {
-            Stream stream = File.Open(filename, FileMode.Open);
-            BinaryFormatter bformatter = new BinaryFormatter();
-
-            List<string> artists = bformatter.Deserialize(stream) as List<string>;
-            stream.Close();
-
-            return artists;
-        }
-        #endregion
-
-        #region SaveArtists
-        public static void SaveArtists(List<string> artists, string filename)
-        {
-            Stream stream = File.Open(filename, FileMode.OpenOrCreate);
-            BinaryFormatter bformatter = new BinaryFormatter();
-
-            bformatter.Serialize(stream, artists);
-            stream.Close();
-        }
-        #endregion
-
-        #endregion
-
-        #region Users
-
-        #region GetUsersFromDataset
-        public static SortedSet<string> GetUsersFromDataset(string filename)
-        {
-            TextReader reader = new StreamReader(filename);
-
-            var u = new SortedSet<string>();
-
-            string line;
-            string[] sep = new string[] { "\t" };
-            while ((line = reader.ReadLine()) != null)
-            {
-                var parts = line.Split(sep, StringSplitOptions.None);
-                u.Add(parts[0]);
-            }
-
-            reader.Close();
+            var u = ImportFromDataset(source, column).ToList();
+            SaveData(u, destination);
             return u;
         }
-        #endregion
 
-        #region LoadUsers
-        public static List<string> LoadUsers(string filename)
+        public static SortedSet<string> ImportFromDataset(string filename, int column)
+        {
+            TextReader reader = new StreamReader(filename);
+
+            var i = new SortedSet<string>();
+
+            string line;
+            var sep = new[] { "\t" };
+            while ((line = reader.ReadLine()) != null)
+            {
+                var parts = line.Split(sep, StringSplitOptions.None);
+                i.Add(parts[column]);
+            }
+
+            reader.Close();
+            return i;
+        }
+
+        public static List<string> LoadData(string filename)
         {
             Stream stream = File.Open(filename, FileMode.Open);
-            BinaryFormatter bformatter = new BinaryFormatter();
+            var bformatter = new BinaryFormatter();
 
-            List<string> users = bformatter.Deserialize(stream) as List<string>;
+            var data = bformatter.Deserialize(stream) as List<string>;
             stream.Close();
 
-            return users;
+            return data;
         }
-        #endregion
 
-        #region SaveUsers
-        public static void SaveUsers(List<string> users, string filename)
+        public static void SaveData(List<string> data, string filename)
         {
             Stream stream = File.Open(filename, FileMode.OpenOrCreate);
-            BinaryFormatter bformatter = new BinaryFormatter();
+            var bformatter = new BinaryFormatter();
 
-            bformatter.Serialize(stream, users);
+            bformatter.Serialize(stream, data);
             stream.Close();
         }
-        #endregion
-
-        #endregion
 
         #region Ratings
 
@@ -155,7 +73,7 @@ namespace RecommendationSystem.MatrixFactorization
             TextReader reader = new StreamReader(filename);
 
             string line;
-            string[] sep = new string[] { "\t" };
+            var sep = new[] { "\t" };
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
@@ -185,7 +103,7 @@ namespace RecommendationSystem.MatrixFactorization
             var ratings = new List<Rating>();
 
             string line;
-            string[] sep = new string[] { "\t" };
+            var sep = new[] { "\t" };
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
@@ -209,8 +127,8 @@ namespace RecommendationSystem.MatrixFactorization
         {
             TextWriter writer = new StreamWriter(filename);
 
-            for (int i = 0; i < ratings.Count; i++)
-                writer.WriteLine("{0}\t{1}\t{2}", ratings[i].UserIndex, ratings[i].ArtistIndex, ratings[i].Value);
+            foreach (var t in ratings)
+                writer.WriteLine("{0}\t{1}\t{2}", t.UserIndex, t.ArtistIndex, t.Value);
 
             writer.Flush();
             writer.Close();
@@ -235,10 +153,10 @@ namespace RecommendationSystem.MatrixFactorization
             foreach (var user in users)
             {
                 var u = user.OrderByDescending(r => r.Value).ToList();
-                for (int j = 0; j < user.Count; j++)
-                    user[j].Value = 5 - j * 5 / user.Count;
+                for (var j = 0; j < u.Count; j++)
+                    u[j].Value = 5 - j * 5 / u.Count;
 
-                ratings.AddRange(user);
+                ratings.AddRange(u);
             }
 
             return ratings;
