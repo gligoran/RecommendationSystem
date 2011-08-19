@@ -1,8 +1,10 @@
-﻿namespace RecommendationSystem.Knn.Recommendations
+﻿using RecommendationSystem.Knn.Users;
+
+namespace RecommendationSystem.Knn.Recommendations
 {
     public class WeightedSumRatingAggregator : IRatingAggregator
     {
-        public float Aggregate(User.User user, string artist)
+        public float Aggregate(User user, string artist)
         {
             var k = 0.0f;
             var r = 0.0f;

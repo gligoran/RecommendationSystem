@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
-using RecommendationSystem.Knn.User;
+using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn
 {
@@ -23,7 +23,7 @@ namespace RecommendationSystem.Knn
 
             // get users
             timer.Start();
-            var users = Manager.LoadData<PlayCountShareUser>(@"D:\Dataset\data-with-mbids.tsv", t).ToList<User.User>();
+            var users = Manager.LoadData<PlayCountShareUser>(@"D:\Dataset\data-with-mbids.tsv", t).ToList<User>();
             timer.Stop();
             Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
             

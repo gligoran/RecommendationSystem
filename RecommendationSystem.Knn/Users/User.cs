@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Knn.Similarity;
 
-namespace RecommendationSystem.Knn.User
+namespace RecommendationSystem.Knn.Users
 {
     public class User
     {

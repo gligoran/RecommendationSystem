@@ -1,7 +1,9 @@
-﻿namespace RecommendationSystem.Knn.Similarity
+﻿using RecommendationSystem.Knn.Users;
+
+namespace RecommendationSystem.Knn.Similarity
 {
     public interface ISimilarityEstimator
     {
-        float Similarity(User.User first, User.User second);
+        float Similarity(User first, User second);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn.Similarity
 {
     public class CosineSimilarityEstimator : ISimilarityEstimator
     {
-        public float Similarity(User.User first, User.User second)
+        public float Similarity(User first, User second)
         {
             float sumNum = 0.0f, sumX = 0.0f, sumY = 0.0f;
 

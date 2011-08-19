@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace RecommendationSystem.Knn.User
+namespace RecommendationSystem.Knn.Users
 {
     public sealed class PlayCountShareUser : User
     {

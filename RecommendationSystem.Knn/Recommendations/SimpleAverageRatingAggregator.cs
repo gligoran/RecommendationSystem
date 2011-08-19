@@ -1,8 +1,10 @@
-﻿namespace RecommendationSystem.Knn.Recommendations
+﻿using RecommendationSystem.Knn.Users;
+
+namespace RecommendationSystem.Knn.Recommendations
 {
     public class SimpleAverageRatingAggregator : IRatingAggregator
     {
-        public float Aggregate(User.User user, string artist)
+        public float Aggregate(User user, string artist)
         {
             var r = 0.0f;
             foreach (var u in user.Neighbours)

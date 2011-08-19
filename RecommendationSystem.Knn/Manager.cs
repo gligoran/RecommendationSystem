@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
+using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn
 {
@@ -11,7 +12,7 @@ namespace RecommendationSystem.Knn
     {
         #region LoadData
         public static IEnumerable<T> LoadData<T>(string filename, int limit = int.MaxValue, bool covertToRatings = false)
-            where T : User.User
+            where T : User
         {
             TextReader reader = new StreamReader(filename);
 
@@ -50,7 +51,7 @@ namespace RecommendationSystem.Knn
         #endregion
 
         #region CalculateNeighbours
-        public static void CalculateKNearestNeighbours(List<User.User> users, ISimilarityEstimator similarityEstimator, int k = 3)
+        public static void CalculateKNearestNeighbours(List<User> users, ISimilarityEstimator similarityEstimator, int k = 3)
         {
             for (var i = 0; i < users.Count; i++)
             {
@@ -58,7 +59,7 @@ namespace RecommendationSystem.Knn
             }
         }
 
-        public static void CalculateKNearestNeighboursForUser(User.User user, List<User.User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
+        public static void CalculateKNearestNeighboursForUser(User user, List<User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
         {
             for (var i = offset; i < users.Count; i++)
             {
@@ -77,7 +78,7 @@ namespace RecommendationSystem.Knn
             }
         }
 
-        public static void PruneNeighbours(User.User user, int k = 3)
+        public static void PruneNeighbours(User user, int k = 3)
         {
             user.Neighbours.Sort();
 
@@ -87,7 +88,7 @@ namespace RecommendationSystem.Knn
         #endregion
 
         #region GetRecommendations
-        public static List<Recommendation> GetRecommendations(User.User user, IRatingAggregator ratingAggregator, int n = 5)
+        public static List<Recommendation> GetRecommendations(User user, IRatingAggregator ratingAggregator, int n = 5)
         {
             if (user.Neighbours.Count == 0)
                 return null;

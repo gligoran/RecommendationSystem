@@ -1,13 +1,14 @@
 ﻿using System;
+using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn.Similarity
 {
     public class SimilarityEstimate : IComparable<SimilarityEstimate>
     {
-        public User.User SimilarUser { get; set; }
+        public User SimilarUser { get; set; }
         public float Estimate { get; set; }
 
-        public SimilarityEstimate(User.User user, float estimate)
+        public SimilarityEstimate(User user, float estimate)
         {
             SimilarUser = user;
             Estimate = estimate;

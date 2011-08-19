@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RecommendationSystem.Knn.User
+namespace RecommendationSystem.Knn.Users
 {
     public sealed class OneToFiveRatingUser : User
     {
