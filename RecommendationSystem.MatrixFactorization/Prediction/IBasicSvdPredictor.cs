@@ -1,4 +1,4 @@
-using RecommendationSystem.MatrixFactorization.Model;
+using RecommendationSystem.MatrixFactorization.Models;
 
 namespace RecommendationSystem.MatrixFactorization.Prediction
 {

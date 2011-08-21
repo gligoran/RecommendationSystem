@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RecommendationSystem.Data.Entities;
-using RecommendationSystem.MatrixFactorization.Model;
+using RecommendationSystem.Entities;
+using RecommendationSystem.MatrixFactorization.Models;
 
 namespace RecommendationSystem.MatrixFactorization.Training
 {
     public abstract class SvdTrainerBase<TSvdModel> : ISvdTrainer<TSvdModel>
         where TSvdModel : ISvdModel
     {
-        protected float[,] UserFeatures;
-        protected float[,] ArtistFeatures;
         protected float[] ResidualRatingValues;
         public List<string> Users { get; set; }
         public List<string> Artists { get; set; }
@@ -26,16 +24,22 @@ namespace RecommendationSystem.MatrixFactorization.Training
             Artists = artists;
         }
 
+        public TSvdModel TrainModel()
+        {
+            return TrainModel(new TrainingParameters());
+        }
+
         public abstract TSvdModel TrainModel(TrainingParameters trainingParameters);
 
-        protected void CalculateFeatures(TrainingParameters trainingParameters)
+        protected void CalculateFeatures(TSvdModel model, TrainingParameters trainingParameters)
         {
             //init
-            UserFeatures = new float[trainingParameters.FeatureCount,Users.Count];
-            ArtistFeatures = new float[trainingParameters.FeatureCount,Artists.Count];
+            model.UserFeatures = new float[trainingParameters.FeatureCount,Users.Count];
+            model.ArtistFeatures = new float[trainingParameters.FeatureCount,Artists.Count];
+
             ResidualRatingValues = new float[Ratings.Count];
-            UserFeatures.Populate(0.1f);
-            ArtistFeatures.Populate(0.1f);
+            model.UserFeatures.Populate(0.1f);
+            model.ArtistFeatures.Populate(0.1f);
 
             rmsePrev = float.MaxValue;
             rmse = float.MaxValue;
@@ -47,20 +51,20 @@ namespace RecommendationSystem.MatrixFactorization.Training
                 Console.WriteLine("Training feature {0}", f);
 #endif
 
-                ConvergeFeature(f, trainingParameters);
-                CacheResidualRatings(f);
+                ConvergeFeature(model, f, trainingParameters);
+                CacheResidualRatings(model, f);
             }
         }
 
-        private void ConvergeFeature(int f, TrainingParameters trainingParameters)
+        private void ConvergeFeature(TSvdModel model, int f, TrainingParameters trainingParameters)
         {
             var count = 0;
             var rmseDiff = float.MaxValue;
 
-            while (count < trainingParameters.EpochLimit)
+            while (count < trainingParameters.EpochLimit && rmseDiff > 0.0f)
             {
                 rmsePrev = rmse;
-                rmse = TrainFeature(f, trainingParameters);
+                rmse = TrainFeature(model, f, trainingParameters);
                 rmseDiff = rmsePrev - rmse;
 
 #if DEBUG
@@ -72,30 +76,30 @@ namespace RecommendationSystem.MatrixFactorization.Training
             rmsePrev = rmse;
         }
 
-        protected float TrainFeature(int f, TrainingParameters trainingParameters)
+        protected float TrainFeature(TSvdModel model, int f, TrainingParameters trainingParameters)
         {
-            var e = Ratings.Select((r, i) => TrainSample(i, f, trainingParameters)).Sum() / Ratings.Count;
+            var e = Ratings.Select((r, i) => TrainSample(model, i, f, trainingParameters)).Sum() / Ratings.Count;
             return (float)Math.Sqrt(e);
         }
 
-        protected float TrainSample(int r, int f, TrainingParameters trainingParameters)
+        protected float TrainSample(TSvdModel model, int r, int f, TrainingParameters trainingParameters)
         {
-            var e = Ratings[r].Value - PredictRatingUsingResiduals(r, f);
-            var uv = UserFeatures[f, Ratings[r].UserIndex];
+            var e = Ratings[r].Value - PredictRatingUsingResiduals(model, r, f);
+            var uv = model.UserFeatures[f, Ratings[r].UserIndex];
 
-            UserFeatures[f, Ratings[r].UserIndex] += trainingParameters.LRate *
-                                                     (e * ArtistFeatures[f, Ratings[r].ArtistIndex] - trainingParameters.K * UserFeatures[f, Ratings[r].UserIndex]);
-            ArtistFeatures[f, Ratings[r].ArtistIndex] += trainingParameters.LRate * (e * uv - trainingParameters.K * ArtistFeatures[f, Ratings[r].ArtistIndex]);
+            model.UserFeatures[f, Ratings[r].UserIndex] += trainingParameters.LRate *
+                                                           (e * model.ArtistFeatures[f, Ratings[r].ArtistIndex] - trainingParameters.K * model.UserFeatures[f, Ratings[r].UserIndex]);
+            model.ArtistFeatures[f, Ratings[r].ArtistIndex] += trainingParameters.LRate * (e * uv - trainingParameters.K * model.ArtistFeatures[f, Ratings[r].ArtistIndex]);
 
             return e * e;
         }
 
-        protected abstract float PredictRatingUsingResiduals(int rating, int feature);
+        protected abstract float PredictRatingUsingResiduals(TSvdModel model, int rating, int feature);
 
-        private void CacheResidualRatings(int f)
+        private void CacheResidualRatings(TSvdModel model, int f)
         {
             for (var i = 0; i < Ratings.Count; i++)
-                ResidualRatingValues[i] += UserFeatures[f, Ratings[i].UserIndex] * ArtistFeatures[f, Ratings[i].ArtistIndex];
+                ResidualRatingValues[i] += model.UserFeatures[f, Ratings[i].UserIndex] * model.ArtistFeatures[f, Ratings[i].ArtistIndex];
         }
     }
 }

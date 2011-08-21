@@ -1,49 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using RecommendationSystem.Entities;
 using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn.Similarity
 {
-    public class PearsonSimilarityEstimator : ISimilarityEstimator
+    public class PearsonSimilarityEstimator : SimilarityEstimatorBase
     {
-        public float Similarity(User first, User second)
+        public override float GetSimilarity(IUser first, IKnnUser second)
         {
-            float rXavg = 0.0f,
-                  rYavg = 0.0f;
             float sumNum = 0.0f,
                   sumX = 0.0f,
                   sumY = 0.0f;
 
-            var keys = new List<string>();
-            foreach (var artist in first.Ratings.Keys)
-            {
-                if (!second.Ratings.Keys.Contains(artist))
-                    continue;
-
-                keys.Add(artist);
-
-                rXavg += first.Ratings[artist];
-                rYavg += second.Ratings[artist];
-            }
-
-            if (keys.Count == 0)
+            var ratingPairs = GetRatingPairs(first, second);
+            if (ratingPairs == null)
                 return 0.0f;
 
-            rXavg /= keys.Count;
-            rYavg /= keys.Count;
+            var rXavg = ratingPairs.Average(ratingPair => ratingPair.Item1.Value);
+            var rYavg = ratingPairs.Average(ratingPair => ratingPair.Item2.Value);
 
-            foreach (var artist in keys)
+            foreach (var ratingPair in ratingPairs)
             {
-                var rX = first.Ratings[artist] - rXavg;
-                var rY = second.Ratings[artist] - rYavg;
+                var rX = ratingPair.Item1.Value - rXavg;
+                var rY = ratingPair.Item2.Value - rYavg;
 
                 sumNum += rX * rY;
-                sumX += (float)Math.Pow(rX, 2);
-                sumY += (float)Math.Pow(rY, 2);
+                sumX += rX * rX;
+                sumY += rY * rY;
             }
 
-            var mass = keys.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
+            var mass = ratingPairs.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
             var r = sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
 
             if (float.IsNaN(r))

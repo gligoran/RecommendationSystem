@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using RecommendationSystem.Data;
-using RecommendationSystem.MatrixFactorization.Prediction;
-using RecommendationSystem.MatrixFactorization.Training;
 
 namespace RecommendationSystem.MatrixFactorization
 {
     public static class Program
     {
-        public static Stopwatch Timer = new Stopwatch();
-        private const string me = "cb732aa2abb82e9527716dc9f083110b22265380";
+        //public static Stopwatch Timer = new Stopwatch();
+        //private const string me = "cb732aa2abb82e9527716dc9f083110b22265380";
 
         private static void Main()
         {
+            //TODO: when predictors are implemented, reeanble this
             //load preprocessed data
-            Timer.Start();
+            /*Timer.Start();
             List<string> users,
                          artists;
             UserProvider.Load(@"D:\Dataset\users.rs", out users);
@@ -44,7 +39,7 @@ namespace RecommendationSystem.MatrixFactorization
             var recs = rValues.ToList();
             recs = recs.OrderByDescending(r => r.Value).ToList();
             for (var i = 0; i < 10; i++)
-                Console.WriteLine("- {0} ({1})", recs[i].Key, recs[i].Value);
+                Console.WriteLine("- {0} ({1})", recs[i].Key, recs[i].Value);*/
 
             Console.ReadLine();
         }

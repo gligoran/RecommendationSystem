@@ -1,10 +1,11 @@
 using System.Collections.Generic;
-using RecommendationSystem.Data.Entities;
-using RecommendationSystem.MatrixFactorization.Model;
+using RecommendationSystem.Entities;
+using RecommendationSystem.MatrixFactorization.Models;
+using RecommendationSystem.Training;
 
 namespace RecommendationSystem.MatrixFactorization.Training
 {
-    public interface ISvdTrainer<out TSvdModel>
+    public interface ISvdTrainer<out TSvdModel> : ITrainer<TSvdModel>
         where TSvdModel : ISvdModel
     {
         List<string> Users { get; set; }

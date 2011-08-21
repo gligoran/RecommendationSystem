@@ -1,19 +1,19 @@
-﻿using System;
+﻿using RecommendationSystem.Entities;
 
-namespace RecommendationSystem.Knn.Recommendations
+namespace RecommendationSystem.Recommendations
 {
-    public class Recommendation : IComparable<Recommendation>
+    public class Recommendation : IRecommendation
     {
-        public string Artist { get; set; }
+        public IArtist Artist { get; set; }
         public float Rating { get; set; }
 
-        public Recommendation(string artist, float rating)
+        public Recommendation(IArtist artist, float rating)
         {
             Artist = artist;
             Rating = rating;
         }
 
-        public int CompareTo(Recommendation other)
+        public int CompareTo(IRecommendation other)
         {
             return Rating > other.Rating ? -1 : (Rating < other.Rating ? 1 : 0);
         }

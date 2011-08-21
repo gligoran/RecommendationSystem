@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RecommendationSystem.Data.Entities;
+using RecommendationSystem.Entities;
 
 namespace RecommendationSystem.Data
 {
@@ -49,7 +49,7 @@ namespace RecommendationSystem.Data
         #region Text
 
         #region Save
-        public static void Save(string filename, List<IArtist> artists)
+        public static void Save(string filename, IEnumerable<IArtist> artists)
         {
             TextWriter writer = new StreamWriter(filename);
 

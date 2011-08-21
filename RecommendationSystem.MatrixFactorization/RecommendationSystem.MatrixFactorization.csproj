@@ -50,10 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\BiasSvdModel.cs" />
-    <Compile Include="Model\IBiasSvdModel.cs" />
-    <Compile Include="Model\ISvdModel.cs" />
-    <Compile Include="Model\SvdModel.cs" />
+    <Compile Include="Models\BiasBasicSvdModel.cs" />
+    <Compile Include="Models\IBiasSvdModel.cs" />
+    <Compile Include="Models\ISvdModel.cs" />
+    <Compile Include="Models\BasicSvdModel.cs" />
     <Compile Include="Prediction\BiasSvdPredictor.cs" />
     <Compile Include="Prediction\IBasicSvdPredictor.cs" />
     <Compile Include="Prediction\IBiasSvdPredictor.cs" />
@@ -72,6 +72,10 @@
     <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">
       <Project>{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}</Project>
       <Name>RecommendationSystem.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
+      <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
+      <Name>RecommendationSystem</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,4 @@
-namespace RecommendationSystem.Data.Entities
+namespace RecommendationSystem.Entities
 {
     public interface IRating
     {

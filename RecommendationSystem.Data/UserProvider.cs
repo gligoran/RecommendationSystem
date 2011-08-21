@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using RecommendationSystem.Data.Entities;
+using RecommendationSystem.Entities;
 
 namespace RecommendationSystem.Data
 {
@@ -44,7 +44,7 @@ namespace RecommendationSystem.Data
         #region Text
 
         #region Save
-        public static void Save(string filename, List<IUser> users)
+        public static void Save(string filename, IEnumerable<IUser> users)
         {
             TextWriter writer = new StreamWriter(filename);
 

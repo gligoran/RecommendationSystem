@@ -1,93 +1,74 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using RecommendationSystem.Data;
+using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
-using RecommendationSystem.Knn.Users;
+using RecommendationSystem.Knn.Training;
 
 namespace RecommendationSystem.Knn
 {
     public static class Program
     {
         private static readonly Stopwatch timer = new Stopwatch();
+        private const string myUserId = "cb732aa2abb82e9527716dc9f083110b22265380";
 
         private static void Main()
         {
-            int t;
-            do
-            {
-                Console.Write("Enter number of users to load (0 for all): ");
-            } while (!int.TryParse(Console.ReadLine(), out t));
-
-            if (t == 0)
-                t = int.MaxValue;
-
-            // get users
             timer.Start();
-            var users = Manager.LoadData<PlayCountShareUser>(@"D:\Dataset\data-with-mbids.tsv", t).ToList<User>();
+            List<string> userLut,
+                         artistLut;
+            var users = UserProvider.Load(DataFiles.Users, out userLut);
+            var artists = ArtistProvider.Load(DataFiles.Artists, out artistLut);
+            users.PopulateWithRatings(DataFiles.EqualFerquencyFiveScaleRatings);
             timer.Stop();
             Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
 
-            if (t > 285392)
-            {
-                var me = users.Where(u => u.UserId == "cb732aa2abb82e9527716dc9f083110b22265380").First();
-                //Console.WriteLine(me);
-                //SimilaritiesTester(users, new CosineSimilarityEstimator());
-                //var meIndex = users.IndexOf(me);
+            var me = users[userLut.BinarySearch(myUserId)];
+            var lp = artistLut.BinarySearch("linkin park");
+            me.Ratings.Remove(me.Ratings.First(rating => rating.ArtistIndex == lp));
 
-                Manager.CalculateKNearestNeighboursForUser(me, users, new PearsonSimilarityEstimator());
-                //foreach (var n in me.Neighbours)
-                //    Console.WriteLine(n);
+            var trainer = new KnnTrainer(users);
+            var model = trainer.TrainModel();
+            var recommender = new KnnRecommender(new CosineSimilarityEstimator(), new SimpleAverageRatingAggregator());
+            var recommendations = recommender.GenerateRecommendations(me, model, artists);
+            Debug.WriteLine("Cosine, SimpleAverage:");
+            foreach (var recommendation in recommendations)
+                Debug.WriteLine("- {0}", recommendation);
 
-                var rs = Manager.GetRecommendations(me, new SimpleAverageRatingAggregator(), 24);
-                Console.WriteLine("Simple average rating aggregation:");
-                foreach (var r in rs)
-                    Console.WriteLine("- {0}", r);
+            recommender = new KnnRecommender(new CosineSimilarityEstimator(), new WeightedSumRatingAggregator());
+            recommendations = recommender.GenerateRecommendations(me, model, artists);
+            Debug.WriteLine("Cosine, WeightedSum:");
+            foreach (var recommendation in recommendations)
+                Debug.WriteLine("- {0}", recommendation);
 
-                rs = Manager.GetRecommendations(me, new WeightedSumRatingAggregator(), 24);
-                Console.WriteLine("Weighted sum rating aggregation:");
-                foreach (var r in rs)
-                    Console.WriteLine("- {0}", r);
+            recommender = new KnnRecommender(new CosineSimilarityEstimator(), new AdjustedWeightedSumRatingAggregator());
+            recommendations = recommender.GenerateRecommendations(me, model, artists);
+            Debug.WriteLine("Cosine, AdjustedWeightedSum:");
+            foreach (var recommendation in recommendations)
+                Debug.WriteLine("- {0}", recommendation);
 
-                rs = Manager.GetRecommendations(me, new AdjustedWeightedSumRatingAggregator(), 24);
-                Console.WriteLine("Adjusted weighted sum rating aggregation:");
-                foreach (var r in rs)
-                    Console.WriteLine("- {0}", r);
-            }
+            recommender = new KnnRecommender(new PearsonSimilarityEstimator(), new SimpleAverageRatingAggregator());
+            recommendations = recommender.GenerateRecommendations(me, model, artists);
+            Debug.WriteLine("Pearson, SimpleAverage:");
+            foreach (var recommendation in recommendations)
+                Debug.WriteLine("- {0}", recommendation);
+
+            recommender = new KnnRecommender(new PearsonSimilarityEstimator(), new WeightedSumRatingAggregator());
+            recommendations = recommender.GenerateRecommendations(me, model, artists);
+            Debug.WriteLine("Pearson, WeightedSum:");
+            foreach (var recommendation in recommendations)
+                Debug.WriteLine("- {0}", recommendation);
+
+            recommender = new KnnRecommender(new PearsonSimilarityEstimator(), new AdjustedWeightedSumRatingAggregator());
+            recommendations = recommender.GenerateRecommendations(me, model, artists);
+            Debug.WriteLine("Pearson, AdjustedWeightedSum:");
+            foreach (var recommendation in recommendations)
+                Debug.WriteLine("- {0}", recommendation);
 
             Console.ReadLine();
         }
-
-        /*private static void SimilaritiesTester(List<User> users, ISimilarityEstimator similarityEstimator)
-        {
-            int t;
-            Console.Write("Enter user index: ");
-            while (int.TryParse(Console.ReadLine(), out t))
-            {
-                float max = float.MinValue;
-                int index = -1;
-                var a = users[t];
-                timer.Restart();
-                for (int i = 0; i < users.Count(); i++)
-                {
-                    if (i == t)
-                        continue;
-
-                    float c = similarityEstimator.Similarity(a, users[i]);
-                    //if (c == 1)
-                    //    Console.WriteLine("[{0}, {1}] = {2}", i, j, c);
-
-                    if (c > max)
-                    {
-                        max = c;
-                        index = i;
-                    }
-                }
-                timer.Stop();
-
-                Console.WriteLine("Max of {0} at {1} found in {2}ms.", max, index, timer.ElapsedMilliseconds);
-                Console.Write("Enter next user index: ");
-            }
-        }*/
     }
 }

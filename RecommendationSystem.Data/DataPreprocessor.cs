@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RecommendationSystem.Data.Entities;
+using RecommendationSystem.Entities;
 
 namespace RecommendationSystem.Data
 {

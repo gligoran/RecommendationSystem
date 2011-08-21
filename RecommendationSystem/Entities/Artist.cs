@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RecommendationSystem.Data.Entities
+namespace RecommendationSystem.Entities
 {
     public class Artist : IArtist
     {
@@ -11,6 +11,11 @@ namespace RecommendationSystem.Data.Entities
         {
             Name = name;
             Ratings = new List<IRating>();
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
 
         #region IComparable

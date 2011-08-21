@@ -1,4 +1,4 @@
-namespace RecommendationSystem.MatrixFactorization.Model
+namespace RecommendationSystem.MatrixFactorization.Models
 {
     public interface IBiasSvdModel : ISvdModel
     {

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Matrix
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Data", "RecommendationSystem.Data\RecommendationSystem.Data.csproj", "{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem", "RecommendationSystem\RecommendationSystem.csproj", "{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,18 @@ Global
 		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|x64.ActiveCfg = Release|Any CPU
 		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}.Release|x86.ActiveCfg = Release|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

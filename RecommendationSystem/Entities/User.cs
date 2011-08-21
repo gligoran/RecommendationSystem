@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RecommendationSystem.Data.Entities
+namespace RecommendationSystem.Entities
 {
     public class User : IUser
     {
@@ -19,17 +19,12 @@ namespace RecommendationSystem.Data.Entities
             Ratings = new List<IRating>();
         }
 
-        public User(string userId, string gender = "", int age = -1, string country = "")
+        public User(string userId, DateTime signUp, string gender = "", int age = -1, string country = "")
             : this(userId)
         {
             Gender = gender;
             Age = age;
             Country = country;
-        }
-
-        public User(string userId, DateTime signUp, string gender = "", int age = -1, string country = "")
-            : this(userId, gender, age, country)
-        {
             SignUp = signUp;
         }
         #endregion

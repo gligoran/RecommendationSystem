@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using RecommendationSystem.Data.Entities;
+using RecommendationSystem.Entities;
 
 namespace RecommendationSystem.Data
 {
@@ -57,7 +57,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region Save
-        public static void Save(string filename, List<IRating> ratings)
+        public static void Save(string filename, IEnumerable<IRating> ratings)
         {
             TextWriter writer = new StreamWriter(filename);
 
@@ -70,13 +70,13 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region PopulateUsersWithRatings
-        public static void PopulateUsersWithRatings(List<IUser> users, string ratingsFile)
+        public static void PopulateWithRatings(this List<IUser> users, string ratingsFile)
         {
             var ratings = Load(ratingsFile);
-            PopulateUsersWithRatings(users, ratings);
+            users.PopulateWithRatings(ratings);
         }
 
-        public static void PopulateUsersWithRatings(List<IUser> users, List<IRating> ratings)
+        public static void PopulateWithRatings(this List<IUser> users, IEnumerable<IRating> ratings)
         {
             foreach (var rating in ratings)
                 users[rating.UserIndex].Ratings.Add(rating);
@@ -84,13 +84,13 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region PopulateArtistsWithRatings
-        public static void PopulateArtistsWithRatings(List<IArtist> artists, string ratingsFile)
+        public static void PopulateWithRatings(this List<IArtist> artists, string ratingsFile)
         {
             var ratings = Load(ratingsFile);
-            PopulateArtistsWithRatings(artists, ratings);
+            artists.PopulateWithRatings(ratings);
         }
 
-        public static void PopulateArtistsWithRatings(List<IArtist> artists, List<IRating> ratings)
+        public static void PopulateWithRatings(this List<IArtist> artists, IEnumerable<IRating> ratings)
         {
             foreach (var rating in ratings)
                 artists[rating.ArtistIndex].Ratings.Add(rating);

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using RecommendationSystem.Data.Entities;
-using RecommendationSystem.MatrixFactorization.Model;
+using RecommendationSystem.Entities;
+using RecommendationSystem.MatrixFactorization.Models;
 
 namespace RecommendationSystem.MatrixFactorization.Training
 {
@@ -12,13 +12,14 @@ namespace RecommendationSystem.MatrixFactorization.Training
 
         public override ISvdModel TrainModel(TrainingParameters trainingParameters)
         {
-            CalculateFeatures(trainingParameters);
-            return new SvdModel(UserFeatures, ArtistFeatures, trainingParameters);
+            var model = new BasicSvdModel();
+            CalculateFeatures(model, trainingParameters);
+            return model;
         }
 
-        protected override float PredictRatingUsingResiduals(int rating, int feature)
+        protected override float PredictRatingUsingResiduals(ISvdModel model, int rating, int feature)
         {
-            return ResidualRatingValues[rating] + UserFeatures[feature, Ratings[rating].UserIndex] * ArtistFeatures[feature, Ratings[rating].ArtistIndex];
+            return ResidualRatingValues[rating] + model.UserFeatures[feature, Ratings[rating].UserIndex] * model.ArtistFeatures[feature, Ratings[rating].ArtistIndex];
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RecommendationSystem.Data.Entities
+namespace RecommendationSystem.Entities
 {
     public interface IArtist : IComparable<IArtist>, IEquatable<IArtist>
     {
