@@ -6,8 +6,8 @@ namespace RecommendationSystem.Knn.Recommendations
     {
         public float Aggregate(User user, string artist)
         {
-            float k = 0.0f;
-            float r = 0.0f;
+            var k = 0.0f;
+            var r = 0.0f;
             foreach (var u in user.Neighbours)
             {
                 k += u.Estimate;

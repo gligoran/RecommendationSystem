@@ -1,5 +1,3 @@
-using System;
-
 namespace RecommendationSystem.Data.Entities
 {
     public interface IRating

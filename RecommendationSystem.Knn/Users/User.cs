@@ -27,6 +27,7 @@ namespace RecommendationSystem.Knn.Users
         /* Line is in format:
          * <user, mbid, artist, playcount>
         */
+
         public User(string userId, IEnumerable<string[]> lines)
             : this(userId)
         {
@@ -55,8 +56,8 @@ namespace RecommendationSystem.Knn.Users
         #endregion
 
         #region Virtual Methods
-        protected virtual void PreprocessRatings() { }
+        protected virtual void PreprocessRatings()
+        {}
         #endregion
-
     }
 }

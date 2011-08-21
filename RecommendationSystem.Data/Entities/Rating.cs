@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RecommendationSystem.Data.Entities
+﻿namespace RecommendationSystem.Data.Entities
 {
     public class Rating : IRating
     {
@@ -8,7 +6,8 @@ namespace RecommendationSystem.Data.Entities
         public int ArtistIndex { get; set; }
         public float Value { get; set; }
 
-        public Rating() { }
+        public Rating()
+        {}
 
         public Rating(int userIndex, int artistIndex, float value)
         {

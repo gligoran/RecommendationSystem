@@ -16,16 +16,16 @@ namespace RecommendationSystem.Data
             var ratings = new List<IRating>();
 
             string line;
-            var sep = new[] { "\t" };
+            var sep = new[] {"\t"};
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
 
                 ratings.Add(new Rating(
-                    users.BinarySearch(parts[0]),
-                    artists.BinarySearch(parts[2]),
-                    float.Parse(parts[3])
-                ));
+                                users.BinarySearch(parts[0]),
+                                artists.BinarySearch(parts[2]),
+                                float.Parse(parts[3])
+                                ));
 
                 limit--;
             }
@@ -43,7 +43,7 @@ namespace RecommendationSystem.Data
             var ratings = new List<IRating>();
 
             string line;
-            var sep = new[] { "\t" };
+            var sep = new[] {"\t"};
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);

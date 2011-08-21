@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using RecommendationSystem.Data.Entities;
 
 namespace RecommendationSystem.Data
@@ -25,7 +24,7 @@ namespace RecommendationSystem.Data
             var users = new SortedSet<IUser>();
 
             string line;
-            var sep = new[] { "\t" };
+            var sep = new[] {"\t"};
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);

@@ -13,11 +13,12 @@ namespace RecommendationSystem.MatrixFactorization
         public static Stopwatch Timer = new Stopwatch();
         private const string me = "cb732aa2abb82e9527716dc9f083110b22265380";
 
-        static void Main()
+        private static void Main()
         {
             //load preprocessed data
             Timer.Start();
-            List<string> users, artists;
+            List<string> users,
+                         artists;
             UserProvider.Load(@"D:\Dataset\users.rs", out users);
             ArtistProvider.Load(@"D:\Dataset\artists.rs", out artists);
             var ratings = RatingProvider.Load(@"D:\Dataset\ratings.rs");

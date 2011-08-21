@@ -8,7 +8,9 @@ namespace RecommendationSystem.Knn.Similarity
     {
         public float Similarity(User first, User second)
         {
-            float sumNum = 0.0f, sumX = 0.0f, sumY = 0.0f;
+            float sumNum = 0.0f,
+                  sumX = 0.0f,
+                  sumY = 0.0f;
 
             var count = 0;
             foreach (var artist in first.Ratings.Keys.Where(artist => second.Ratings.Keys.Contains(artist)))

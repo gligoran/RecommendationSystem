@@ -7,7 +7,7 @@ namespace RecommendationSystem.MatrixFactorization.Prediction
     {
         public List<string> Users { get; set; }
         public List<string> Artists { get; set; }
-        
+
         public BiasSvdPredictor(List<string> users, List<string> artists)
         {
             Users = users;

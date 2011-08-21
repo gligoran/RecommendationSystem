@@ -31,8 +31,8 @@ namespace RecommendationSystem.MatrixFactorization.Training
         protected void CalculateFeatures(TrainingParameters trainingParameters)
         {
             //init
-            UserFeatures = new float[trainingParameters.FeatureCount, Users.Count];
-            ArtistFeatures = new float[trainingParameters.FeatureCount, Artists.Count];
+            UserFeatures = new float[trainingParameters.FeatureCount,Users.Count];
+            ArtistFeatures = new float[trainingParameters.FeatureCount,Artists.Count];
             ResidualRatingValues = new float[Ratings.Count];
             UserFeatures.Populate(0.1f);
             ArtistFeatures.Populate(0.1f);
@@ -83,7 +83,8 @@ namespace RecommendationSystem.MatrixFactorization.Training
             var e = Ratings[r].Value - PredictRatingUsingResiduals(r, f);
             var uv = UserFeatures[f, Ratings[r].UserIndex];
 
-            UserFeatures[f, Ratings[r].UserIndex] += trainingParameters.LRate * (e * ArtistFeatures[f, Ratings[r].ArtistIndex] - trainingParameters.K * UserFeatures[f, Ratings[r].UserIndex]);
+            UserFeatures[f, Ratings[r].UserIndex] += trainingParameters.LRate *
+                                                     (e * ArtistFeatures[f, Ratings[r].ArtistIndex] - trainingParameters.K * UserFeatures[f, Ratings[r].UserIndex]);
             ArtistFeatures[f, Ratings[r].ArtistIndex] += trainingParameters.LRate * (e * uv - trainingParameters.K * ArtistFeatures[f, Ratings[r].ArtistIndex]);
 
             return e * e;
@@ -97,5 +98,4 @@ namespace RecommendationSystem.MatrixFactorization.Training
                 ResidualRatingValues[i] += UserFeatures[f, Ratings[i].UserIndex] * ArtistFeatures[f, Ratings[i].ArtistIndex];
         }
     }
-
 }

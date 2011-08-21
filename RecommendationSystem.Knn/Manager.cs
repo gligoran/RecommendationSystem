@@ -21,30 +21,31 @@ namespace RecommendationSystem.Knn
             var lines = new List<string[]>();
 
             var count = limit;
-            var sep = new[] { "\t" };
+            var sep = new[] {"\t"};
             while ((line = reader.ReadLine()) != null && count > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
                 if (parts[0] == userId)
-                {
                     lines.Add(parts);
-                }
                 else
                 {
                     if (lines.Count > 0)
                     {
-                        yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
+                        yield return (T)Activator.CreateInstance(typeof(T), new object[] {userId, lines});
                         count--;
                     }
 
                     userId = parts[0];
-                    lines = new List<string[]> { parts };
+                    lines = new List<string[]>
+                            {
+                                parts
+                            };
                 }
             }
 
             //add last user if unlimited
             if (limit == int.MaxValue)
-                yield return (T)Activator.CreateInstance(typeof(T), new object[] { userId, lines });
+                yield return (T)Activator.CreateInstance(typeof(T), new object[] {userId, lines});
 
             reader.Close();
         }
@@ -54,9 +55,7 @@ namespace RecommendationSystem.Knn
         public static void CalculateKNearestNeighbours(List<User> users, ISimilarityEstimator similarityEstimator, int k = 3)
         {
             for (var i = 0; i < users.Count; i++)
-            {
                 CalculateKNearestNeighboursForUser(users[i], users, similarityEstimator, i + 1);
-            }
         }
 
         public static void CalculateKNearestNeighboursForUser(User user, List<User> users, ISimilarityEstimator similarityEstimator, int offset = 0, int k = 3)
@@ -68,7 +67,8 @@ namespace RecommendationSystem.Knn
 
                 var s = similarityEstimator.Similarity(user, users[i]);
 
-                if (s <= 0.0) continue;
+                if (s <= 0.0)
+                    continue;
 
                 user.Neighbours.Add(new SimilarityEstimate(users[i], s));
                 users[i].Neighbours.Add(new SimilarityEstimate(user, s));
@@ -102,7 +102,7 @@ namespace RecommendationSystem.Knn
 
             foreach (var artist in artists)
             {
-                float r = ratingAggregator.Aggregate(user, artist);
+                var r = ratingAggregator.Aggregate(user, artist);
                 if (r > 0.0f)
                 {
                     recommendations.Add(new Recommendation(artist, r));

@@ -7,10 +7,11 @@ using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn
 {
-    class Program
+    public static class Program
     {
         private static readonly Stopwatch timer = new Stopwatch();
-        static void Main()
+
+        private static void Main()
         {
             int t;
             do
@@ -26,7 +27,7 @@ namespace RecommendationSystem.Knn
             var users = Manager.LoadData<PlayCountShareUser>(@"D:\Dataset\data-with-mbids.tsv", t).ToList<User>();
             timer.Stop();
             Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
-            
+
             if (t > 285392)
             {
                 var me = users.Where(u => u.UserId == "cb732aa2abb82e9527716dc9f083110b22265380").First();

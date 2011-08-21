@@ -9,8 +9,11 @@ namespace RecommendationSystem.Knn.Similarity
     {
         public float Similarity(User first, User second)
         {
-            float rXavg = 0.0f, rYavg = 0.0f;
-            float sumNum = 0.0f, sumX = 0.0f, sumY = 0.0f;
+            float rXavg = 0.0f,
+                  rYavg = 0.0f;
+            float sumNum = 0.0f,
+                  sumX = 0.0f,
+                  sumY = 0.0f;
 
             var keys = new List<string>();
             foreach (var artist in first.Ratings.Keys)
@@ -40,8 +43,8 @@ namespace RecommendationSystem.Knn.Similarity
                 sumY += (float)Math.Pow(rY, 2);
             }
 
-            float mass = keys.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
-            float r = sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
+            var mass = keys.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
+            var r = sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
 
             if (float.IsNaN(r))
                 return 0.0f;

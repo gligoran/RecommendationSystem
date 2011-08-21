@@ -33,7 +33,7 @@ namespace RecommendationSystem.Data
             var artists = new SortedSet<IArtist>();
 
             string line;
-            var sep = new[] { "\t" };
+            var sep = new[] {"\t"};
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);

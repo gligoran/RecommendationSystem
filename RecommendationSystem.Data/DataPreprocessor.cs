@@ -1,6 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using RecommendationSystem.Data.Entities;
 
 namespace RecommendationSystem.Data
@@ -10,7 +10,8 @@ namespace RecommendationSystem.Data
         #region PreprocessAllData
         public static void PreprocessAllData()
         {
-            List<string> userLut, artistLut;
+            List<string> userLut,
+                         artistLut;
             var users = UserProvider.ImportFromDataset(DataFiles.UserDataset, out userLut);
             UserProvider.Save(DataFiles.Users, users);
             var artists = ArtistProvider.ImportFromDataset(DataFiles.RatingDataset, out artistLut);
@@ -160,7 +161,7 @@ namespace RecommendationSystem.Data
             }
         }
         #endregion
-        
+
         #region ConvertToEqualFrequencyFiveScale
         public static void ConvertToEqualFrequencyFiveScale(this List<IRating> ratings)
         {

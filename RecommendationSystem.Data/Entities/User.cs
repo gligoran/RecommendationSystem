@@ -74,16 +74,21 @@ namespace RecommendationSystem.Data.Entities
         #region Equals
         public bool Equals(User other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
             return Equals(UserId, other.UserId);
         }
 
         public override bool Equals(object other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != typeof(User)) return false;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other.GetType() != typeof(User))
+                return false;
             return Equals((User)other);
         }
 

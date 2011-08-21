@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace RecommendationSystem.Data.Entities
@@ -7,7 +6,7 @@ namespace RecommendationSystem.Data.Entities
     {
         public string Name { get; set; }
         public List<IRating> Ratings { get; set; }
-        
+
         public Artist(string name)
         {
             Name = name;
@@ -43,16 +42,21 @@ namespace RecommendationSystem.Data.Entities
         #region Equals
         public bool Equals(IArtist other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
             return Equals(Name, other.Name);
         }
 
         public override bool Equals(object other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other.GetType() != typeof(IArtist)) return false;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other.GetType() != typeof(IArtist))
+                return false;
             return Equals((IArtist)other);
         }
 

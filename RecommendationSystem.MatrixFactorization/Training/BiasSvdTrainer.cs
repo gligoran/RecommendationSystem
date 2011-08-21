@@ -20,7 +20,6 @@ namespace RecommendationSystem.MatrixFactorization.Training
         {
             CalculateFeatures(trainingParameters);
             return new BiasSvdModel(UserFeatures, ArtistFeatures, globalAverage, userBias, artistBias, trainingParameters);
-
         }
 
         protected override float PredictRatingUsingResiduals(int rating, int feature)

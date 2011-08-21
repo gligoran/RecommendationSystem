@@ -8,7 +8,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
     {
         public BasicSvdTrainer(List<IRating> ratings, List<string> users, List<string> artists)
             : base(ratings, users, artists)
-        { }
+        {}
 
         public override ISvdModel TrainModel(TrainingParameters trainingParameters)
         {
