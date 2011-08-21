@@ -40,11 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArtistProvider.cs" />
+    <Compile Include="Entities\Artist.cs" />
+    <Compile Include="Entities\IArtist.cs" />
+    <Compile Include="Entities\IRating.cs" />
+    <Compile Include="Entities\IUser.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="DataFiles.cs" />
+    <Compile Include="DataPreprocessor.cs" />
     <Compile Include="RatingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rating.cs" />
-    <Compile Include="StringListProvider.cs" />
+    <Compile Include="Entities\Rating.cs" />
+    <Compile Include="UserProvider.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

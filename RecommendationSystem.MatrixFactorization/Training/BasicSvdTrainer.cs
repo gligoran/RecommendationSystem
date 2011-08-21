@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using RecommendationSystem.Data;
+using RecommendationSystem.Data.Entities;
 using RecommendationSystem.MatrixFactorization.Model;
 
 namespace RecommendationSystem.MatrixFactorization.Training
 {
     public class BasicSvdTrainer : SvdTrainerBase<ISvdModel>
     {
-        public BasicSvdTrainer(List<Rating> ratings, List<string> users, List<string> artists)
+        public BasicSvdTrainer(List<IRating> ratings, List<string> users, List<string> artists)
             : base(ratings, users, artists)
         { }
 

@@ -8,7 +8,7 @@ using RecommendationSystem.MatrixFactorization.Training;
 
 namespace RecommendationSystem.MatrixFactorization
 {
-    class Program
+    public static class Program
     {
         public static Stopwatch Timer = new Stopwatch();
         private const string me = "cb732aa2abb82e9527716dc9f083110b22265380";
@@ -17,8 +17,9 @@ namespace RecommendationSystem.MatrixFactorization
         {
             //load preprocessed data
             Timer.Start();
-            var users = StringListProvider.Load(@"D:\Dataset\users.rs");
-            var artists = StringListProvider.Load(@"D:\Dataset\artists.rs");
+            List<string> users, artists;
+            UserProvider.Load(@"D:\Dataset\users.rs", out users);
+            ArtistProvider.Load(@"D:\Dataset\artists.rs", out artists);
             var ratings = RatingProvider.Load(@"D:\Dataset\ratings.rs");
             Timer.Stop();
             Console.WriteLine("Data loaded in: {0}ms", Timer.ElapsedMilliseconds);
@@ -26,7 +27,7 @@ namespace RecommendationSystem.MatrixFactorization
             //train
             var svd = new BasicSvdTrainer(ratings, users, artists);
             Timer.Start();
-            var model = svd.TrainModel(TrainingParameters.DefaultTrainingParameters);
+            var model = svd.TrainModel(new TrainingParameters(100, epochLimit: 120));
             Timer.Stop();
             Console.WriteLine("SVD completed in: {0}ms", Timer.ElapsedMilliseconds);
 

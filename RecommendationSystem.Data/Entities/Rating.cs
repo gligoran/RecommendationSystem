@@ -1,6 +1,8 @@
-﻿namespace RecommendationSystem.Data
+﻿using System;
+
+namespace RecommendationSystem.Data.Entities
 {
-    public class Rating
+    public class Rating : IRating
     {
         public int UserIndex { get; set; }
         public int ArtistIndex { get; set; }
@@ -13,6 +15,11 @@
             UserIndex = userIndex;
             ArtistIndex = artistIndex;
             Value = value;
+        }
+
+        public IRating Clone()
+        {
+            return new Rating(UserIndex, ArtistIndex, Value);
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RecommendationSystem.Data;
+using RecommendationSystem.Data.Entities;
 using RecommendationSystem.MatrixFactorization.Model;
 
 namespace RecommendationSystem.MatrixFactorization.Training
@@ -14,11 +14,12 @@ namespace RecommendationSystem.MatrixFactorization.Training
         protected float[] ResidualRatingValues;
         public List<string> Users { get; set; }
         public List<string> Artists { get; set; }
-        public List<Rating> Ratings { get; set; }
-        
-        private float rmsePrev = float.MaxValue;
+        public List<IRating> Ratings { get; set; }
 
-        protected SvdTrainerBase(List<Rating> ratings, List<string> users, List<string> artists)
+        private float rmsePrev = float.MaxValue;
+        private float rmse = float.MaxValue;
+
+        protected SvdTrainerBase(List<IRating> ratings, List<string> users, List<string> artists)
         {
             Ratings = ratings;
             Users = users;
@@ -36,6 +37,9 @@ namespace RecommendationSystem.MatrixFactorization.Training
             UserFeatures.Populate(0.1f);
             ArtistFeatures.Populate(0.1f);
 
+            rmsePrev = float.MaxValue;
+            rmse = float.MaxValue;
+
             //MAIN LOOP - loops through features
             for (var f = 0; f < trainingParameters.FeatureCount; f++)
             {
@@ -52,9 +56,8 @@ namespace RecommendationSystem.MatrixFactorization.Training
         {
             var count = 0;
             var rmseDiff = float.MaxValue;
-            var rmse = float.MaxValue;
 
-            while (rmseDiff > trainingParameters.RmseDiffLimit /*&& count < TrainingParameters.EpochLimit*/)
+            while (count < trainingParameters.EpochLimit)
             {
                 rmsePrev = rmse;
                 rmse = TrainFeature(f, trainingParameters);

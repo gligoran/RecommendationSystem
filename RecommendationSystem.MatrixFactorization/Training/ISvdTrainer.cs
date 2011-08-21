@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using RecommendationSystem.Data;
+using RecommendationSystem.Data.Entities;
 using RecommendationSystem.MatrixFactorization.Model;
 
 namespace RecommendationSystem.MatrixFactorization.Training
@@ -9,7 +9,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
     {
         List<string> Users { get; set; }
         List<string> Artists { get; set; }
-        List<Rating> Ratings { get; set; }
+        List<IRating> Ratings { get; set; }
         TSvdModel TrainModel(TrainingParameters trainingParameters);
     }
 }

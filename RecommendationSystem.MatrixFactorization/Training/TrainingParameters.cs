@@ -8,7 +8,7 @@
         public float LRate { get; set; }
         public int FeatureCount { get; set; }
 
-        public TrainingParameters(int featureCount, float lRate, float k, float rmseDiffLimit, float epochLimit)
+        public TrainingParameters(int featureCount = 100, float lRate = 0.001f, float k = 0.02f, float rmseDiffLimit = 0.00001f, float epochLimit = 100)
         {
             FeatureCount = featureCount;
             LRate = lRate;

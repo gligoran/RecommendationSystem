@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RecommendationSystem.Data;
+using RecommendationSystem.Data.Entities;
 using RecommendationSystem.MatrixFactorization.Model;
 
 namespace RecommendationSystem.MatrixFactorization.Training
@@ -10,7 +10,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
         private float[] userBias;
         private float[] artistBias;
 
-        public BiasSvdTrainer(List<Rating> ratings, List<string> users, List<string> artists)
+        public BiasSvdTrainer(List<IRating> ratings, List<string> users, List<string> artists)
             : base(ratings, users, artists)
         {
             ComputeBiases();
