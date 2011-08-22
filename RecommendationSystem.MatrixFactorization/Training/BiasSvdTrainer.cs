@@ -6,11 +6,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
 {
     public class BiasSvdTrainer : SvdTrainerBase<IBiasSvdModel>
     {
-        public BiasSvdTrainer(List<IRating> ratings, List<string> users, List<string> artists)
-            : base(ratings, users, artists)
-        {}
-
-        public override IBiasSvdModel TrainModel(TrainingParameters trainingParameters)
+        public override IBiasSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
             var model = new BiasSvdModel(trainingParameters);
             ComputeBiases(model);

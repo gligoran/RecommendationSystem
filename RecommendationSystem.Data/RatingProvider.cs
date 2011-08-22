@@ -63,8 +63,11 @@ namespace RecommendationSystem.Data
         #region Save
         public static void Save(string filename, IEnumerable<IRating> ratings)
         {
-            var file = File.Open(filename, FileMode.OpenOrCreate);
-            TextWriter writer = new StreamWriter(file);
+            var dir = Path.GetDirectoryName(filename);
+            if (dir != null && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            TextWriter writer = new StreamWriter(filename);
 
             foreach (var t in ratings)
                 writer.WriteLine("{0}\t{1}\t{2}", t.UserIndex, t.ArtistIndex, t.Value);

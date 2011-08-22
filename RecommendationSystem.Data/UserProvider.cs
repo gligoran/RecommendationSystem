@@ -46,8 +46,11 @@ namespace RecommendationSystem.Data
         #region Save
         public static void Save(string filename, IEnumerable<IUser> users)
         {
-            var file = File.Open(filename, FileMode.OpenOrCreate);
-            TextWriter writer = new StreamWriter(file);
+            var dir = Path.GetDirectoryName(filename);
+            if (dir != null && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            TextWriter writer = new StreamWriter(filename);
 
             foreach (var user in users)
                 writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}", user.UserId, user.Gender, user.Age, user.Country, user.SignUp.ToString("d", CultureInfo.InvariantCulture));

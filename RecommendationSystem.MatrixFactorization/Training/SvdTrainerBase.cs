@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RecommendationSystem.Data;
 using RecommendationSystem.Entities;
 using RecommendationSystem.MatrixFactorization.Models;
 
@@ -10,26 +11,24 @@ namespace RecommendationSystem.MatrixFactorization.Training
         where TSvdModel : ISvdModel
     {
         protected float[] ResidualRatingValues;
-        public List<string> Users { get; set; }
-        public List<string> Artists { get; set; }
-        public List<IRating> Ratings { get; set; }
+        protected List<string> Users { get; set; }
+        protected List<string> Artists { get; set; }
+        protected List<IRating> Ratings { get; set; }
 
         private float rmsePrev = float.MaxValue;
         private float rmse = float.MaxValue;
 
-        protected SvdTrainerBase(List<IRating> ratings, List<string> users, List<string> artists)
+        public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
         {
-            Ratings = ratings;
-            Users = users;
-            Artists = artists;
+            return TrainModel(users, artists, ratings, new TrainingParameters());
         }
 
-        public TSvdModel TrainModel()
+        public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
-            return TrainModel(new TrainingParameters());
+            return TrainModel(users.GetLookupTable(), artists.GetLookupTable(), ratings, trainingParameters);
         }
 
-        public abstract TSvdModel TrainModel(TrainingParameters trainingParameters);
+        public abstract TSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters);
 
         protected void CalculateFeatures(TSvdModel model, TrainingParameters trainingParameters)
         {

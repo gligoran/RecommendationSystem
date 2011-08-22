@@ -51,8 +51,11 @@ namespace RecommendationSystem.Data
         #region Save
         public static void Save(string filename, IEnumerable<IArtist> artists)
         {
-            var file = File.Open(filename, FileMode.OpenOrCreate);
-            TextWriter writer = new StreamWriter(file);
+            var dir = Path.GetDirectoryName(filename);
+            if (dir != null && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            TextWriter writer = new StreamWriter(filename);
 
             foreach (var artist in artists)
                 writer.WriteLine("{0}", artist.Name);

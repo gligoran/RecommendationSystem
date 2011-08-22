@@ -31,8 +31,8 @@ namespace RecommendationSystem.Knn
             var lp = artistLut.BinarySearch("linkin park");
             me.Ratings.Remove(me.Ratings.First(rating => rating.ArtistIndex == lp));
 
-            var trainer = new KnnTrainer(users);
-            var model = trainer.TrainModel();
+            var trainer = new KnnTrainer();
+            var model = trainer.TrainModel(users, null, null);
 
             var cosineSimilarityEstimator = new CosineSimilarityEstimator();
             var simpleAverageRatingAggregator = new SimpleAverageRatingAggregator();

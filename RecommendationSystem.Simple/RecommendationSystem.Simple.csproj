@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</ProjectGuid>
+    <ProjectGuid>{64468AE3-522C-4F18-8331-364E0FCBD942}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RecommendationSystem</RootNamespace>
-    <AssemblyName>RecommendationSystem</AssemblyName>
+    <RootNamespace>RecommendationSystem.Simple</RootNamespace>
+    <AssemblyName>RecommendationSystem.Simple</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>&lt;Project Location In Database&gt;</SccProjectName>
@@ -44,19 +44,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Artist.cs" />
-    <Compile Include="Entities\IArtist.cs" />
-    <Compile Include="Entities\IRating.cs" />
-    <Compile Include="Entities\IUser.cs" />
-    <Compile Include="Entities\Rating.cs" />
-    <Compile Include="Entities\User.cs" />
-    <Compile Include="IRecommendationSystem.cs" />
-    <Compile Include="Models\IModel.cs" />
-    <Compile Include="Recommendations\IRecommendation.cs" />
-    <Compile Include="Recommendations\Recommendation.cs" />
+    <Compile Include="AverageRating\AverageRatingRecommendationSystem.cs" />
+    <Compile Include="AverageRating\AverageRatingRecommender.cs" />
+    <Compile Include="AverageRating\AverageRatingTrainer.cs" />
+    <Compile Include="AverageRating\IAverageRatingModel.cs" />
+    <Compile Include="AverageRating\IAverageRatingRecommendationSystem.cs" />
+    <Compile Include="AverageRating\AverageRatingModel.cs" />
+    <Compile Include="MostCommonRating\IMostCommonRatingModel.cs" />
+    <Compile Include="MostCommonRating\IMostCommonRatingRecommendationSystem.cs" />
+    <Compile Include="MostCommonRating\MostCommonRatingRecommender.cs" />
+    <Compile Include="MostCommonRating\MostCommonRatingModel.cs" />
+    <Compile Include="MostCommonRating\MostCommonRatingRecommendationSystem.cs" />
+    <Compile Include="MostCommonRating\MostCommonRatingTrainer.cs" />
+    <Compile Include="MedianRating\MedianRatingModel.cs" />
+    <Compile Include="MedianRating\MedianRatingRecommendationSystem.cs" />
+    <Compile Include="MedianRating\MeanRatingRecommender.cs" />
+    <Compile Include="MedianRating\MedianRatingTrainer.cs" />
+    <Compile Include="MedianRating\IMedianRatingModel.cs" />
+    <Compile Include="MedianRating\IMedianRatingRecommendationSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recommendations\IRecommender.cs" />
-    <Compile Include="Training\ITrainer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
+      <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
+      <Name>RecommendationSystem</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

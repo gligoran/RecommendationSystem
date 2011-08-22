@@ -6,11 +6,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
 {
     public class BasicSvdTrainer : SvdTrainerBase<ISvdModel>
     {
-        public BasicSvdTrainer(List<IRating> ratings, List<string> users, List<string> artists)
-            : base(ratings, users, artists)
-        {}
-
-        public override ISvdModel TrainModel(TrainingParameters trainingParameters)
+        public override ISvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
             var model = new BasicSvdModel();
             CalculateFeatures(model, trainingParameters);

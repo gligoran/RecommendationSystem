@@ -6,19 +6,12 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.Knn.Training
 {
-    public class KnnTrainer : ITrainer<IKnnModel>
+    public class KnnTrainer : ITrainer<IKnnModel, IUser>
     {
-        public List<IUser> Users { get; set; }
-
-        public KnnTrainer(List<IUser> users)
-        {
-            Users = users;
-        }
-
-        public IKnnModel TrainModel()
+        public IKnnModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
         {
             var model = new KnnModel();
-            foreach (var user in Users)
+            foreach (var user in users)
                 model.Users.Add(KnnUser.FromIUser(user));
 
             return model;
