@@ -41,7 +41,7 @@ namespace RecommendationSystem.Knn
             var adjustedWeightedSumRatingAggregator = new AdjustedWeightedSumRatingAggregator();
             var pearsonSimilarityEstimator = new PearsonSimilarityEstimator();
 
-            var recommender = new ContentKnnRecommender(cosineSimilarityEstimator, simpleAverageRatingAggregator, contentSimilarityEstimator);
+            var recommender = new ContentKnnRecommender(cosineSimilarityEstimator, simpleAverageRatingAggregator, contentSimilarityEstimator, contentSimilarityWeight: 10.0f, ratingSimilarityWeight: 2.0f);
             var recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Cosine, SimpleAverage:");
             foreach (var recommendation in recommendations)
