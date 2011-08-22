@@ -22,7 +22,7 @@ namespace RecommendationSystem.Data
         private static List<IArtist> ImportFromDataset(string filename, int column, out List<string> artistIndexLookupTable, int limit = int.MaxValue)
         {
             var artists = ImportFromDataset(filename, column, limit);
-            artistIndexLookupTable = CreateLookupTable(artists);
+            artistIndexLookupTable = artists.GetLookupTable();
             return artists;
         }
 
@@ -51,7 +51,8 @@ namespace RecommendationSystem.Data
         #region Save
         public static void Save(string filename, IEnumerable<IArtist> artists)
         {
-            TextWriter writer = new StreamWriter(filename);
+            var file = File.Open(filename, FileMode.OpenOrCreate);
+            TextWriter writer = new StreamWriter(file);
 
             foreach (var artist in artists)
                 writer.WriteLine("{0}", artist.Name);
@@ -75,8 +76,8 @@ namespace RecommendationSystem.Data
 
         #endregion
 
-        #region CreateLookupTable
-        private static List<string> CreateLookupTable(IEnumerable<IArtist> artists)
+        #region GetLookupTable
+        public static List<string> GetLookupTable(this IEnumerable<IArtist> artists)
         {
             return artists.Select(artist => artist.Name).ToList();
         }

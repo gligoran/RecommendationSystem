@@ -8,7 +8,7 @@ namespace RecommendationSystem.Data
     public static class DataPreprocessor
     {
         #region PreprocessAllData
-        public static void PreprocessAllData()
+        public static void PreprocessAllData(bool splitTrainAndTest = false)
         {
             List<string> userLut,
                          artistLut;
@@ -51,6 +51,9 @@ namespace RecommendationSystem.Data
             ratings = RatingProvider.Load(DataFiles.Playcounts);
             ratings.ConvertToLogEqualWidthFiveScale();
             RatingProvider.Save(DataFiles.LogEqualWidthFiveScaleRatings, ratings);
+
+            if (splitTrainAndTest)
+                DataSpliter.GenerateSplitTestAndTrainDataFiles();
         }
         #endregion
 

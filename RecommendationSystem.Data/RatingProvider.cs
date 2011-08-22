@@ -19,15 +19,19 @@ namespace RecommendationSystem.Data
             var sep = new[] {"\t"};
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
+                limit--;
+
                 var parts = line.Split(sep, StringSplitOptions.None);
 
+                var userIndex = users.BinarySearch(parts[0]);
+                if (userIndex < 0)
+                    continue;
+
                 ratings.Add(new Rating(
-                                users.BinarySearch(parts[0]),
+                                userIndex,
                                 artists.BinarySearch(parts[2]),
                                 float.Parse(parts[3])
                                 ));
-
-                limit--;
             }
 
             reader.Close();
@@ -59,7 +63,8 @@ namespace RecommendationSystem.Data
         #region Save
         public static void Save(string filename, IEnumerable<IRating> ratings)
         {
-            TextWriter writer = new StreamWriter(filename);
+            var file = File.Open(filename, FileMode.OpenOrCreate);
+            TextWriter writer = new StreamWriter(file);
 
             foreach (var t in ratings)
                 writer.WriteLine("{0}\t{1}\t{2}", t.UserIndex, t.ArtistIndex, t.Value);
@@ -98,7 +103,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region ExtractRatingsFromUsers
-        public static List<IRating> ExtractRatingsFromUsers(IEnumerable<IUser> users)
+        public static List<IRating> ExtractRatingsFromUsers(this IEnumerable<IUser> users)
         {
             if (users == null)
                 return null;

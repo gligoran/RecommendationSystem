@@ -7,10 +7,9 @@ namespace RecommendationSystem.MatrixFactorization.Models
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }
         public TrainingParameters UserTrainingParameters { get; set; }
-        
+
         internal BasicSvdModel()
-        {
-        }
+        {}
 
         public BasicSvdModel(float[,] userFeatures, float[,] artistFeatures, TrainingParameters trainingParameters)
         {

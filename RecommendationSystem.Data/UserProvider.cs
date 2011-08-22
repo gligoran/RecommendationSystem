@@ -13,7 +13,7 @@ namespace RecommendationSystem.Data
         public static List<IUser> ImportFromDataset(string filename, out List<string> userIndexLookupTable, int limit = int.MaxValue)
         {
             var users = ImportFromDataset(filename, limit);
-            userIndexLookupTable = CreateLookupTable(users);
+            userIndexLookupTable = users.GetLookupTable();
             return users;
         }
 
@@ -46,7 +46,8 @@ namespace RecommendationSystem.Data
         #region Save
         public static void Save(string filename, IEnumerable<IUser> users)
         {
-            TextWriter writer = new StreamWriter(filename);
+            var file = File.Open(filename, FileMode.OpenOrCreate);
+            TextWriter writer = new StreamWriter(file);
 
             foreach (var user in users)
                 writer.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}", user.UserId, user.Gender, user.Age, user.Country, user.SignUp.ToString("d", CultureInfo.InvariantCulture));
@@ -70,8 +71,8 @@ namespace RecommendationSystem.Data
 
         #endregion
 
-        #region CreateLookupTable
-        private static List<string> CreateLookupTable(IEnumerable<IUser> users)
+        #region GetLookupTable
+        public static List<string> GetLookupTable(this IEnumerable<IUser> users)
         {
             return users.Select(u => u.UserId).ToList();
         }

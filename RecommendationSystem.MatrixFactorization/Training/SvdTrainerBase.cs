@@ -61,7 +61,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
             var count = 0;
             var rmseDiff = float.MaxValue;
 
-            while (count < trainingParameters.EpochLimit && rmseDiff > 0.0f)
+            while (count < trainingParameters.EpochLimit && rmseDiff > -0.1f)
             {
                 rmsePrev = rmse;
                 rmse = TrainFeature(model, f, trainingParameters);

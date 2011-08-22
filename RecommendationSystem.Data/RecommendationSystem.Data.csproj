@@ -43,6 +43,7 @@
     <Compile Include="ArtistProvider.cs" />
     <Compile Include="DataFiles.cs" />
     <Compile Include="DataPreprocessor.cs" />
+    <Compile Include="DataSpliter.cs" />
     <Compile Include="RatingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserProvider.cs" />
