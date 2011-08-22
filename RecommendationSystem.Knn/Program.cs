@@ -27,42 +27,51 @@ namespace RecommendationSystem.Knn
             Console.WriteLine("{0} users loaded in {1}ms.", users.Count(), timer.ElapsedMilliseconds);
 
             var me = users[userLut.BinarySearch(myUserId)];
+
             var lp = artistLut.BinarySearch("linkin park");
             me.Ratings.Remove(me.Ratings.First(rating => rating.ArtistIndex == lp));
 
             var trainer = new KnnTrainer(users);
             var model = trainer.TrainModel();
-            var recommender = new KnnRecommender(new CosineSimilarityEstimator(), new SimpleAverageRatingAggregator());
+
+            var cosineSimilarityEstimator = new CosineSimilarityEstimator();
+            var simpleAverageRatingAggregator = new SimpleAverageRatingAggregator();
+            var contentSimilarityEstimator = new ContentSimilarityEstimator();
+            var weightedSumRatingAggregator = new WeightedSumRatingAggregator();
+            var adjustedWeightedSumRatingAggregator = new AdjustedWeightedSumRatingAggregator();
+            var pearsonSimilarityEstimator = new PearsonSimilarityEstimator();
+
+            var recommender = new ContentKnnRecommender(cosineSimilarityEstimator, simpleAverageRatingAggregator, contentSimilarityEstimator);
             var recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Cosine, SimpleAverage:");
             foreach (var recommendation in recommendations)
                 Debug.WriteLine("- {0}", recommendation);
 
-            recommender = new KnnRecommender(new CosineSimilarityEstimator(), new WeightedSumRatingAggregator());
+            recommender = new ContentKnnRecommender(cosineSimilarityEstimator, weightedSumRatingAggregator, contentSimilarityEstimator);
             recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Cosine, WeightedSum:");
             foreach (var recommendation in recommendations)
                 Debug.WriteLine("- {0}", recommendation);
 
-            recommender = new KnnRecommender(new CosineSimilarityEstimator(), new AdjustedWeightedSumRatingAggregator());
+            recommender = new ContentKnnRecommender(cosineSimilarityEstimator, adjustedWeightedSumRatingAggregator, contentSimilarityEstimator);
             recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Cosine, AdjustedWeightedSum:");
             foreach (var recommendation in recommendations)
                 Debug.WriteLine("- {0}", recommendation);
 
-            recommender = new KnnRecommender(new PearsonSimilarityEstimator(), new SimpleAverageRatingAggregator());
+            recommender = new ContentKnnRecommender(pearsonSimilarityEstimator, simpleAverageRatingAggregator, contentSimilarityEstimator);
             recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Pearson, SimpleAverage:");
             foreach (var recommendation in recommendations)
                 Debug.WriteLine("- {0}", recommendation);
 
-            recommender = new KnnRecommender(new PearsonSimilarityEstimator(), new WeightedSumRatingAggregator());
+            recommender = new ContentKnnRecommender(pearsonSimilarityEstimator, weightedSumRatingAggregator, contentSimilarityEstimator);
             recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Pearson, WeightedSum:");
             foreach (var recommendation in recommendations)
                 Debug.WriteLine("- {0}", recommendation);
 
-            recommender = new KnnRecommender(new PearsonSimilarityEstimator(), new AdjustedWeightedSumRatingAggregator());
+            recommender = new ContentKnnRecommender(pearsonSimilarityEstimator, adjustedWeightedSumRatingAggregator, contentSimilarityEstimator);
             recommendations = recommender.GenerateRecommendations(me, model, artists);
             Debug.WriteLine("Pearson, AdjustedWeightedSum:");
             foreach (var recommendation in recommendations)

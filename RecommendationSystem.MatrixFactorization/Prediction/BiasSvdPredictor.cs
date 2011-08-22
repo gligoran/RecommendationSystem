@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using RecommendationSystem.Entities;
 using RecommendationSystem.MatrixFactorization.Models;
@@ -17,7 +18,7 @@ namespace RecommendationSystem.MatrixFactorization.Prediction
 
         public float PredictRating(IBiasSvdModel model, IUser user)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
 
             /*var rating = 0.0f;
             for (var i = 0; i < model.UserTrainingParameters.FeatureCount; i++)

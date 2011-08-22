@@ -55,7 +55,7 @@ namespace RecommendationSystem.Knn.Recommendations
                 if (neighbour == user)
                     continue;
 
-                var s = SimilarityEstimator.GetSimilarity(user, neighbour);
+                var s = CalculateSimilarity(user, neighbour);
                 if (s <= 0.0)
                     continue;
 
@@ -67,6 +67,12 @@ namespace RecommendationSystem.Knn.Recommendations
             }
 
             return neighbours;
+        }
+
+        protected virtual float CalculateSimilarity(IUser user, IKnnUser neighbour)
+        {
+            var s = SimilarityEstimator.GetSimilarity(user, neighbour);
+            return s;
         }
     }
 }

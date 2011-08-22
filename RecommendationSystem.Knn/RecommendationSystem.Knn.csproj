@@ -43,13 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Recommendations\ContentKnnRecommender.cs" />
+    <Compile Include="Recommendations\IContentKnnRecommender.cs" />
     <Compile Include="Recommendations\IKnnRecommender.cs" />
     <Compile Include="Recommendations\KnnRecommender.cs" />
     <Compile Include="RatingAggregation\AdjustedWeightedSumRatingAggregator.cs" />
     <Compile Include="RatingAggregation\IRatingAggregator.cs" />
     <Compile Include="RatingAggregation\SimpleAverageRatingAggregator.cs" />
     <Compile Include="RatingAggregation\WeightedSumRatingAggregator.cs" />
+    <Compile Include="Similarity\ContentSimilarityEstimator.cs" />
     <Compile Include="Similarity\CosineSimilarityEstimator.cs" />
+    <Compile Include="Similarity\IContentSimilarityEstimator.cs" />
     <Compile Include="Similarity\PearsonSimilarityEstimator.cs" />
     <Compile Include="Models\IKnnModel.cs" />
     <Compile Include="Models\KnnModel.cs" />
