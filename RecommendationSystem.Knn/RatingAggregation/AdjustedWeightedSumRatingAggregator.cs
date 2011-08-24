@@ -26,5 +26,10 @@ namespace RecommendationSystem.Knn.RatingAggregation
 
             return user.AverageRating + r / k;
         }
+
+        public override string ToString()
+        {
+            return "AWSRA";
+        }
     }
 }

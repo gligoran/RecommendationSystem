@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RecommendationSystem.QualityTesting</RootNamespace>
-    <AssemblyName>RecommendationSystem.QualityTesting</AssemblyName>
+    <AssemblyName>rsqt</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -47,8 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CryptoRandom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RatingByArtistComparer.cs" />
+    <Compile Include="RmseAndVariance.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">

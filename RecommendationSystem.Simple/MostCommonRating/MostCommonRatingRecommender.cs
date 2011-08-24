@@ -12,5 +12,10 @@ namespace RecommendationSystem.Simple.MostCommonRating
             var indices = user.Ratings.Select(rating => rating.ArtistIndex).ToList();
             return indices.Select(index => new Recommendation(artists[index], model.MostCommonRating)).Cast<IRecommendation>().ToList();
         }
+
+        public float PredictRatingForArtist(IUser user, IMostCommonRatingModel model, List<IArtist> artists, int artist)
+        {
+            return model.MostCommonRating;
+        }
     }
 }

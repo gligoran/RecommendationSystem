@@ -1,4 +1,6 @@
-﻿namespace RecommendationSystem.Entities
+﻿using System;
+
+namespace RecommendationSystem.Entities
 {
     public class Rating : IRating
     {
@@ -20,5 +22,12 @@
         {
             return new Rating(UserIndex, ArtistIndex, Value);
         }
+
+#if DEBUG
+        public override string ToString()
+        {
+            return string.Format("-\t{0}\t{1}{2}", ArtistIndex, Value, Environment.NewLine);
+        }
+#endif
     }
 }

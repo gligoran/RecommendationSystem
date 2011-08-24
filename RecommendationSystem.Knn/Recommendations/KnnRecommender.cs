@@ -9,11 +9,24 @@ using RecommendationSystem.Recommendations;
 
 namespace RecommendationSystem.Knn.Recommendations
 {
-    public class KnnRecommender : IKnnRecommender
+    public class KnnRecommender : IRecommender<IKnnModel>
     {
         public ISimilarityEstimator SimilarityEstimator { get; set; }
         public IRatingAggregator RatingAggregator { get; set; }
         public int NearestNeighboursCount { get; set; }
+
+        #region Consturctor
+        public KnnRecommender(int nearestNeighboursCount = 3)
+            : this(new CosineSimilarityEstimator(), new SimpleAverageRatingAggregator(), nearestNeighboursCount)
+        {}
+
+        public KnnRecommender(ISimilarityEstimator similarityEstimator, int nearestNeighboursCount = 3)
+            : this(similarityEstimator, new SimpleAverageRatingAggregator(), nearestNeighboursCount)
+        {}
+
+        public KnnRecommender(IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3)
+            : this(new CosineSimilarityEstimator(), ratingAggregator, nearestNeighboursCount)
+        {}
 
         public KnnRecommender(ISimilarityEstimator similarityEstimator, IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3)
         {
@@ -21,7 +34,17 @@ namespace RecommendationSystem.Knn.Recommendations
             RatingAggregator = ratingAggregator;
             NearestNeighboursCount = nearestNeighboursCount;
         }
+        #endregion
 
+        #region PredictRatingForArtist
+        public float PredictRatingForArtist(IUser user, IKnnModel model, List<IArtist> artists, int artistIndex)
+        {
+            var recommendations = GenerateRecommendations(user, model, artists);
+            return recommendations != null ? recommendations.Where(recommendation => recommendation.Artist == artists[artistIndex]).Select(rating => rating.Value).FirstOrDefault() : 0.0f;
+        }
+        #endregion
+
+        #region GenerateRecommendations
         public List<IRecommendation> GenerateRecommendations(IUser user, IKnnModel model, List<IArtist> artists)
         {
             return GenerateRecommendations(user, model, artists, NearestNeighboursCount);
@@ -31,7 +54,7 @@ namespace RecommendationSystem.Knn.Recommendations
         {
             var knnUser = KnnUser.FromIUser(user);
 
-            var neighbours = CalculateKNearestNeighbours(user, model.Users, nearestNeighboursCount);
+            var neighbours = CalculateKNearestNeighbours(knnUser, model.Users, nearestNeighboursCount);
             if (neighbours.Count == 0)
                 return null;
 
@@ -47,7 +70,8 @@ namespace RecommendationSystem.Knn.Recommendations
             return recommendations;
         }
 
-        private List<SimilarUser> CalculateKNearestNeighbours(IUser user, IEnumerable<IKnnUser> users, int nearestNeighboursCount)
+        #region CalculateKNearestNeighbours
+        private List<SimilarUser> CalculateKNearestNeighbours(IKnnUser user, IEnumerable<IKnnUser> users, int nearestNeighboursCount)
         {
             var neighbours = new List<SimilarUser>();
             foreach (var neighbour in users)
@@ -68,11 +92,20 @@ namespace RecommendationSystem.Knn.Recommendations
 
             return neighbours;
         }
+        #endregion
 
-        protected virtual float CalculateSimilarity(IUser user, IKnnUser neighbour)
+        #region CalculateSimilarity
+        protected virtual float CalculateSimilarity(IKnnUser user, IKnnUser neighbour)
         {
             var s = SimilarityEstimator.GetSimilarity(user, neighbour);
             return s;
         }
+        #endregion
+
+        public override string ToString()
+        {
+            return "NoContent";
+        }
+        #endregion
     }
 }

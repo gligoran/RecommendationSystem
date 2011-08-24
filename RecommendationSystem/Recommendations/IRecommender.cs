@@ -8,5 +8,6 @@ namespace RecommendationSystem.Recommendations
         where TModel : IModel
     {
         List<IRecommendation> GenerateRecommendations(IUser user, TModel model, List<IArtist> artists);
+        float PredictRatingForArtist(IUser user, TModel model, List<IArtist> artists, int artist);
     }
 }

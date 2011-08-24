@@ -12,7 +12,7 @@ namespace RecommendationSystem.Data
         #region Users
 
         #region Normalize
-        public static void Normalize(this List<IUser> users)
+        public static void Normalize(this IEnumerable<IUser> users)
         {
             foreach (var user in users)
             {
@@ -24,7 +24,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region LogNormalize
-        public static void LogNormalize(this List<IUser> users)
+        public static void LogNormalize(this IEnumerable<IUser> users)
         {
             foreach (var user in users)
             {
@@ -36,7 +36,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region ConvertRatingsToEqualFrequencyFiveScale
-        public static void ConvertRatingsToEqualFrequencyFiveScale(this List<IUser> users)
+        public static void ConvertRatingsToEqualFrequencyFiveScale(this IEnumerable<IUser> users)
         {
             foreach (var user in users)
             {
@@ -48,7 +48,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region ConvertRatingsToEqualWidthFiveScale
-        public static void ConvertRatingsToEqualWidthFiveScale(this List<IUser> users)
+        public static void ConvertRatingsToEqualWidthFiveScale(this IEnumerable<IUser> users)
         {
             foreach (var user in users)
             {
@@ -61,7 +61,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region ConvertRatingsToLogEqualWidthFiveScale
-        public static void ConvertRatingsToLogEqualWidthFiveScale(this List<IUser> users)
+        public static void ConvertRatingsToLogEqualWidthFiveScale(this IEnumerable<IUser> users)
         {
             foreach (var user in users)
             {

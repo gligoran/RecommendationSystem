@@ -12,5 +12,10 @@ namespace RecommendationSystem.Simple.MedianRating
             var indices = user.Ratings.Select(rating => rating.ArtistIndex).ToList();
             return indices.Select(index => new Recommendation(artists[index], model.MedianRating)).Cast<IRecommendation>().ToList();
         }
+
+        public float PredictRatingForArtist(IUser user, IMedianRatingModel model, List<IArtist> artists, int artist)
+        {
+            return model.MedianRating;
+        }
     }
 }

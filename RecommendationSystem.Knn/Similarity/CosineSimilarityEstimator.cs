@@ -1,32 +1,39 @@
 ﻿using System;
-using RecommendationSystem.Entities;
+using System.Linq;
+using RecommendationSystem.Data;
 using RecommendationSystem.Knn.Users;
 
 namespace RecommendationSystem.Knn.Similarity
 {
-    public class CosineSimilarityEstimator : SimilarityEstimatorBase
+    public class CosineSimilarityEstimator : ISimilarityEstimator
     {
-        public override float GetSimilarity(IUser first, IKnnUser second)
+        public float GetSimilarity(IKnnUser first, IKnnUser second)
         {
             float sumNum = 0.0f,
                   sumX = 0.0f,
                   sumY = 0.0f;
 
-            var ratingPairs = GetRatingPairs(first, second);
-            if (ratingPairs == null)
+            var artistIndices = first.ArtistIndices.IntersectSorted(second.ArtistIndices).ToList();
+            if (artistIndices.Count <= 0)
                 return 0.0f;
 
-            foreach (var ratingPair in ratingPairs)
+            foreach (var artistIndex in artistIndices)
             {
-                var rX = ratingPair.Item1.Value;
-                var rY = ratingPair.Item2.Value;
+                var rX = first.RatingsByArtistIndexLookupTable[artistIndex].Value;
+                var rY = second.RatingsByArtistIndexLookupTable[artistIndex].Value;
+
                 sumNum += rX * rY;
-                sumX += (float)Math.Pow(rX, 2);
-                sumY += (float)Math.Pow(rY, 2);
+                sumX += rX * rX;
+                sumY += rY * rY;
             }
 
-            var mass = ratingPairs.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
+            var mass = artistIndices.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
             return sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
+        }
+
+        public override string ToString()
+        {
+            return "CSE";
         }
     }
 }

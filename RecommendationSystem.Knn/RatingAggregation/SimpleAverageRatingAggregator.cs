@@ -24,5 +24,10 @@ namespace RecommendationSystem.Knn.RatingAggregation
 
             return r / neighbours.Count;
         }
+
+        public override string ToString()
+        {
+            return "SARA";
+        }
     }
 }

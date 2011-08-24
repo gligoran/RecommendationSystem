@@ -28,5 +28,10 @@ namespace RecommendationSystem.Knn.RatingAggregation
 
             return r / k;
         }
+
+        public override string ToString()
+        {
+            return "WSRA";
+        }
     }
 }

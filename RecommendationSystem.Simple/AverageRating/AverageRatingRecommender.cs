@@ -12,5 +12,10 @@ namespace RecommendationSystem.Simple.AverageRating
             var indices = user.Ratings.Select(rating => rating.ArtistIndex).ToList();
             return indices.Select(index => new Recommendation(artists[index], model.AverageRating)).Cast<IRecommendation>().ToList();
         }
+
+        public float PredictRatingForArtist(IUser user, IAverageRatingModel model, List<IArtist> artists, int artist)
+        {
+            return model.AverageRating;
+        }
     }
 }
