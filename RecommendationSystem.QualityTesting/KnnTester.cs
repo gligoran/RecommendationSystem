@@ -62,7 +62,7 @@ namespace RecommendationSystem.QualityTesting
             where TModel : IModel
             where TUser : IUser
         {
-            var onePrecent = NumberOfTests / 10;
+            var onePrecent = NumberOfTests / 100;
             var rmseList = new List<float>();
             while (rmseList.Count < NumberOfTests)
             {
