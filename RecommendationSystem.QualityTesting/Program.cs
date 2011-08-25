@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using RecommendationSystem.Data;
 using RecommendationSystem.Entities;
-using RecommendationSystem.Knn;
-using RecommendationSystem.Knn.Models;
 using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
@@ -17,14 +14,13 @@ using RecommendationSystem.Simple.AverageRating;
 using RecommendationSystem.Simple.MedianRating;
 using RecommendationSystem.Simple.MostCommonRating;
 using RecommendationSystem.Training;
+using Amib.Threading;
 
 namespace RecommendationSystem.QualityTesting
 {
     public static class Program
     {
         private static readonly Stopwatch timer = new Stopwatch();
-        private static CryptoRandom rng = new CryptoRandom();
-        private static TextWriter fileWriter;
 
         public static void Main(string[] args)
         {
@@ -80,13 +76,13 @@ namespace RecommendationSystem.QualityTesting
                         #region Knn RS'
                         LoadData(out trainUsers, out trainRatings, out testUsers, out testRatings, out artists);
 
-                        var ks = argList[argList.IndexOf("-k") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                        var ks = argList[argList.IndexOf("-k") + 1].ToLower().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
                         var numberOfTests = int.Parse(argList[argList.IndexOf("-t") + 1].ToLower());
                         var performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
                         var performContentKnnTests = argList.IndexOf("-co") >= 0;
 
                         var sims = new List<ISimilarityEstimator>();
-                        var argSims = argList[argList.IndexOf("-sim") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                        var argSims = argList[argList.IndexOf("-sim") + 1].ToLower().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var argSim in argSims)
                         {
                             switch (argSim)
@@ -101,7 +97,7 @@ namespace RecommendationSystem.QualityTesting
                         }
 
                         var ras = new List<IRatingAggregator>();
-                        var argRas = argList[argList.IndexOf("-ra") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                        var argRas = argList[argList.IndexOf("-ra") + 1].ToLower().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var argRa in argRas)
                         {
                             switch (argRa)
@@ -124,6 +120,8 @@ namespace RecommendationSystem.QualityTesting
                         timer.Stop();
                         Console.WriteLine("Model trained in {0}ms.", timer.ElapsedMilliseconds);
 
+                        var stp = new SmartThreadPool();
+                        //stp.MaxThreads = Environment.ProcessorCount;
                         foreach (var k in ks)
                         {
                             foreach (var sim in sims)
@@ -131,15 +129,45 @@ namespace RecommendationSystem.QualityTesting
                                 foreach (var ra in ras)
                                 {
                                     if (performNoContentKnnTests)
-                                        KnnTest<KnnRecommender>(k, sim, ra, testUsers, knnModel, trainer, artists, numberOfTests);
+                                    {
+                                        var tester = new KnnTester<KnnRecommender>
+                                                     {
+                                                         K = k,
+                                                         Sim = sim,
+                                                         Ra = ra,
+                                                         TestUsers = testUsers,
+                                                         KnnModel = knnModel,
+                                                         Trainer = trainer,
+                                                         Artists = artists,
+                                                         NumberOfTests = numberOfTests
+                                                     };
+                                        stp.QueueWorkItem(tester.KnnTest);
+                                    }
 
                                     if (performContentKnnTests)
-                                        KnnTest<ContentKnnRecommender>(k, sim, ra, testUsers, knnModel, trainer, artists, numberOfTests);
+                                    {
+                                        var tester = new KnnTester<ContentKnnRecommender>
+                                                     {
+                                                         K = k,
+                                                         Sim = sim,
+                                                         Ra = ra,
+                                                         TestUsers = testUsers,
+                                                         KnnModel = knnModel,
+                                                         Trainer = trainer,
+                                                         Artists = artists,
+                                                         NumberOfTests = numberOfTests
+                                                     };
+                                        stp.QueueWorkItem(tester.KnnTest);
+                                    }
+
                                 }
                             }
                         }
+
+                        stp.Start();
+
                         break;
-                        #endregion
+                        #endregion  
 
                     case "svd":
                     case "mf":
@@ -160,61 +188,6 @@ namespace RecommendationSystem.QualityTesting
                 Console.WriteLine("{0}{1}{1}{2}", e, Environment.NewLine, e.Message);
             }
         }
-
-        #region KnnTest
-        private static void KnnTest<TRecommender>(int k, ISimilarityEstimator sim, IRatingAggregator ra, List<IUser> testUsers, IKnnModel knnModel, ITrainer<IKnnModel, IUser> trainer, List<IArtist> artists, int numberOfTests)
-            where TRecommender : IRecommender<IKnnModel>
-        {
-            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] {sim, ra, k});
-
-            InitializeResultWriter(String.Format(@"D:\Dataset\results\Knn-{0}-{1}-{2}.txt", sim, ra, recommender));
-            Write("------------------------------------------------------", false);
-            Write(string.Format("Test Knn-{0}-{1}-{2} ({3})", sim, ra, recommender, DateTime.Now));
-            Write("------------------------------------------------------");
-
-            var rs = new KnnRecommendationSystem(trainer, recommender);
-            timer.Restart();
-            var rv = TestRecommendationSystem(artists, testUsers, knnModel, rs, numberOfTests);
-            timer.Stop();
-
-            Write(string.Format("RMSE(Knn-{0}-{1}-{2}) = {3} ({4}ms).", sim, ra, recommender, rv, timer.ElapsedMilliseconds));
-            fileWriter.Close();
-        }
-        #endregion
-
-        #region TestRecommendationSystem
-        private static RmseAndVariance TestRecommendationSystem<TModel, TUser>(List<IArtist> artists, List<TUser> testUsers, TModel model, IRecommendationSystem<TModel, TUser, ITrainer<TModel, TUser>, IRecommender<TModel>> rs, int numberOfTests = 100000)
-            where TModel : IModel
-            where TUser : IUser
-        {
-            var tenPrecent = numberOfTests / 10;
-            var rmseList = new List<float>();
-            while (rmseList.Count < numberOfTests)
-            {
-                var userIndex = rng.Next(testUsers.Count);
-                var user = testUsers[userIndex];
-
-                //if true we'll remove the only rating
-                if (user.Ratings.Count < 2)
-                    continue;
-
-                var ratingIndex = rng.Next(user.Ratings.Count);
-                var rating = user.Ratings[ratingIndex];
-
-                var error = GerPredictionError(artists, model, rs, rating, user);
-
-                rmseList.Add((float)Math.Sqrt(error * error));
-
-                if (rmseList.Count % tenPrecent != 0)
-                    continue;
-
-                Write(string.Format("Test at {0} in {1}ms with RMSE {2}", rmseList.Count, timer.ElapsedMilliseconds, rmseList.Sum() / rmseList.Count));
-            }
-
-            var rv = new RmseAndVariance(rmseList);
-            return rv;
-        }
-        #endregion
 
         #region CompleteTestRecommendationSystem
         private static RmseAndVariance CompleteTestRecommendationSystem<TModel, TUser>(List<IArtist> artists, List<TUser> testUsers, TModel model, IRecommendationSystem<TModel, TUser, ITrainer<TModel, TUser>, IRecommender<TModel>> rs)
@@ -264,25 +237,25 @@ namespace RecommendationSystem.QualityTesting
         #endregion
 
         #region SavingResults
-        private static void InitializeResultWriter(string filename)
-        {
-            var dir = Path.GetDirectoryName(filename);
-            if (dir != null && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+        //private static void InitializeResultWriter(string filename)
+        //{
+        //    var dir = Path.GetDirectoryName(filename);
+        //    if (dir != null && !Directory.Exists(dir))
+        //        Directory.CreateDirectory(dir);
 
-            fileWriter = new StreamWriter(filename);
-        }
+        //    fileWriter = new StreamWriter(filename);
+        //}
 
-        private static void Write(string text, bool toFile = true)
-        {
-            Console.WriteLine(text);
+        //private static void Write(string text, bool toFile = true)
+        //{
+        //    Console.WriteLine(text);
 
-            if (!toFile)
-                return;
+        //    if (!toFile)
+        //        return;
 
-            fileWriter.WriteLine(text);
-            fileWriter.Flush();
-        }
+        //    fileWriter.WriteLine(text);
+        //    fileWriter.Flush();
+        //}
         #endregion
     }
 }
