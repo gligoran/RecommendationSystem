@@ -21,7 +21,7 @@ namespace RecommendationSystem.QualityTesting
 
         public override string ToString()
         {
-            return string.Format("N: {0}, AvgRMSE: {1}, RmseVar: {2}, EstVar: {3}", RmseList.Count, AverageRmse, RmseVariance, EstimateVariance);
+            return string.Format("N: {0},\tAvgRMSE: {1},\tRmseVar: {2},\tEstVar: {3}", RmseList.Count, AverageRmse, RmseVariance, EstimateVariance);
         }
     }
 }

@@ -53,7 +53,7 @@ namespace RecommendationSystem.QualityTesting.Testers
                 Timer.Stop();
 
                 Write("------------------------------------------------------", false);
-                Write(string.Format("RMSE({0}) = {1} ({2}ms).", TestName, rv, Timer.ElapsedMilliseconds));
+                Write(string.Format("{0} -> {1} ({2}).", TestName, rv, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
             }
             catch (Exception e)
             {
