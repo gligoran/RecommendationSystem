@@ -9,7 +9,7 @@ namespace RecommendationSystem.Data
     public static class ArtistProvider
     {
         #region ImportFromDataset
-        public static List<IArtist> ImportFromDataset(string filename, out List<string> artistIndexLookupTable, int limit = int.MaxValue)
+        public static IEnumerable<IArtist> ImportFromDataset(string filename, out List<string> artistIndexLookupTable, int limit = int.MaxValue)
         {
             return ImportFromDataset(filename, 2, out artistIndexLookupTable);
         }

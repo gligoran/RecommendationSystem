@@ -39,9 +39,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SmartThreadPool, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\lib\SmartThreadPool.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,11 +49,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CryptoRandom.cs" />
-    <Compile Include="KnnTester.cs" />
+    <Compile Include="Testers\ITester.cs" />
+    <Compile Include="Testers\KnnTester.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RatingByArtistComparer.cs" />
     <Compile Include="RmseAndVariance.cs" />
+    <Compile Include="Testers\TesterBase.cs" />
+    <Compile Include="Testers\SimpleTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">
@@ -83,6 +82,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

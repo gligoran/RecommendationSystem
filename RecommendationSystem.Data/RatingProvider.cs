@@ -93,7 +93,7 @@ namespace RecommendationSystem.Data
                 users.CombineDuplicateArtists();
         }
 
-        private static void CombineDuplicateArtists(this List<IUser> users)
+        private static void CombineDuplicateArtists(this IEnumerable<IUser> users)
         {
             var max = 0;
             var count = 0;

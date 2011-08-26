@@ -196,7 +196,7 @@ namespace RecommendationSystem.Data
         #endregion
 
         #region GroupRatingsByUsers
-        private static IEnumerable<List<IRating>> GroupRatingsByUsers(List<IRating> ratings, int userCount)
+        private static IEnumerable<List<IRating>> GroupRatingsByUsers(IEnumerable<IRating> ratings, int userCount)
         {
             var users = new List<IRating>[userCount];
             for (var i = 0; i < userCount; i++)

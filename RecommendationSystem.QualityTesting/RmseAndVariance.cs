@@ -6,24 +6,22 @@ namespace RecommendationSystem.QualityTesting
 {
     public class RmseAndVariance
     {
-        public float Rmse { get; set; }
-        public float Variance { get; set; }
-
-        public RmseAndVariance(float rmse, float variance)
-        {
-            Rmse = rmse;
-            Variance = variance;
-        }
+        internal List<float> RmseList { get; set; }
+        public float AverageRmse { get; set; }
+        public float RmseVariance { get; set; }
+        public float EstimateVariance { get; set; }
 
         public RmseAndVariance(List<float> rmseList)
         {
-            Rmse = rmseList.Average();
-            Variance = rmseList.Select(rmse => Math.Abs(Rmse - rmse)).Average();
+            RmseList = rmseList;
+            AverageRmse = rmseList.Average();
+            RmseVariance = rmseList.Sum(rmse => (float)Math.Pow(rmse - AverageRmse, 2)) / (rmseList.Count - 1);
+            EstimateVariance = RmseVariance / rmseList.Count;
         }
 
         public override string ToString()
         {
-            return string.Format("RMSE: {0}, Variance: {1}", Rmse, Variance);
+            return string.Format("N: {0}, AvgRMSE: {1}, RmseVar: {2}, EstVar: {3}", RmseList.Count, AverageRmse, RmseVariance, EstimateVariance);
         }
     }
 }

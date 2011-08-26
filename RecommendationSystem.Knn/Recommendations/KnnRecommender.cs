@@ -45,7 +45,7 @@ namespace RecommendationSystem.Knn.Recommendations
         #endregion
 
         #region GenerateRecommendations
-        public List<IRecommendation> GenerateRecommendations(IUser user, IKnnModel model, List<IArtist> artists)
+        public IEnumerable<IRecommendation> GenerateRecommendations(IUser user, IKnnModel model, List<IArtist> artists)
         {
             return GenerateRecommendations(user, model, artists, NearestNeighboursCount);
         }

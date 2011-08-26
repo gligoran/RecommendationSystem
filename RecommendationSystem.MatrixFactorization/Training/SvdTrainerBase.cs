@@ -23,7 +23,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
             return TrainModel(users, artists, ratings, new TrainingParameters());
         }
 
-        public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings, TrainingParameters trainingParameters)
+        public TSvdModel TrainModel(IEnumerable<IUser> users, IEnumerable<IArtist> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
             return TrainModel(users.GetLookupTable(), artists.GetLookupTable(), ratings, trainingParameters);
         }
