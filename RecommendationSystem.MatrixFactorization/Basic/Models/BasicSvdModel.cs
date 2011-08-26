@@ -1,8 +1,9 @@
+using RecommendationSystem.MatrixFactorization.Models;
 using RecommendationSystem.MatrixFactorization.Training;
 
-namespace RecommendationSystem.MatrixFactorization.Models
+namespace RecommendationSystem.MatrixFactorization.Basic.Models
 {
-    public class BasicSvdModel : ISvdModel
+    public class BasicSvdModel : IBasicSvdModel
     {
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }

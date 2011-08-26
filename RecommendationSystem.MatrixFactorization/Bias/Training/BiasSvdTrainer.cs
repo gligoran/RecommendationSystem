@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using RecommendationSystem.Entities;
-using RecommendationSystem.MatrixFactorization.Models;
+using RecommendationSystem.MatrixFactorization.Bias.Models;
+using RecommendationSystem.MatrixFactorization.Training;
 
-namespace RecommendationSystem.MatrixFactorization.Training
+namespace RecommendationSystem.MatrixFactorization.Bias.Training
 {
     public class BiasSvdTrainer : SvdTrainerBase<IBiasSvdModel>
     {

@@ -1,4 +1,6 @@
-namespace RecommendationSystem.MatrixFactorization.Models
+using RecommendationSystem.MatrixFactorization.Models;
+
+namespace RecommendationSystem.MatrixFactorization.Bias.Models
 {
     public interface IBiasSvdModel : ISvdModel
     {

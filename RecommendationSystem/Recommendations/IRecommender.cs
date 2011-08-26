@@ -7,7 +7,7 @@ namespace RecommendationSystem.Recommendations
     public interface IRecommender<in TModel>
         where TModel : IModel
     {
-        IEnumerable<IRecommendation> GenerateRecommendations(IUser user, TModel model, List<IArtist> artists);
         float PredictRatingForArtist(IUser user, TModel model, List<IArtist> artists, int artist);
+        IEnumerable<IRecommendation> GenerateRecommendations(IUser user, TModel model, List<IArtist> artists);
     }
 }

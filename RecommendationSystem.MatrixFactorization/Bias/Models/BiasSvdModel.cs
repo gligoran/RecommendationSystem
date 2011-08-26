@@ -1,6 +1,7 @@
+using RecommendationSystem.MatrixFactorization.Models;
 using RecommendationSystem.MatrixFactorization.Training;
 
-namespace RecommendationSystem.MatrixFactorization.Models
+namespace RecommendationSystem.MatrixFactorization.Bias.Models
 {
     public class BiasSvdModel : IBiasSvdModel
     {

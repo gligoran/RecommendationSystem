@@ -1,6 +1,6 @@
 ﻿namespace RecommendationSystem.MatrixFactorization
 {
-    public static class Extensions
+    public static class PopulateExtension
     {
         public static void Populate<T>(this T[,] array, T defaultVaue)
         {
