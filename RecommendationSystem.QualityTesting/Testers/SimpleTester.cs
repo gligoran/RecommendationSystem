@@ -26,11 +26,15 @@ namespace RecommendationSystem.QualityTesting.Testers
             TrainRatings = trainRatings;
             TestUsers = testUsers;
 
-            TestName = "SimpleTests";
+            TestName = "Simple";
         }
 
         public override void Test()
         {
+            base.Test();
+            
+            try
+            {
             var rss = new[] {"ar", "mr", "mcr"};
             Parallel.ForEach(rss, rs =>
                 {
@@ -56,6 +60,11 @@ namespace RecommendationSystem.QualityTesting.Testers
                             break;
                     }
                 });
+            }
+            catch (Exception e)
+            {
+                Write(string.Format("{0}{1}{1}{2}", e, Environment.NewLine, e.Message));
+            }
         }
 
         #region CompleteTestRecommendationSystem

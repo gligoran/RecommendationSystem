@@ -10,7 +10,10 @@ namespace RecommendationSystem.QualityTesting.Testers
         protected TextWriter FileWriter;
         public string TestName { get; set; }
 
-        public abstract void Test();
+        public virtual void Test()
+        {
+            InitializeResultWriter(String.Format(@"D:\Dataset\results\{0}.txt", TestName));
+        }
 
         protected void InitializeResultWriter(string filename)
         {

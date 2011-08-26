@@ -40,7 +40,7 @@ namespace RecommendationSystem.QualityTesting.Testers
             TestName = string.Format("Knn-K{0}-{1}-{2}-{3}-T{4}", K, Sim, Ra, recommender, NumberOfTests);
             writeFrequency = NumberOfTests / 100;
 
-            InitializeResultWriter(String.Format(@"D:\Dataset\results\{0}.txt", TestName));
+            base.Test();
 
             try
             {
