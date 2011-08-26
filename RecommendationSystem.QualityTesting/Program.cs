@@ -10,8 +10,6 @@ using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Knn.Training;
 using RecommendationSystem.QualityTesting.Testers;
 
-//using Amib.Threading;
-
 namespace RecommendationSystem.QualityTesting
 {
     public static class Program
@@ -31,7 +29,7 @@ namespace RecommendationSystem.QualityTesting
                 var argList = new List<string>(args);
 
                 var mode = argList[argList.IndexOf("-mode") + 1].ToLower();
-                Console.WriteLine("Performing {0} tests...", mode);
+                Console.WriteLine("Performing {0} tests...", mode.ToUpper());
 
                 List<IArtist> artists;
                 List<IUser> trainUsers;
