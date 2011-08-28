@@ -14,25 +14,27 @@ namespace RecommendationSystem.Knn.Recommendations
         public ISimilarityEstimator SimilarityEstimator { get; set; }
         public IRatingAggregator RatingAggregator { get; set; }
         public int NearestNeighboursCount { get; set; }
+        public float DefaultRating { get; set; }
 
         #region Consturctor
-        public KnnRecommender(int nearestNeighboursCount = 3)
-            : this(new CosineSimilarityEstimator(), new SimpleAverageRatingAggregator(), nearestNeighboursCount)
-        {}
+        public KnnRecommender(int nearestNeighboursCount = 3, float defaultRating = 0.0f)
+            : this(new CosineSimilarityEstimator(), new SimpleAverageRatingAggregator(), nearestNeighboursCount, defaultRating)
+        { }
 
-        public KnnRecommender(ISimilarityEstimator similarityEstimator, int nearestNeighboursCount = 3)
-            : this(similarityEstimator, new SimpleAverageRatingAggregator(), nearestNeighboursCount)
-        {}
+        public KnnRecommender(ISimilarityEstimator similarityEstimator, int nearestNeighboursCount = 3, float defaultRating = 0.0f)
+            : this(similarityEstimator, new SimpleAverageRatingAggregator(), nearestNeighboursCount, defaultRating)
+        { }
 
-        public KnnRecommender(IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3)
-            : this(new CosineSimilarityEstimator(), ratingAggregator, nearestNeighboursCount)
-        {}
+        public KnnRecommender(IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3, float defaultRating = 0.0f)
+            : this(new CosineSimilarityEstimator(), ratingAggregator, nearestNeighboursCount, defaultRating)
+        { }
 
-        public KnnRecommender(ISimilarityEstimator similarityEstimator, IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3)
+        public KnnRecommender(ISimilarityEstimator similarityEstimator, IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3, float defaultRating = 0.0f)
         {
             SimilarityEstimator = similarityEstimator;
             RatingAggregator = ratingAggregator;
             NearestNeighboursCount = nearestNeighboursCount;
+            DefaultRating = defaultRating;
         }
         #endregion
 
@@ -40,7 +42,10 @@ namespace RecommendationSystem.Knn.Recommendations
         public float PredictRatingForArtist(IUser user, IKnnModel model, List<IArtist> artists, int artistIndex)
         {
             var recommendations = GenerateRecommendations(user, model, artists);
-            return recommendations != null ? recommendations.Where(recommendation => recommendation.Artist == artists[artistIndex]).Select(rating => rating.Value).FirstOrDefault() : 0.0f;
+            if (recommendations != null)
+                return recommendations.Where(recommendation => recommendation.Artist == artists[artistIndex]).Select(rating => rating.Value).FirstOrDefault();
+
+            return DefaultRating;
         }
         #endregion
 

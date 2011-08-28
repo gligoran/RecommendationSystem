@@ -36,7 +36,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         #region Test
         public override void Test()
         {
-            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] {Sim, Ra, K});
+            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] {Sim, Ra, K, 1.0f});
             TestName = string.Format("Knn-K{0}-{1}-{2}-{3}-T{4}", K, Sim, Ra, recommender, NumberOfTests);
             writeFrequency = NumberOfTests / 100;
 
