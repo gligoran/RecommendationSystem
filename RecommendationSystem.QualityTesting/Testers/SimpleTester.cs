@@ -35,7 +35,7 @@ namespace RecommendationSystem.QualityTesting.Testers
 
             try
             {
-                var rss = new[] { "ar", "mr", "mcr" };
+                var rss = new[] {"ar", "mr", "mcr"};
                 var test = Parallel.ForEach(rss, rs =>
                     {
                         switch (rs)

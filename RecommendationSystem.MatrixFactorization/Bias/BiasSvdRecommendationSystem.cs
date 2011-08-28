@@ -7,7 +7,7 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.MatrixFactorization.Bias
 {
-    class BiasSvdRecommendationSystem : ISvdRecommendationSystem<IBiasSvdModel>
+    internal class BiasSvdRecommendationSystem : ISvdRecommendationSystem<IBiasSvdModel>
     {
         public ITrainer<IBiasSvdModel, IUser> Trainer { get; set; }
         public IRecommender<IBiasSvdModel> Recommender { get; set; }
@@ -20,11 +20,11 @@ namespace RecommendationSystem.MatrixFactorization.Bias
 
         public BiasSvdRecommendationSystem(ITrainer<IBiasSvdModel, IUser> trainer)
             : this(trainer, new BiasSvdRecommender())
-        { }
+        {}
 
         public BiasSvdRecommendationSystem(IRecommender<IBiasSvdModel> recommender)
             : this(new BiasSvdTrainer(), recommender)
-        { }
+        {}
 
         public BiasSvdRecommendationSystem(ITrainer<IBiasSvdModel, IUser> trainer, IRecommender<IBiasSvdModel> recommender)
         {

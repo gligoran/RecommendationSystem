@@ -2,21 +2,21 @@
 {
     public class TrainingParameters
     {
-        public float EpochLimit { get; set; }
-        public float RmseDiffLimit { get; set; }
+        public float MinEpochTreshold { get; set; }
+        public float MaxEpochTreshold { get; set; }
+        public double RmseImprovementTreshold { get; set; }
         public float K { get; set; }
         public float LRate { get; set; }
         public int FeatureCount { get; set; }
 
-        public TrainingParameters(int featureCount = 100, float lRate = 0.001f, float k = 0.02f, float rmseDiffLimit = 0.00001f, float epochLimit = 100)
+        public TrainingParameters(int featureCount = 100, float lRate = 0.001f, float k = 0.02f, float rmseImprovementTreshold = 0.0001f, int minEpochTreshold = 120, int maxEpochTreshold = 200)
         {
             FeatureCount = featureCount;
             LRate = lRate;
             K = k;
-            RmseDiffLimit = rmseDiffLimit;
-            EpochLimit = epochLimit;
+            RmseImprovementTreshold = rmseImprovementTreshold;
+            MinEpochTreshold = minEpochTreshold;
+            MaxEpochTreshold = maxEpochTreshold;
         }
-
-        public static TrainingParameters DefaultTrainingParameters = new TrainingParameters(25, 0.001f, 0.02f, 0.00001f, 70);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using RecommendationSystem.Entities;
 using RecommendationSystem.MatrixFactorization.Basic.Models;
@@ -9,12 +10,12 @@ namespace RecommendationSystem.MatrixFactorization.Basic.Recommendations
     {
         public float PredictRatingForArtist(IUser user, IBasicSvdModel model, List<IArtist> artists, int artist)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IEnumerable<IRecommendation> GenerateRecommendations(IUser user, IBasicSvdModel model, List<IArtist> artists)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

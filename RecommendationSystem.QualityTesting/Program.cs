@@ -8,6 +8,8 @@ using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Knn.Training;
+using RecommendationSystem.MatrixFactorization.Bias.Training;
+using RecommendationSystem.MatrixFactorization.Training;
 using RecommendationSystem.QualityTesting.Testers;
 
 namespace RecommendationSystem.QualityTesting
@@ -83,9 +85,9 @@ namespace RecommendationSystem.QualityTesting
                             }
                         }
 
-                        var trainer = new KnnTrainer();
+                        var knnTrainer = new KnnTrainer();
                         timer.Restart();
-                        var knnModel = trainer.TrainModel(trainUsers, artists, trainRatings);
+                        var knnModel = knnTrainer.TrainModel(trainUsers, artists, trainRatings);
                         timer.Stop();
                         Console.WriteLine("Model trained in {0}ms.", timer.ElapsedMilliseconds);
 
@@ -104,7 +106,7 @@ namespace RecommendationSystem.QualityTesting
                                                             Ra = ra,
                                                             TestUsers = testUsers,
                                                             KnnModel = knnModel,
-                                                            Trainer = trainer,
+                                                            Trainer = knnTrainer,
                                                             Artists = artists,
                                                             NumberOfTests = numberOfTests
                                                         };
@@ -120,7 +122,7 @@ namespace RecommendationSystem.QualityTesting
                                                                    Ra = ra,
                                                                    TestUsers = testUsers,
                                                                    KnnModel = knnModel,
-                                                                   Trainer = trainer,
+                                                                   Trainer = knnTrainer,
                                                                    Artists = artists,
                                                                    NumberOfTests = numberOfTests
                                                                };
@@ -133,17 +135,21 @@ namespace RecommendationSystem.QualityTesting
                         break;
                     case "svd":
                     case "mf":
-                        Console.WriteLine("Matrix factorization (SVD) tests are not yet implemented.");
+                        var svdTrainer = new BiasSvdTrainer();
+                        var model = svdTrainer.TrainModel(trainUsers, artists, trainRatings, new TrainingParameters(2, rmseImprovementTreshold: 1f, minEpochTreshold: 1, maxEpochTreshold: 2));
+                        svdTrainer.SaveModel(@"D:\Dataset\models\svdmodel.rs", model);
+                        model = svdTrainer.LoadModel(@"D:\Dataset\models\svdmodel.rs");
+
                         break;
                 }
-
-                if (args.Where(arg => arg.ToLower() == "-wait").Count() != 0)
-                    Console.ReadLine();
             }
             catch (Exception e)
             {
                 Console.WriteLine("{0}{1}{1}{2}", e, Environment.NewLine, e.Message);
             }
+
+            if (args.Where(arg => arg.ToLower() == "-wait").Count() != 0)
+                Console.ReadLine();
         }
 
         #region LoadData

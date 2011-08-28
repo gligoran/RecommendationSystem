@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using RecommendationSystem.Entities;
@@ -30,7 +31,7 @@ namespace RecommendationSystem.Data
                 ratings.Add(new Rating(
                                 userIndex,
                                 artists.BinarySearch(parts[2]),
-                                float.Parse(parts[3])
+                                float.Parse(parts[3], CultureInfo.CurrentCulture)
                                 ));
             }
 
@@ -51,7 +52,7 @@ namespace RecommendationSystem.Data
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
-                ratings.Add(new Rating(int.Parse(parts[0]), int.Parse(parts[1]), float.Parse(parts[2])));
+                ratings.Add(new Rating(int.Parse(parts[0]), int.Parse(parts[1]), float.Parse(parts[2], CultureInfo.CurrentCulture)));
                 limit--;
             }
 

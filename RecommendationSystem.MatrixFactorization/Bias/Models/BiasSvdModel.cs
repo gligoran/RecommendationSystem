@@ -1,4 +1,3 @@
-using RecommendationSystem.MatrixFactorization.Models;
 using RecommendationSystem.MatrixFactorization.Training;
 
 namespace RecommendationSystem.MatrixFactorization.Bias.Models
@@ -7,21 +6,30 @@ namespace RecommendationSystem.MatrixFactorization.Bias.Models
     {
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }
+
+        public int FeatureCount
+        {
+            get { return UserFeatures.GetUpperBound(0) + 1; }
+        }
+
         public float GlobalAverage { get; set; }
         public float[] UserBias { get; set; }
         public float[] ArtistBias { get; set; }
-        public TrainingParameters TrainingParameters { get; set; }
 
-        public BiasSvdModel(TrainingParameters trainingParameters)
-        {
-            TrainingParameters = trainingParameters;
-        }
+        internal BiasSvdModel()
+        {}
 
         public BiasSvdModel(float[,] userFeatures, float[,] artistFeatures, float globalAverage, float[] userBias, float[] artistBias, TrainingParameters trainingParameters)
-            : this(trainingParameters)
         {
             UserFeatures = userFeatures;
             ArtistFeatures = artistFeatures;
+            GlobalAverage = globalAverage;
+            UserBias = userBias;
+            ArtistBias = artistBias;
+        }
+
+        public BiasSvdModel(float globalAverage, float[] userBias, float[] artistBias)
+        {
             GlobalAverage = globalAverage;
             UserBias = userBias;
             ArtistBias = artistBias;

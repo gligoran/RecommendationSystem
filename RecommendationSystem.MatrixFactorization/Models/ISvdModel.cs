@@ -6,5 +6,6 @@ namespace RecommendationSystem.MatrixFactorization.Models
     {
         float[,] UserFeatures { get; set; }
         float[,] ArtistFeatures { get; set; }
+        int FeatureCount { get; }
     }
 }

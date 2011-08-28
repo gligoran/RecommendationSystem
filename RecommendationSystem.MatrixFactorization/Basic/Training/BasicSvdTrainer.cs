@@ -7,16 +7,19 @@ namespace RecommendationSystem.MatrixFactorization.Basic.Training
 {
     public class BasicSvdTrainer : SvdTrainerBase<IBasicSvdModel>
     {
-        public override IBasicSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
+        protected override IBasicSvdModel InitializeNewModel(List<string> users, List<string> artists, List<IRating> ratings)
         {
-            var model = new BasicSvdModel();
-            CalculateFeatures(model, trainingParameters);
-            return model;
+            return new BasicSvdModel();
         }
 
-        protected override float PredictRatingUsingResiduals(IBasicSvdModel model, int rating, int feature)
+        protected override float PredictRatingUsingResiduals(IBasicSvdModel model, int rating, int feature, List<IRating> ratings)
         {
-            return ResidualRatingValues[rating] + model.UserFeatures[feature, Ratings[rating].UserIndex] * model.ArtistFeatures[feature, Ratings[rating].ArtistIndex];
+            return ResidualRatingValues[rating] + model.UserFeatures[feature, ratings[rating].UserIndex] * model.ArtistFeatures[feature, ratings[rating].ArtistIndex];
+        }
+
+        protected override IBasicSvdModel GetNewModel()
+        {
+            return new BasicSvdModel();
         }
     }
 }
