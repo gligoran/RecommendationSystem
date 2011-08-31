@@ -73,7 +73,7 @@ namespace RecommendationSystem.MatrixFactorization.Training
             var count = 0;
             var rmseImprovment = float.MaxValue;
 
-            while ((rmseImprovment > trainingParameters.RmseImprovementTreshold || count > trainingParameters.MinEpochTreshold) && count < trainingParameters.MaxEpochTreshold)
+            while ((rmseImprovment > trainingParameters.RmseImprovementTreshold || count < trainingParameters.MinEpochTreshold) && count < trainingParameters.MaxEpochTreshold)
             {
                 rmsePrev = rmse;
                 rmse = TrainFeature(model, f, ratings, trainingParameters);

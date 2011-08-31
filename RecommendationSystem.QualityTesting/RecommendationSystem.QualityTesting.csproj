@@ -53,7 +53,7 @@
     <Compile Include="Testers\KnnTester.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RmseAndVariance.cs" />
+    <Compile Include="RmseBiasAndVariance.cs" />
     <Compile Include="Testers\TesterBase.cs" />
     <Compile Include="Testers\SimpleTester.cs" />
   </ItemGroup>

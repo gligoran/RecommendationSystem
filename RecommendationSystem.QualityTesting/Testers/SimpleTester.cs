@@ -70,11 +70,12 @@ namespace RecommendationSystem.QualityTesting.Testers
         }
 
         #region CompleteTestRecommendationSystem
-        private RmseAndVariance TestRecommendationSystem<TModel, TUser>(IRecommendationSystem<TModel, TUser, ITrainer<TModel, TUser>, IRecommender<TModel>> rs, IEnumerable<TUser> testUsers, TModel model, List<IArtist> artists)
+        private RmseBiasAndVariance TestRecommendationSystem<TModel, TUser>(IRecommendationSystem<TModel, TUser, ITrainer<TModel, TUser>, IRecommender<TModel>> rs, IEnumerable<TUser> testUsers, TModel model, List<IArtist> artists)
             where TModel : IModel
             where TUser : IUser
         {
             var rmseList = new List<float>();
+            var biasList = new List<float>();
             foreach (var user in TestUsers)
             {
                 lock (user)
@@ -83,14 +84,16 @@ namespace RecommendationSystem.QualityTesting.Testers
                     foreach (var rating in user.Ratings)
                     {
                         user.Ratings = originalRatings.Where(r => r != rating).ToList();
-                        var error = rs.Recommender.PredictRatingForArtist(user, model, artists, rating.ArtistIndex) - rating.Value;
+                        var predictedRating = rs.Recommender.PredictRatingForArtist(user, model, artists, rating.ArtistIndex);
+                        var error = predictedRating - rating.Value;
+                        biasList.Add(error);
                         rmseList.Add((float)Math.Sqrt(error * error));
                     }
                     user.Ratings = originalRatings;
                 }
             }
 
-            return new RmseAndVariance(rmseList);
+            return new RmseBiasAndVariance(rmseList, biasList);
         }
         #endregion
     }

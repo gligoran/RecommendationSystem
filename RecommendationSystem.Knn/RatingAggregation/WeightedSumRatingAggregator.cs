@@ -21,7 +21,7 @@ namespace RecommendationSystem.Knn.RatingAggregation
 
                 var rating = neighbour.User.Ratings.FirstOrDefault(nr => nr.ArtistIndex == artistIndex);
                 if (rating == null)
-                    r += neighbour.Similarity * neighbour.User.AverageRating;
+                    r += neighbour.Similarity * 1.0f;
                 else
                     r += neighbour.Similarity * rating.Value;
             }

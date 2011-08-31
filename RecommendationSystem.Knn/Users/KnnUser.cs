@@ -20,7 +20,7 @@ namespace RecommendationSystem.Knn.Users
             ArtistIndices = new List<int>(artistIndexRatings.Keys);
             ArtistIndices.Sort();
 
-            AverageRating = Ratings.Average(rating => rating.Value);
+            AverageRating = Ratings.Count > 0 ? Ratings.Average(rating => rating.Value) : 0.0f;
         }
 
         public static IKnnUser FromIUser(IUser user)

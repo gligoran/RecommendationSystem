@@ -9,7 +9,7 @@
         public float LRate { get; set; }
         public int FeatureCount { get; set; }
 
-        public TrainingParameters(int featureCount = 100, float lRate = 0.001f, float k = 0.02f, float rmseImprovementTreshold = 0.0001f, int minEpochTreshold = 120, int maxEpochTreshold = 200)
+        public TrainingParameters(int featureCount = 10, float lRate = 0.001f, float k = 0.02f, float rmseImprovementTreshold = 0.000001f, int minEpochTreshold = 120, int maxEpochTreshold = 200)
         {
             FeatureCount = featureCount;
             LRate = lRate;

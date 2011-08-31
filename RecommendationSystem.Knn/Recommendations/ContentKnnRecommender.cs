@@ -1,4 +1,3 @@
-using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Knn.Users;
 
@@ -23,12 +22,12 @@ namespace RecommendationSystem.Knn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentKnnRecommender(IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
-            : this(ratingAggregator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
+        public ContentKnnRecommender(IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+            : this(recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
         {}
 
-        public ContentKnnRecommender(IRatingAggregator ratingAggregator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
-            : base(ratingAggregator, nearestNeighboursCount)
+        public ContentKnnRecommender(IRecommendationGenerator recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+            : base(recommendationGenerator, nearestNeighboursCount)
         {
             ContentSimilarityEstimator = contentSimilarityEstimator;
             RatingSimilarityWeight = ratingSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
@@ -47,20 +46,20 @@ namespace RecommendationSystem.Knn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentKnnRecommender(ISimilarityEstimator similarityEstimator, IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
-            : this(similarityEstimator, ratingAggregator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
+        public ContentKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+            : this(similarityEstimator, recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
         {}
 
-        public ContentKnnRecommender(ISimilarityEstimator similarityEstimator, IRatingAggregator ratingAggregator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
-            : base(similarityEstimator, ratingAggregator, nearestNeighboursCount)
+        public ContentKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+            : base(similarityEstimator, recommendationGenerator, nearestNeighboursCount)
         {
             ContentSimilarityEstimator = contentSimilarityEstimator;
             RatingSimilarityWeight = ratingSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentKnnRecommender(ISimilarityEstimator similarityEstimator, IRatingAggregator ratingAggregator, int nearestNeighboursCount = 3)
-            : this(similarityEstimator, ratingAggregator, new ContentSimilarityEstimator(), nearestNeighboursCount)
+        public ContentKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3)
+            : this(similarityEstimator, recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount)
         {}
         #endregion
 

@@ -8,7 +8,9 @@ using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Knn.Training;
+using RecommendationSystem.MatrixFactorization.Basic.Training;
 using RecommendationSystem.MatrixFactorization.Bias.Training;
+using RecommendationSystem.MatrixFactorization.Models;
 using RecommendationSystem.MatrixFactorization.Training;
 using RecommendationSystem.QualityTesting.Testers;
 
@@ -43,10 +45,16 @@ namespace RecommendationSystem.QualityTesting
                 switch (mode)
                 {
                     case "simple":
+
+                        #region Simple
                         var simpleTester = new SimpleTester(trainUsers, artists, trainRatings, testUsers);
                         simpleTester.Test();
                         break;
+                        #endregion
+
                     case "knn":
+
+                        #region kNN
                         var ks = argList[argList.IndexOf("-k") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
                         var numberOfTests = int.Parse(argList[argList.IndexOf("-t") + 1].ToLower());
                         var performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
@@ -64,23 +72,35 @@ namespace RecommendationSystem.QualityTesting
                                 case "cse":
                                     sims.Add(new CosineSimilarityEstimator());
                                     break;
+                                case "upse":
+                                    sims.Add(new UnionPearsonSimilarityEstimator());
+                                    break;
+                                case "ucse":
+                                    sims.Add(new UnionCosineSimilarityEstimator());
+                                    break;
                             }
                         }
 
-                        var ras = new List<IRatingAggregator>();
-                        var argRas = argList[argList.IndexOf("-ra") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                        foreach (var argRa in argRas)
+                        var rgs = new List<IRecommendationGenerator>();
+                        var argRgs = argList[argList.IndexOf("-rg") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var argRg in argRgs)
                         {
-                            switch (argRa)
+                            switch (argRg)
                             {
                                 case "sara":
-                                    ras.Add(new SimpleAverageRatingAggregator());
+                                    rgs.Add(new RatingAggregationRecommendationGenerator(new SimpleAverageRatingAggregator()));
                                     break;
                                 case "wsra":
-                                    ras.Add(new WeightedSumRatingAggregator());
+                                    rgs.Add(new RatingAggregationRecommendationGenerator(new WeightedSumRatingAggregator()));
                                     break;
                                 case "awsra":
-                                    ras.Add(new AdjustedWeightedSumRatingAggregator());
+                                    rgs.Add(new RatingAggregationRecommendationGenerator(new AdjustedWeightedSumRatingAggregator()));
+                                    break;
+                                case "frg":
+                                    rgs.Add(new FifthsRecommendationGenerator());
+                                    break;
+                                case "edrg":
+                                    rgs.Add(new EqualDescentRecommendationGenerator());
                                     break;
                             }
                         }
@@ -95,7 +115,7 @@ namespace RecommendationSystem.QualityTesting
                         {
                             foreach (var sim in sims)
                             {
-                                foreach (var ra in ras)
+                                foreach (var rg in rgs)
                                 {
                                     if (performNoContentKnnTests)
                                     {
@@ -103,7 +123,7 @@ namespace RecommendationSystem.QualityTesting
                                                         {
                                                             K = k,
                                                             Sim = sim,
-                                                            Ra = ra,
+                                                            Rg = rg,
                                                             TestUsers = testUsers,
                                                             KnnModel = knnModel,
                                                             Trainer = knnTrainer,
@@ -119,7 +139,7 @@ namespace RecommendationSystem.QualityTesting
                                                                {
                                                                    K = k,
                                                                    Sim = sim,
-                                                                   Ra = ra,
+                                                                   Rg = rg,
                                                                    TestUsers = testUsers,
                                                                    KnnModel = knnModel,
                                                                    Trainer = knnTrainer,
@@ -131,16 +151,51 @@ namespace RecommendationSystem.QualityTesting
                                 }
                             }
                         }
+                        break;
+                        #endregion
+
+                    case "svd-train":
+                    case "mf-train":
+
+                        #region SVD/MF Training
+                        var ttype = argList[argList.IndexOf("-type") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)[0];
+                        if (ttype == "basic")
+                        {
+                            var svdTrainer = new BasicSvdTrainer();
+                            var model = svdTrainer.TrainModel(trainUsers, artists, trainRatings, new TrainingParameters());
+                            svdTrainer.SaveModel(@"D:\Dataset\models\basic-svd-model.rs", model);
+                        }
+                        else if (ttype == "bias")
+                        {
+                            var svdTrainer = new BiasSvdTrainer();
+                            var model = svdTrainer.TrainModel(trainUsers, artists, trainRatings, new TrainingParameters());
+                            svdTrainer.SaveModel(@"D:\Dataset\models\bias-svd-model.rs", model);
+                        }
 
                         break;
+                        #endregion
+
                     case "svd":
                     case "mf":
-                        var svdTrainer = new BiasSvdTrainer();
-                        var model = svdTrainer.TrainModel(trainUsers, artists, trainRatings, new TrainingParameters(2, rmseImprovementTreshold: 1f, minEpochTreshold: 1, maxEpochTreshold: 2));
-                        svdTrainer.SaveModel(@"D:\Dataset\models\svdmodel.rs", model);
-                        model = svdTrainer.LoadModel(@"D:\Dataset\models\svdmodel.rs");
+
+                        #region SVD/MF Prediction
+                        ISvdModel svdModel = null;
+                        var ptype = argList[argList.IndexOf("-type") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)[0];
+                        if (ptype == "basic")
+                        {
+                            var svdTrainer = new BasicSvdTrainer();
+                            svdModel = svdTrainer.LoadModel(@"D:\Dataset\models\basic-svd-model.rs");
+                        }
+                        else if (ptype == "bias")
+                        {
+                            var svdTrainer = new BiasSvdTrainer();
+                            svdModel = svdTrainer.LoadModel(@"D:\Dataset\models\bias-svd-model.rs");
+                        }
+                        else
+                            throw new ArgumentException("Unknown type of SVD model. Enter BASIC or BIAS.");
 
                         break;
+                        #endregion
                 }
             }
             catch (Exception e)
@@ -157,7 +212,7 @@ namespace RecommendationSystem.QualityTesting
         {
             Console.WriteLine("Loading data...");
             timer.Restart();
-            trainRatings = RatingProvider.Load(DataFiles.TrainLogEqualWidthFiveScaleRatings);
+            trainRatings = RatingProvider.Load(DataFiles.TrainEqualFerquencyFiveScaleRatings);
             trainUsers = UserProvider.Load(DataFiles.TrainUsers);
             artists = ArtistProvider.Load(DataFiles.Artists);
             trainUsers.PopulateWithRatings(trainRatings);
