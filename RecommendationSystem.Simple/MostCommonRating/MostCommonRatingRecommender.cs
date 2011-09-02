@@ -13,7 +13,7 @@ namespace RecommendationSystem.Simple.MostCommonRating
             return indices.Select(index => new Recommendation(artists[index], model.MostCommonRating)).Cast<IRecommendation>().ToList();
         }
 
-        public float PredictRatingForArtist(IUser user, IMostCommonRatingModel model, List<IArtist> artists, int artist)
+        public float PredictRatingForArtist(IUser user, IMostCommonRatingModel model, List<IArtist> artists, int artistIndex)
         {
             return model.MostCommonRating;
         }

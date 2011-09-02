@@ -53,22 +53,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\Prediction\BasicSvdPredictor.cs" />
+    <Compile Include="Prediction\SvdPredictorBase.cs" />
     <Compile Include="Bias\Recommendations\BiasSvdRecommender.cs" />
     <Compile Include="Basic\BasicSvdRecommendationSystem.cs" />
     <Compile Include="Basic\Recommendations\BasicSvdRecommender.cs" />
     <Compile Include="Bias\BiasSvdRecommendationSystem.cs" />
+    <Compile Include="Bias\Prediction\BiasSvdPredictor.cs" />
+    <Compile Include="Recommendation\ISvdRecommender.cs" />
+    <Compile Include="Recommendation\SvdRecommenderBase.cs" />
     <Compile Include="ISvdRecommendationSystem.cs" />
     <Compile Include="Bias\Models\BiasSvdModel.cs" />
     <Compile Include="Basic\Models\IBasicSvdModel.cs" />
     <Compile Include="Bias\Models\IBiasSvdModel.cs" />
     <Compile Include="Models\ISvdModel.cs" />
     <Compile Include="Basic\Models\BasicSvdModel.cs" />
-    <Compile Include="Bias\Prediction\BiasSvdPredictor.cs" />
-    <Compile Include="Basic\Prediction\IBasicSvdPredictor.cs" />
-    <Compile Include="Bias\Prediction\IBiasSvdPredictor.cs" />
-    <Compile Include="Prediction\ISvdPredictor.cs" />
-    <Compile Include="Basic\Prediction\BasicSvdPredictor.cs" />
     <Compile Include="Bias\Training\BiasSvdTrainer.cs" />
+    <Compile Include="Prediction\ISvdPredictor.cs" />
+    <Compile Include="SvdRecommendationSystemBase.cs" />
     <Compile Include="Training\ISvdTrainer.cs" />
     <Compile Include="Training\SvdTrainerBase.cs" />
     <Compile Include="Training\TrainingParameters.cs" />

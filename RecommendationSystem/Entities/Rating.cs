@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RecommendationSystem.Entities
+﻿namespace RecommendationSystem.Entities
 {
     public class Rating : IRating
     {

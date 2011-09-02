@@ -13,7 +13,7 @@ namespace RecommendationSystem.Simple.MedianRating
             return indices.Select(index => new Recommendation(artists[index], model.MedianRating)).Cast<IRecommendation>().ToList();
         }
 
-        public float PredictRatingForArtist(IUser user, IMedianRatingModel model, List<IArtist> artists, int artist)
+        public float PredictRatingForArtist(IUser user, IMedianRatingModel model, List<IArtist> artists, int artistIndex)
         {
             return model.MedianRating;
         }

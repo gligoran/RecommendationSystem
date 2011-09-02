@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using RecommendationSystem.Data;
 using RecommendationSystem.Entities;
@@ -8,9 +10,12 @@ using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Knn.Training;
-using RecommendationSystem.MatrixFactorization.Basic.Training;
-using RecommendationSystem.MatrixFactorization.Bias.Training;
-using RecommendationSystem.MatrixFactorization.Models;
+using RecommendationSystem.MatrixFactorization.Basic;
+using RecommendationSystem.MatrixFactorization.Basic.Models;
+using RecommendationSystem.MatrixFactorization.Basic.Recommendations;
+using RecommendationSystem.MatrixFactorization.Bias;
+using RecommendationSystem.MatrixFactorization.Bias.Models;
+using RecommendationSystem.MatrixFactorization.Bias.Recommendations;
 using RecommendationSystem.MatrixFactorization.Training;
 using RecommendationSystem.QualityTesting.Testers;
 
@@ -158,18 +163,49 @@ namespace RecommendationSystem.QualityTesting
                     case "mf-train":
 
                         #region SVD/MF Training
-                        var ttype = argList[argList.IndexOf("-type") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)[0];
-                        if (ttype == "basic")
+                        var svdFs = argList[argList.IndexOf("-f") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                        var svdLrs = argList[argList.IndexOf("-lr") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToList();
+                        var svdKs = argList[argList.IndexOf("-k") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToList();
+                        var svdRis = argList[argList.IndexOf("-ri") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToList();
+                        var svdEs = argList[argList.IndexOf("-e") + 1].Split(new[] {'-'}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                        var svdBbs = argList[argList.IndexOf("-bb") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                        var svdTypes = argList[argList.IndexOf("-type") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                        var minEpoch = svdEs[0];
+                        var maxEpoch = svdEs[1];
+                        var svdBasic = svdTypes.Contains("basic");
+                        var svdBias = svdTypes.Contains("bias");
+
+                        foreach (var svdF in svdFs)
                         {
-                            var svdTrainer = new BasicSvdTrainer();
-                            var model = svdTrainer.TrainModel(trainUsers, artists, trainRatings, new TrainingParameters());
-                            svdTrainer.SaveModel(@"D:\Dataset\models\basic-svd-model.rs", model);
-                        }
-                        else if (ttype == "bias")
-                        {
-                            var svdTrainer = new BiasSvdTrainer();
-                            var model = svdTrainer.TrainModel(trainUsers, artists, trainRatings, new TrainingParameters());
-                            svdTrainer.SaveModel(@"D:\Dataset\models\bias-svd-model.rs", model);
+                            foreach (var svdLr in svdLrs)
+                            {
+                                foreach (var svdK in svdKs)
+                                {
+                                    foreach (var svdRi in svdRis)
+                                    {
+                                        foreach (var svdBb in svdBbs)
+                                        {
+                                            var trainingParameters = new TrainingParameters(svdF, svdLr, svdK, svdRi, minEpoch, maxEpoch, svdBb);
+                                            var filename = string.Format("F{0}-LR{1}-K{2}-RI{3}-E{4}-{5}-BB{6}", svdF, svdLr, svdK, svdRi, minEpoch, maxEpoch, svdBb);
+
+                                            if (svdBasic)
+                                            {
+                                                var rs = new BasicSvdRecommendationSystem();
+                                                var model = rs.Trainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
+                                                rs.SaveModel(string.Format(@"D:\Dataset\models\basicSvd-{0}.rs", filename), model);
+                                            }
+
+                                            if (svdBias)
+                                            {
+                                                var rs = new BiasSvdRecommendationSystem();
+                                                var model = rs.Trainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
+                                                rs.SaveModel(string.Format(@"D:\Dataset\models\biasSvd-{0}.rs", filename), model);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         break;
@@ -179,20 +215,72 @@ namespace RecommendationSystem.QualityTesting
                     case "mf":
 
                         #region SVD/MF Prediction
-                        ISvdModel svdModel = null;
-                        var ptype = argList[argList.IndexOf("-type") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)[0];
-                        if (ptype == "basic")
+                        var models = Directory.GetFiles(@"D:\Dataset\models\", "*.rs", SearchOption.TopDirectoryOnly);
+                        for (var i = 0; i < models.Length; i++)
                         {
-                            var svdTrainer = new BasicSvdTrainer();
-                            svdModel = svdTrainer.LoadModel(@"D:\Dataset\models\basic-svd-model.rs");
+                            var modelName = Path.GetFileName(models[i]);
+                            modelName = modelName != null ? modelName.Remove(modelName.Length - 3) : "unnamed model";
+                            Console.WriteLine("{0}) {1}", i + 1, modelName);
                         }
-                        else if (ptype == "bias")
+
+                        Console.WriteLine("Enter numbers of models for testing (separate with comma, add BB for bias bins usage):");
+                        string line;
+                        while ((line = Console.ReadLine()) == null)
+                        {}
+                        var selectedModels = new List<int>();
+                        var useBiasBins = new List<bool>();
+                        if (line == "all")
                         {
-                            var svdTrainer = new BiasSvdTrainer();
-                            svdModel = svdTrainer.LoadModel(@"D:\Dataset\models\bias-svd-model.rs");
+                            for (var i = 0; i < models.Length; i++)
+                            {
+                                selectedModels.Add(i);
+                                selectedModels.Add(i);
+                                useBiasBins.Add(true);
+                                useBiasBins.Add(false);
+                            }
                         }
                         else
-                            throw new ArgumentException("Unknown type of SVD model. Enter BASIC or BIAS.");
+                        {
+                            var parts = line.Split(new[] {' ', ','});
+
+                            foreach (var part in parts)
+                            {
+                                selectedModels.Add(int.Parse(part.Replace("BB", string.Empty)) - 1);
+                                useBiasBins.Add(part.Contains("BB"));
+                            }
+                        }
+
+                        for (var i = 0; i < selectedModels.Count; i++)
+                        {
+                            var selectedModel = selectedModels[i];
+                            if (selectedModel >= models.Length)
+                                continue;
+
+                            var modelFile = models[selectedModel];
+
+                            var testName = Path.GetFileName(modelFile);
+                            testName = testName != null ? testName.Remove(testName.Length - 3) : "SvdTest";
+
+                            if (useBiasBins[i])
+                                testName += "-WithBB";
+
+                            if (modelFile.Contains("basic"))
+                            {
+                                var basicSvdRecommender = new BasicSvdRecommender(useBiasBins[i]);
+                                var rs = new BasicSvdRecommendationSystem(basicSvdRecommender);
+                                var svdModel = rs.LoadModel(modelFile);
+                                var basicSvdTester = new SvdTester<IBasicSvdModel>(testName, rs, svdModel, testUsers, testRatings, artists);
+                                basicSvdTester.Test();
+                            }
+                            else if (models[selectedModel - 1].Contains("bias"))
+                            {
+                                var biasSvdRecommender = new BiasSvdRecommender(useBiasBins[i]);
+                                var rs = new BiasSvdRecommendationSystem(biasSvdRecommender);
+                                var svdModel = rs.LoadModel(modelFile);
+                                var biasSvdTester = new SvdTester<IBiasSvdModel>(testName, rs, svdModel, testUsers, testRatings, artists);
+                                biasSvdTester.Test();
+                            }
+                        }
 
                         break;
                         #endregion

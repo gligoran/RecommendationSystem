@@ -26,8 +26,9 @@ namespace RecommendationSystem.Knn.Recommendations
             artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(knnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
 
             var recommendations = new List<Recommendation>();
-            foreach (var artistIndex in artistIndices)
+            for (var i = 0; i < artistIndices.Count; i++)
             {
+                var artistIndex = artistIndices[i];
                 var rating = 0.0f;
                 var count = 0;
                 foreach (var neighbour in neighbours.Where(neighbour => neighbour.User.ArtistIndices.Contains(artistIndex)))
@@ -38,6 +39,9 @@ namespace RecommendationSystem.Knn.Recommendations
 
                 recommendations.Add(new Recommendation(artists[artistIndex], rating / count));
             }
+
+            if (recommendations.Count < 1)
+                return recommendations;
 
             recommendations.Sort();
             for (var i = 0; i < recommendations.Count; i++)

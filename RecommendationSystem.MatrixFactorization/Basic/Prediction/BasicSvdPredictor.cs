@@ -1,30 +1,47 @@
-﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RecommendationSystem.Entities;
-using RecommendationSystem.MatrixFactorization.Models;
+using RecommendationSystem.MatrixFactorization.Basic.Models;
+using RecommendationSystem.MatrixFactorization.Prediction;
 
 namespace RecommendationSystem.MatrixFactorization.Basic.Prediction
 {
-    public class BasicSvdPredictor : IBasicSvdPredictor
+    public class BasicSvdPredictor : SvdPredictorBase<IBasicSvdModel>
     {
-        public List<string> Users { get; set; }
-        public List<string> Artists { get; set; }
-
-        public BasicSvdPredictor(List<string> users, List<string> artists)
+        public override float PredictRatingForArtist(IUser user, IBasicSvdModel model, List<IArtist> artists, int artistIndex, bool useBiasBins)
         {
-            Users = users;
-            Artists = artists;
+            var newUserFeatures = GetUserFeatures(model, user);
+
+            var userRating = 0.0f;
+            for (var f = 0; f < model.FeatureCount; f++)
+                userRating += newUserFeatures[f] * model.ArtistFeatures[f, artistIndex];
+
+            userRating = CapUserRatings(userRating);
+
+            if (useBiasBins)
+            {
+                userRating -= model.BiasBins[GetBiasBinIndex(userRating, model.BiasBins.Length)];
+                userRating = CapUserRatings(userRating);
+            }
+
+            return userRating;
         }
 
-        public float PredictRating(ISvdModel model, IUser user)
+        public float[] GetUserFeatures(IBasicSvdModel model, IUser user)
         {
-            throw new NotImplementedException();
+            var ratingSum = user.Ratings.Sum(r => r.Value);
 
-            /*var rating = 0.0f;
-            for (var i = 0; i < model.UserTrainingParameters.FeatureCount; i++)
-                rating += model.UserFeatures[i, userIndex] * model.ArtistFeatures[i, artistIndex];
+            var newUserFeatures = new float[model.FeatureCount];
+            for (var f = 0; f < model.FeatureCount; f++)
+            {
+                newUserFeatures[f] = 0.0f;
+                foreach (var rating in user.Ratings)
+                    newUserFeatures[f] += rating.Value * model.ArtistFeatures[f, rating.ArtistIndex];
 
-            return rating;*/
+                newUserFeatures[f] /= ratingSum;
+            }
+
+            return newUserFeatures;
         }
     }
 }

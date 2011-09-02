@@ -8,8 +8,9 @@
         public float K { get; set; }
         public float LRate { get; set; }
         public int FeatureCount { get; set; }
+        public int BiasBinCount { get; set; }
 
-        public TrainingParameters(int featureCount = 10, float lRate = 0.001f, float k = 0.02f, float rmseImprovementTreshold = 0.000001f, int minEpochTreshold = 120, int maxEpochTreshold = 200)
+        public TrainingParameters(int featureCount = 10, float lRate = 0.001f, float k = 0.02f, float rmseImprovementTreshold = 0.000001f, int minEpochTreshold = 120, int maxEpochTreshold = 200, int biasBinCount = 8)
         {
             FeatureCount = featureCount;
             LRate = lRate;
@@ -17,6 +18,7 @@
             RmseImprovementTreshold = rmseImprovementTreshold;
             MinEpochTreshold = minEpochTreshold;
             MaxEpochTreshold = maxEpochTreshold;
+            BiasBinCount = biasBinCount;
         }
     }
 }

@@ -69,7 +69,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         #endregion
 
         #region TestRecommendationSystem
-        private RmseBiasAndVariance TestRecommendationSystem(out RmseBiasAndVariance[] rvsByRatings)
+        private RmseBiasAndVariance TestRecommendationSystem(out RmseBiasAndVariance[] rbvsByRatings)
         {
             var rmseBC = new BlockingCollection<float>[5];
             for (var i = 0; i < rmseBC.Length; i++)
@@ -79,7 +79,7 @@ namespace RecommendationSystem.QualityTesting.Testers
             for (var i = 0; i < biasBC.Length; i++)
                 biasBC[i] = new BlockingCollection<float>();
 
-            var x = Parallel.For(0, NumberOfTests, i =>
+            Parallel.For(0, NumberOfTests, i =>
                 {
                     IUser user;
                     do
@@ -96,15 +96,15 @@ namespace RecommendationSystem.QualityTesting.Testers
             while (rmseBC.Sum(bc => bc.Count) != NumberOfTests)
             {}
 
-            rvsByRatings = new RmseBiasAndVariance[5];
+            rbvsByRatings = new RmseBiasAndVariance[5];
             var totalRmse = new List<float>();
             var totalBias = new List<float>();
             for (var i = 0; i < rmseBC.Length; i++)
             {
                 if (rmseBC[i].Count > 0)
-                    rvsByRatings[i] = new RmseBiasAndVariance(rmseBC[i].ToList(), biasBC[i].ToList());
+                    rbvsByRatings[i] = new RmseBiasAndVariance(rmseBC[i].ToList(), biasBC[i].ToList());
                 else
-                    rvsByRatings[i] = new RmseBiasAndVariance();
+                    rbvsByRatings[i] = new RmseBiasAndVariance();
 
                 totalRmse.AddRange(rmseBC[i].ToList());
                 totalBias.AddRange(biasBC[i].ToList());

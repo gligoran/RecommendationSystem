@@ -1,35 +1,36 @@
-using RecommendationSystem.Entities;
 using RecommendationSystem.MatrixFactorization.Basic.Models;
 using RecommendationSystem.MatrixFactorization.Basic.Recommendations;
 using RecommendationSystem.MatrixFactorization.Basic.Training;
-using RecommendationSystem.Recommendations;
-using RecommendationSystem.Training;
+using RecommendationSystem.MatrixFactorization.Recommendation;
+using RecommendationSystem.MatrixFactorization.Training;
 
 namespace RecommendationSystem.MatrixFactorization.Basic
 {
-    public class BasicSvdRecommendationSystem : ISvdRecommendationSystem<IBasicSvdModel>
+    public class BasicSvdRecommendationSystem : SvdRecommendationSystemBase<IBasicSvdModel>
     {
-        public ITrainer<IBasicSvdModel, IUser> Trainer { get; set; }
-        public IRecommender<IBasicSvdModel> Recommender { get; set; }
-
         public BasicSvdRecommendationSystem()
         {
             Trainer = new BasicSvdTrainer();
             Recommender = new BasicSvdRecommender();
         }
 
-        public BasicSvdRecommendationSystem(ITrainer<IBasicSvdModel, IUser> trainer)
+        public BasicSvdRecommendationSystem(ISvdTrainer<IBasicSvdModel> trainer)
             : this(trainer, new BasicSvdRecommender())
         {}
 
-        public BasicSvdRecommendationSystem(IRecommender<IBasicSvdModel> recommender)
+        public BasicSvdRecommendationSystem(ISvdRecommender<IBasicSvdModel> recommender)
             : this(new BasicSvdTrainer(), recommender)
         {}
 
-        public BasicSvdRecommendationSystem(ITrainer<IBasicSvdModel, IUser> trainer, IRecommender<IBasicSvdModel> recommender)
+        public BasicSvdRecommendationSystem(ISvdTrainer<IBasicSvdModel> trainer, ISvdRecommender<IBasicSvdModel> recommender)
         {
             Trainer = trainer;
             Recommender = recommender;
+        }
+
+        protected override IBasicSvdModel GetNewModel()
+        {
+            return new BasicSvdModel();
         }
     }
 }

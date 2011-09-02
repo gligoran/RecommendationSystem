@@ -4,19 +4,21 @@ namespace RecommendationSystem.MatrixFactorization.Basic.Models
     {
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }
+        public float[] BiasBins { get; set; }
 
         public int FeatureCount
         {
             get { return UserFeatures.GetUpperBound(0) + 1; }
         }
 
-        public BasicSvdModel(float[,] userFeatures, float[,] artistFeatures)
+        internal BasicSvdModel()
+        {}
+
+        public BasicSvdModel(float[,] userFeatures, float[,] artistFeatures, float[] biasBins)
         {
             UserFeatures = userFeatures;
             ArtistFeatures = artistFeatures;
+            BiasBins = biasBins;
         }
-
-        internal BasicSvdModel()
-        {}
     }
 }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RecommendationSystem.QualityTesting
+namespace RecommendationSystem.QualityTesting.Testers
 {
     public class RmseBiasAndVariance
     {

@@ -1,22 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Entities;
 using RecommendationSystem.MatrixFactorization.Bias.Models;
+using RecommendationSystem.MatrixFactorization.Bias.Prediction;
+using RecommendationSystem.MatrixFactorization.Prediction;
 using RecommendationSystem.MatrixFactorization.Training;
 
 namespace RecommendationSystem.MatrixFactorization.Bias.Training
 {
     public class BiasSvdTrainer : SvdTrainerBase<IBiasSvdModel>
     {
+        #region Constructor
+        public BiasSvdTrainer()
+            : this(new BiasSvdPredictor())
+        {}
+
+        public BiasSvdTrainer(ISvdPredictor<IBiasSvdModel> predictor)
+            : base(predictor)
+        {}
+        #endregion
+
+        #region InitializeNewModel
         protected override IBiasSvdModel InitializeNewModel(List<string> users, List<string> artists, List<IRating> ratings)
         {
             var model = new BiasSvdModel();
             ComputeGlobalAverageAndBiases(model, users, artists, ratings);
             return model;
         }
+        #endregion
 
         #region PredictRatingUsingResiduals
         protected override float PredictRatingUsingResiduals(IBiasSvdModel model, int rating, int feature, List<IRating> ratings)
@@ -54,80 +65,12 @@ namespace RecommendationSystem.MatrixFactorization.Bias.Training
                 model.UserBias[i] /= userCount[i];
 
             for (var i = 0; i < model.ArtistBias.Length; i++)
-                model.ArtistBias[i] /= artistCount[i];
-        }
-        #endregion
-
-        #region SaveModel
-        protected override void SaveProperties(IBiasSvdModel model, TextWriter writer)
-        {
-            base.SaveProperties(model, writer);
-
-            writer.WriteLine("GlobalAverage={0}", model.GlobalAverage);
-        }
-
-        protected override void SaveData(IBiasSvdModel model, TextWriter writer)
-        {
-            base.SaveData(model, writer);
-
-            SaveBiases(writer, model.UserBias);
-            SaveBiases(writer, model.ArtistBias);
-        }
-
-        private static void SaveBiases(TextWriter writer, float[] biases)
-        {
-            for (var i = 0; i < biases.Length; i++)
             {
-                if (i != 0)
-                    writer.Write("\t");
-
-                writer.Write(biases[i]);
+                if (artistCount[i] > 0)
+                    model.ArtistBias[i] /= artistCount[i];
+                else
+                    model.ArtistBias[i] = 0.0f;
             }
-            writer.WriteLine();
-        }
-        #endregion
-
-        #region LoadModel
-        protected override IBiasSvdModel GetNewModel()
-        {
-            return new BiasSvdModel();
-        }
-
-        protected override void LoadProperties(IBiasSvdModel model, TextReader reader)
-        {
-            base.LoadProperties(model, reader);
-
-            //get global average
-            var line = reader.ReadLine();
-            if (line == null)
-                throw new ArgumentException("File {0} is not a valide SvdModel.");
-            model.GlobalAverage = float.Parse(line.Split(new[] {'='}, StringSplitOptions.None)[1], CultureInfo.CurrentCulture);
-
-            model.UserBias = new float[model.UserFeatures.GetUpperBound(1) + 1];
-            model.ArtistBias = new float[model.ArtistFeatures.GetUpperBound(1) + 1];
-        }
-
-        protected override void LoadData(IBiasSvdModel model, TextReader reader)
-        {
-            base.LoadData(model, reader);
-
-            FillBiases(model.UserBias, reader);
-            FillBiases(model.ArtistBias, reader);
-        }
-
-        private void FillBiases(float[] biases, TextReader reader)
-        {
-            var sep = new[] {'\t'};
-            var line = reader.ReadLine();
-            if (line == null)
-                throw new ArgumentException("File is not a valid SvdModel.");
-
-            var factors = line.Split(sep, StringSplitOptions.None);
-            if (factors.Length != biases.Length)
-                throw new ArgumentException("File is not a valid SvdModel.");
-
-            for (var i = 0; i < factors.Length; i++)
-                biases[i] = float.Parse(factors[i], CultureInfo.CurrentCulture);
         }
         #endregion
     }

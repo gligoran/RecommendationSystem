@@ -1,30 +1,49 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using RecommendationSystem.Entities;
 using RecommendationSystem.MatrixFactorization.Bias.Models;
+using RecommendationSystem.MatrixFactorization.Prediction;
 
 namespace RecommendationSystem.MatrixFactorization.Bias.Prediction
 {
-    public class BiasSvdPredictor : IBiasSvdPredictor
+    public class BiasSvdPredictor : SvdPredictorBase<IBiasSvdModel>
     {
-        public List<string> Users { get; set; }
-        public List<string> Artists { get; set; }
-
-        public BiasSvdPredictor(List<string> users, List<string> artists)
+        public override float PredictRatingForArtist(IUser user, IBiasSvdModel model, List<IArtist> artists, int artist, bool useBiasBins)
         {
-            Users = users;
-            Artists = artists;
+            float userBias;
+            var newUserFeatures = GetUserFeatures(model, user, out userBias);
+
+            var userRating = 0.0f;
+            for (var f = 0; f < model.FeatureCount; f++)
+                userRating += newUserFeatures[f] * model.ArtistFeatures[f, artist];
+
+            userRating = CapUserRatings(model.GlobalAverage + userBias + model.ArtistBias[artist]);
+
+            if (useBiasBins)
+            {
+                userRating -= model.BiasBins[GetBiasBinIndex(userRating, model.BiasBins.Count())];
+                userRating = CapUserRatings(userRating);
+            }
+
+            return userRating;
         }
 
-        public float PredictRating(IBiasSvdModel model, IUser user)
+        private float[] GetUserFeatures(IBiasSvdModel model, IUser user, out float userBias)
         {
-            throw new NotImplementedException();
+            userBias = user.Ratings.Average(rating => rating.Value - model.GlobalAverage);
 
-            /*var rating = 0.0f;
-            for (var i = 0; i < model.UserTrainingParameters.FeatureCount; i++)
-                rating += model.UserFeatures[i, userIndex] * model.ArtistFeatures[i, artistIndex];
+            var ratingSum = user.Ratings.Sum(r => r.Value);
+            var newUserFeatures = new float[model.FeatureCount];
+            for (var f = 0; f < model.FeatureCount; f++)
+            {
+                newUserFeatures[f] = 0.0f;
+                foreach (var rating in user.Ratings)
+                    newUserFeatures[f] += (rating.Value - model.GlobalAverage - userBias - model.ArtistBias[rating.ArtistIndex]) * model.ArtistFeatures[f, rating.ArtistIndex];
 
-            return rating + model.GlobalAverage + model.UserBias[userIndex] + model.ArtistBias[artistIndex];*/
+                newUserFeatures[f] /= ratingSum;
+            }
+
+            return newUserFeatures;
         }
     }
 }
