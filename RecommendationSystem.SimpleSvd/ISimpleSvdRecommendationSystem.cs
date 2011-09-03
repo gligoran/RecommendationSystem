@@ -5,7 +5,7 @@ using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd
 {
-    public interface ISvdRecommendationSystem<TSvdModel> : IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISvdRecommender<TSvdModel>>
+    public interface ISimpleSvdRecommendationSystem<TSvdModel> : IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>>
         where TSvdModel : ISvdModel
     {
         void SaveModel(string filename, TSvdModel model);

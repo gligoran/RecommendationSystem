@@ -16,10 +16,10 @@ namespace RecommendationSystem.QualityTesting.Testers
         public List<IRating> TestRatings { get; set; }
         public List<IArtist> Artists { get; set; }
 
-        public IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISvdRecommender<TSvdModel>> RecommendationSystem { get; set; }
+        public IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>> RecommendationSystem { get; set; }
         public TSvdModel Model { get; set; }
 
-        public SvdTester(string testName, IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISvdRecommender<TSvdModel>> recommendationSystem, TSvdModel model, List<IUser> testUsers, List<IRating> testRatings, List<IArtist> artists)
+        public SvdTester(string testName, IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>> recommendationSystem, TSvdModel model, List<IUser> testUsers, List<IRating> testRatings, List<IArtist> artists)
         {
             RecommendationSystem = recommendationSystem;
             Model = model;

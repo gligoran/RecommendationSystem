@@ -6,7 +6,7 @@ using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.SimpleSvd.Bias.Prediction
 {
-    public class BiasSvdPredictor : SvdPredictorBase<IBiasSvdModel>
+    public class BiasSimpleSvdPredictor : SvdPredictorBase<IBiasSvdModel>
     {
         public override float PredictRatingForArtist(IUser user, IBiasSvdModel model, List<IArtist> artists, int artist, bool useBiasBins)
         {

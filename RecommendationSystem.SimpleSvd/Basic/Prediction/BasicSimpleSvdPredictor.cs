@@ -5,7 +5,7 @@ using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.SimpleSvd.Basic.Prediction
 {
-    public class BasicSvdPredictor : SvdPredictorBase<IBasicSvdModel>
+    public class BasicSimpleSvdPredictor : SvdPredictorBase<IBasicSvdModel>
     {
         public override float PredictRatingForArtist(IUser user, IBasicSvdModel model, List<IArtist> artists, int artistIndex, bool useBiasBins)
         {

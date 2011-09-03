@@ -7,13 +7,13 @@ using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd.Basic.Training
 {
-    public class BasicSvdTrainer : SvdTrainerBase<IBasicSvdModel>
+    public class BasicSimpleSimpleSvdTrainer : SvdTrainerBase<IBasicSvdModel>
     {
-        public BasicSvdTrainer()
-            : this(new BasicSvdPredictor())
+        public BasicSimpleSimpleSvdTrainer()
+            : this(new BasicSimpleSvdPredictor())
         {}
 
-        public BasicSvdTrainer(ISvdPredictor<IBasicSvdModel> predictor)
+        public BasicSimpleSimpleSvdTrainer(ISvdPredictor<IBasicSvdModel> predictor)
             : base(predictor)
         {}
 

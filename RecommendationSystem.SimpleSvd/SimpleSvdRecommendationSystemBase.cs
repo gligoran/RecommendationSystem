@@ -7,11 +7,11 @@ using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd
 {
-    public abstract class SvdRecommendationSystemBase<TSvdModel> : ISvdRecommendationSystem<TSvdModel>
+    public abstract class SimpleSvdRecommendationSystemBase<TSvdModel> : ISimpleSvdRecommendationSystem<TSvdModel>
         where TSvdModel : ISvdModel
     {
         public ISvdTrainer<TSvdModel> Trainer { get; set; }
-        public ISvdRecommender<TSvdModel> Recommender { get; set; }
+        public ISimpleSvdRecommender<TSvdModel> Recommender { get; set; }
 
         #region SaveModel
         public void SaveModel(string filename, TSvdModel model)

@@ -8,14 +8,14 @@ using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd.Bias.Training
 {
-    public class BiasSvdTrainer : SvdTrainerBase<IBiasSvdModel>
+    public class BiasSimpleSvdTrainer : SvdTrainerBase<IBiasSvdModel>
     {
         #region Constructor
-        public BiasSvdTrainer()
-            : this(new BiasSvdPredictor())
+        public BiasSimpleSvdTrainer()
+            : this(new BiasSimpleSvdPredictor())
         {}
 
-        public BiasSvdTrainer(ISvdPredictor<IBiasSvdModel> predictor)
+        public BiasSimpleSvdTrainer(ISvdPredictor<IBiasSvdModel> predictor)
             : base(predictor)
         {}
         #endregion

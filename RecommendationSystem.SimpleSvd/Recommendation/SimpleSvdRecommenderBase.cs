@@ -6,13 +6,13 @@ using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.SimpleSvd.Recommendation
 {
-    public abstract class SvdRecommenderBase<TSvdModel> : ISvdRecommender<TSvdModel>
+    public abstract class SimpleSvdRecommenderBase<TSvdModel> : ISimpleSvdRecommender<TSvdModel>
         where TSvdModel : ISvdModel
     {
         public ISvdPredictor<TSvdModel> Predictor { get; set; }
         public bool UseBiasBins { get; set; }
 
-        protected SvdRecommenderBase(ISvdPredictor<TSvdModel> predictor, bool useBiasBins = false)
+        protected SimpleSvdRecommenderBase(ISvdPredictor<TSvdModel> predictor, bool useBiasBins = false)
         {
             Predictor = predictor;
             UseBiasBins = useBiasBins;

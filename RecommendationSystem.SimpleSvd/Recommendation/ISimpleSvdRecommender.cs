@@ -4,7 +4,7 @@ using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.SimpleSvd.Recommendation
 {
-    public interface ISvdRecommender<TSvdModel> : IRecommender<TSvdModel>
+    public interface ISimpleSvdRecommender<TSvdModel> : IRecommender<TSvdModel>
         where TSvdModel : ISvdModel
     {
         ISvdPredictor<TSvdModel> Predictor { get; set; }

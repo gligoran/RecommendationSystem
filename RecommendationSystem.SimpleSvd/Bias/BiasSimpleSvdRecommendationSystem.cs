@@ -9,24 +9,24 @@ using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd.Bias
 {
-    public class BiasSvdRecommendationSystem : SvdRecommendationSystemBase<IBiasSvdModel>
+    public class BiasSimpleSvdRecommendationSystem : SimpleSvdRecommendationSystemBase<IBiasSvdModel>
     {
         #region Constructor
-        public BiasSvdRecommendationSystem()
+        public BiasSimpleSvdRecommendationSystem()
         {
-            Trainer = new BiasSvdTrainer();
-            Recommender = new BiasSvdRecommender();
+            Trainer = new BiasSimpleSvdTrainer();
+            Recommender = new BiasSimpleSvdRecommender();
         }
 
-        public BiasSvdRecommendationSystem(ISvdTrainer<IBiasSvdModel> trainer)
-            : this(trainer, new BiasSvdRecommender())
+        public BiasSimpleSvdRecommendationSystem(ISvdTrainer<IBiasSvdModel> trainer)
+            : this(trainer, new BiasSimpleSvdRecommender())
         {}
 
-        public BiasSvdRecommendationSystem(ISvdRecommender<IBiasSvdModel> recommender)
-            : this(new BiasSvdTrainer(), recommender)
+        public BiasSimpleSvdRecommendationSystem(ISimpleSvdRecommender<IBiasSvdModel> recommender)
+            : this(new BiasSimpleSvdTrainer(), recommender)
         {}
 
-        public BiasSvdRecommendationSystem(ISvdTrainer<IBiasSvdModel> trainer, ISvdRecommender<IBiasSvdModel> recommender)
+        public BiasSimpleSvdRecommendationSystem(ISvdTrainer<IBiasSvdModel> trainer, ISimpleSvdRecommender<IBiasSvdModel> recommender)
         {
             Trainer = trainer;
             Recommender = recommender;

@@ -195,14 +195,14 @@ namespace RecommendationSystem.QualityTesting
 
                                             if (svdBasic)
                                             {
-                                                var rs = new BasicSvdRecommendationSystem();
+                                                var rs = new BasicSimpleSvdRecommendationSystem();
                                                 var model = rs.Trainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
                                                 rs.SaveModel(string.Format(@"D:\Dataset\models\basicSvd-{0}.rs", filename), model);
                                             }
 
                                             if (svdBias)
                                             {
-                                                var rs = new BiasSvdRecommendationSystem();
+                                                var rs = new BiasSimpleSvdRecommendationSystem();
                                                 var model = rs.Trainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
                                                 rs.SaveModel(string.Format(@"D:\Dataset\models\biasSvd-{0}.rs", filename), model);
                                             }
@@ -270,16 +270,16 @@ namespace RecommendationSystem.QualityTesting
 
                             if (modelFile.Contains("basic"))
                             {
-                                var basicSvdRecommender = new BasicSvdRecommender(useBiasBins[i]);
-                                var rs = new BasicSvdRecommendationSystem(basicSvdRecommender);
+                                var basicSvdRecommender = new BasicSimpleSimpleSvdRecommender(useBiasBins[i]);
+                                var rs = new BasicSimpleSvdRecommendationSystem(basicSvdRecommender);
                                 var svdModel = rs.LoadModel(modelFile);
                                 var basicSvdTester = new SvdTester<IBasicSvdModel>(testName, rs, svdModel, testUsers, testRatings, artists);
                                 basicSvdTester.Test();
                             }
                             else if (models[selectedModel - 1].Contains("bias"))
                             {
-                                var biasSvdRecommender = new BiasSvdRecommender(useBiasBins[i]);
-                                var rs = new BiasSvdRecommendationSystem(biasSvdRecommender);
+                                var biasSvdRecommender = new BiasSimpleSvdRecommender(useBiasBins[i]);
+                                var rs = new BiasSimpleSvdRecommendationSystem(biasSvdRecommender);
                                 var svdModel = rs.LoadModel(modelFile);
                                 var biasSvdTester = new SvdTester<IBiasSvdModel>(testName, rs, svdModel, testUsers, testRatings, artists);
                                 biasSvdTester.Test();

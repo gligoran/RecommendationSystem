@@ -9,13 +9,13 @@ using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.SimpleSvd.Bias.Recommendations
 {
-    public class BiasSvdRecommender : SvdRecommenderBase<IBiasSvdModel>
+    public class BiasSimpleSvdRecommender : SimpleSvdRecommenderBase<IBiasSvdModel>
     {
-        public BiasSvdRecommender(bool useBiasBins = false)
-            : this(new BiasSvdPredictor(), useBiasBins)
+        public BiasSimpleSvdRecommender(bool useBiasBins = false)
+            : this(new BiasSimpleSvdPredictor(), useBiasBins)
         {}
 
-        public BiasSvdRecommender(ISvdPredictor<IBiasSvdModel> predictor, bool useBiasBins = false)
+        public BiasSimpleSvdRecommender(ISvdPredictor<IBiasSvdModel> predictor, bool useBiasBins = false)
             : base(predictor, useBiasBins)
         {}
 
