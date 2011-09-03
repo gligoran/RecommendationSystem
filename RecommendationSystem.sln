@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Knn", "RecommendationSystem.Knn\RecommendationSystem.Knn.csproj", "{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.SimpleKnn", "RecommendationSystem.SimpleKnn\RecommendationSystem.SimpleKnn.csproj", "{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7} = {7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}
 	EndProjectSection

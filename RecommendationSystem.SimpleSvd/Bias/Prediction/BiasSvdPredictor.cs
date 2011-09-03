@@ -10,7 +10,7 @@ namespace RecommendationSystem.SimpleSvd.Bias.Prediction
     {
         public override float PredictRatingForArtist(IUser user, IBiasSvdModel model, List<IArtist> artists, int artist, bool useBiasBins)
         {
-            var userBias = user.Ratings.Average(rating => rating.Value - model.GlobalAverage); ;
+            var userBias = user.Ratings.Average(rating => rating.Value - model.GlobalAverage);
             var newUserFeatures = NewUserFeatureGenerator.GetNewUserFeatures(model, user);
 
             var userRating = 0.0f;

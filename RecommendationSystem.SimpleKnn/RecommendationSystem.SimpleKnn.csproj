@@ -5,19 +5,14 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C95EF281-8FEF-4D76-9B14-EFEDCCE133D1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RecommendationSystem.QualityTesting</RootNamespace>
-    <AssemblyName>rsqt</AssemblyName>
+    <RootNamespace>RecommendationSystem.SimpleKnn</RootNamespace>
+    <AssemblyName>RecommendationSystem.SimpleKnn</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>&lt;Project Location In Database&gt;</SccProjectName>
-    <SccLocalPath>&lt;Local Binding Root of Project&gt;</SccLocalPath>
-    <SccAuxPath>&lt;Source Control Database&gt;</SccAuxPath>
-    <SccProvider>Mercurial Source Control Package</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -38,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,45 +46,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CryptoRandom.cs" />
-    <Compile Include="Testers\RmseAndBias.cs" />
-    <Compile Include="Testers\NaiveTester.cs" />
-    <Compile Include="Testers\ITester.cs" />
-    <Compile Include="Testers\KnnTester.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="IntersectSortedExtension.cs" />
+    <Compile Include="ISimpleKnnRecommendationSystem.cs" />
+    <Compile Include="SimpleKnnRecommendationSystem.cs" />
+    <Compile Include="Recommendations\ContentSimpleKnnRecommender.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\FifthsRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\EqualDescentRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\IContentSimpleKnnRecommender.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\IRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\SimpleKnnRecommender.cs" />
+    <Compile Include="RatingAggregation\AdjustedWeightedSumRatingAggregator.cs" />
+    <Compile Include="RatingAggregation\IRatingAggregator.cs" />
+    <Compile Include="RatingAggregation\SimpleAverageRatingAggregator.cs" />
+    <Compile Include="RatingAggregation\WeightedSumRatingAggregator.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\RatingAggregationRecommendationGenerator.cs" />
+    <Compile Include="Similarity\ContentSimilarityEstimator.cs" />
+    <Compile Include="Similarity\UnionCosineSimilarityEstimator.cs" />
+    <Compile Include="Similarity\UnionPearsonSimilarityEstimator.cs" />
+    <Compile Include="Similarity\CosineSimilarityEstimator.cs" />
+    <Compile Include="Similarity\IContentSimilarityEstimator.cs" />
+    <Compile Include="Similarity\PearsonSimilarityEstimator.cs" />
+    <Compile Include="Models\ISimpleKnnModel.cs" />
+    <Compile Include="Models\SimpleKnnModel.cs" />
+    <Compile Include="Similarity\SimilarUser.cs" />
+    <Compile Include="Training\SimpleKnnTrainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Testers\RmseBiasAndVariance.cs" />
-    <Compile Include="Testers\TesterBase.cs" />
-    <Compile Include="Testers\SvdTester.cs" />
+    <Compile Include="Similarity\ISimilarityEstimator.cs" />
+    <Compile Include="Users\IKnnUser.cs" />
+    <Compile Include="Users\SimpleKnnUser.cs" />
+    <Compile Include="Users\ISimpleKnnUser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">
-      <Project>{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}</Project>
-      <Name>RecommendationSystem.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RecommendationSystem.SimpleKnn\RecommendationSystem.SimpleKnn.csproj">
-      <Project>{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}</Project>
-      <Name>RecommendationSystem.SimpleKnn</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RecommendationSystem.SimpleSvd\RecommendationSystem.SimpleSvd.csproj">
-      <Project>{80E6B57C-A34D-4442-AE09-181D11DF32E6}</Project>
-      <Name>RecommendationSystem.SimpleSvd</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RecommendationSystem.Naive\RecommendationSystem.Naive.csproj">
-      <Project>{64468AE3-522C-4F18-8331-364E0FCBD942}</Project>
-      <Name>RecommendationSystem.Naive</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RecommendationSystem.Svd.Foundation\RecommendationSystem.Svd.Foundation.csproj">
-      <Project>{F7484A47-1256-4566-9C47-78CDD5F403E2}</Project>
-      <Name>RecommendationSystem.Svd.Foundation</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
       <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
       <Name>RecommendationSystem</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

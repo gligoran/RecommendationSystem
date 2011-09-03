@@ -6,11 +6,12 @@ using System.IO;
 using System.Linq;
 using RecommendationSystem.Data;
 using RecommendationSystem.Entities;
-using RecommendationSystem.Knn.RatingAggregation;
-using RecommendationSystem.Knn.Recommendations;
-using RecommendationSystem.Knn.Similarity;
-using RecommendationSystem.Knn.Training;
 using RecommendationSystem.QualityTesting.Testers;
+using RecommendationSystem.SimpleKnn.RatingAggregation;
+using RecommendationSystem.SimpleKnn.Recommendations;
+using RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration;
+using RecommendationSystem.SimpleKnn.Similarity;
+using RecommendationSystem.SimpleKnn.Training;
 using RecommendationSystem.SimpleSvd.Basic;
 using RecommendationSystem.SimpleSvd.Basic.Recommendations;
 using RecommendationSystem.SimpleSvd.Bias;
@@ -110,7 +111,7 @@ namespace RecommendationSystem.QualityTesting
                             }
                         }
 
-                        var knnTrainer = new KnnTrainer();
+                        var knnTrainer = new SimpleKnnTrainer();
                         timer.Restart();
                         var knnModel = knnTrainer.TrainModel(trainUsers, artists, trainRatings);
                         timer.Stop();
@@ -124,13 +125,13 @@ namespace RecommendationSystem.QualityTesting
                                 {
                                     if (performNoContentKnnTests)
                                     {
-                                        var knnTester = new KnnTester<KnnRecommender>
+                                        var knnTester = new KnnTester<SimpleKnnRecommender>
                                                         {
                                                             K = k,
                                                             Sim = sim,
                                                             Rg = rg,
                                                             TestUsers = testUsers,
-                                                            KnnModel = knnModel,
+                                                            SimpleKnnModel = knnModel,
                                                             Trainer = knnTrainer,
                                                             Artists = artists,
                                                             NumberOfTests = numberOfTests
@@ -140,13 +141,13 @@ namespace RecommendationSystem.QualityTesting
 
                                     if (performContentKnnTests)
                                     {
-                                        var contentKnnTester = new KnnTester<ContentKnnRecommender>
+                                        var contentKnnTester = new KnnTester<ContentSimpleKnnRecommender>
                                                                {
                                                                    K = k,
                                                                    Sim = sim,
                                                                    Rg = rg,
                                                                    TestUsers = testUsers,
-                                                                   KnnModel = knnModel,
+                                                                   SimpleKnnModel = knnModel,
                                                                    Trainer = knnTrainer,
                                                                    Artists = artists,
                                                                    NumberOfTests = numberOfTests

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("RecommendationSystem.Svd.Foundation")]
+[assembly: AssemblyTitle("RecommendationSystem.SimpleKnn")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("RecommendationSystem.Svd.Foundation")]
+[assembly: AssemblyProduct("RecommendationSystem.SimpleKnn")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("ee099040-499d-44b6-93d2-f45aaba7f556")]
+[assembly: Guid("8019723e-117f-4474-ac0a-cc2618277f0f")]
 
 // Version information for an assembly consists of the following four values:
 //

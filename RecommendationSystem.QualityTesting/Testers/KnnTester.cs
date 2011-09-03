@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RecommendationSystem.Entities;
-using RecommendationSystem.Knn;
-using RecommendationSystem.Knn.Models;
-using RecommendationSystem.Knn.Recommendations;
-using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Recommendations;
+using RecommendationSystem.SimpleKnn;
+using RecommendationSystem.SimpleKnn.Models;
+using RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration;
+using RecommendationSystem.SimpleKnn.Similarity;
 using RecommendationSystem.Training;
 
 namespace RecommendationSystem.QualityTesting.Testers
 {
     public class KnnTester<TRecommender> : TesterBase
-        where TRecommender : IRecommender<IKnnModel>
+        where TRecommender : IRecommender<ISimpleKnnModel>
     {
         #region Fields
         private CryptoRandom rng = new CryptoRandom();
-        private IRecommendationSystem<IKnnModel, IUser, ITrainer<IKnnModel, IUser>, IRecommender<IKnnModel>> rs;
+        private IRecommendationSystem<ISimpleKnnModel, IUser, ITrainer<ISimpleKnnModel, IUser>, IRecommender<ISimpleKnnModel>> rs;
         private int writeFrequency;
         #endregion
 
@@ -27,8 +27,8 @@ namespace RecommendationSystem.QualityTesting.Testers
         public ISimilarityEstimator Sim { get; set; }
         public IRecommendationGenerator Rg { get; set; }
         public List<IUser> TestUsers { get; set; }
-        public IKnnModel KnnModel { get; set; }
-        public ITrainer<IKnnModel, IUser> Trainer { get; set; }
+        public ISimpleKnnModel SimpleKnnModel { get; set; }
+        public ITrainer<ISimpleKnnModel, IUser> Trainer { get; set; }
         public List<IArtist> Artists { get; set; }
         public int NumberOfTests { get; set; }
         #endregion
@@ -47,7 +47,7 @@ namespace RecommendationSystem.QualityTesting.Testers
                 Write(string.Format("Test {0} ({1})", TestName, DateTime.Now));
                 Write("------------------------------------------------------", false);
 
-                rs = new KnnRecommendationSystem(Trainer, recommender);
+                rs = new SimpleKnnRecommendationSystem(Trainer, recommender);
                 Timer.Restart();
                 RmseBiasAndVariance[] rbvsByRatings;
                 var rbv = TestRecommendationSystem(out rbvsByRatings);
@@ -122,7 +122,7 @@ namespace RecommendationSystem.QualityTesting.Testers
             var originalRatings = user.Ratings;
             user.Ratings = user.Ratings.Where(r => r != rating).ToList();
 
-            var predictedRating = rs.Recommender.PredictRatingForArtist(user, KnnModel, Artists, rating.ArtistIndex);
+            var predictedRating = rs.Recommender.PredictRatingForArtist(user, SimpleKnnModel, Artists, rating.ArtistIndex);
             var error = predictedRating - rating.Value;
             biasBC[(int)rating.Value - 1].Add(error);
             rmseBC[(int)rating.Value - 1].Add((float)Math.Sqrt(error * error));
@@ -144,7 +144,7 @@ namespace RecommendationSystem.QualityTesting.Testers
                 var originalRatings = user.Ratings;
                 user.Ratings = user.Ratings.Where(r => r != rating).ToList();
 
-                var error = rating.Value - rs.Recommender.PredictRatingForArtist(user, KnnModel, Artists, rating.ArtistIndex);
+                var error = rating.Value - rs.Recommender.PredictRatingForArtist(user, SimpleKnnModel, Artists, rating.ArtistIndex);
                 rmseList.Add((float)Math.Sqrt(error * error));
 
                 user.Ratings = originalRatings;
