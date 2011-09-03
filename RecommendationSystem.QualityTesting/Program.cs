@@ -10,14 +10,14 @@ using RecommendationSystem.Knn.RatingAggregation;
 using RecommendationSystem.Knn.Recommendations;
 using RecommendationSystem.Knn.Similarity;
 using RecommendationSystem.Knn.Training;
-using RecommendationSystem.MatrixFactorization.Basic;
-using RecommendationSystem.MatrixFactorization.Basic.Models;
-using RecommendationSystem.MatrixFactorization.Basic.Recommendations;
-using RecommendationSystem.MatrixFactorization.Bias;
-using RecommendationSystem.MatrixFactorization.Bias.Models;
-using RecommendationSystem.MatrixFactorization.Bias.Recommendations;
-using RecommendationSystem.MatrixFactorization.Training;
 using RecommendationSystem.QualityTesting.Testers;
+using RecommendationSystem.SimpleSvd.Basic;
+using RecommendationSystem.SimpleSvd.Basic.Recommendations;
+using RecommendationSystem.SimpleSvd.Bias;
+using RecommendationSystem.SimpleSvd.Bias.Recommendations;
+using RecommendationSystem.Svd.Foundation.Basic.Models;
+using RecommendationSystem.Svd.Foundation.Bias.Models;
+using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.QualityTesting
 {
@@ -52,7 +52,7 @@ namespace RecommendationSystem.QualityTesting
                     case "simple":
 
                         #region Simple
-                        var simpleTester = new SimpleTester(trainUsers, artists, trainRatings, testUsers);
+                        var simpleTester = new NaiveTester(trainUsers, artists, trainRatings, testUsers);
                         simpleTester.Test();
                         break;
                         #endregion

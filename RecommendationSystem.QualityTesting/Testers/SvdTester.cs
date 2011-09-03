@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Entities;
-using RecommendationSystem.MatrixFactorization.Models;
-using RecommendationSystem.MatrixFactorization.Recommendation;
-using RecommendationSystem.MatrixFactorization.Training;
+using RecommendationSystem.SimpleSvd.Recommendation;
+using RecommendationSystem.Svd.Foundation.Models;
+using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.QualityTesting.Testers
 {

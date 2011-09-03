@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Knn", 
 		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7} = {7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.MatrixFactorization", "RecommendationSystem.MatrixFactorization\RecommendationSystem.MatrixFactorization.csproj", "{80E6B57C-A34D-4442-AE09-181D11DF32E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.SimpleSvd", "RecommendationSystem.SimpleSvd\RecommendationSystem.SimpleSvd.csproj", "{80E6B57C-A34D-4442-AE09-181D11DF32E6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7} = {7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}
 	EndProjectSection
@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem", "Rec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.QualityTesting", "RecommendationSystem.QualityTesting\RecommendationSystem.QualityTesting.csproj", "{C95EF281-8FEF-4D76-9B14-EFEDCCE133D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Simple", "RecommendationSystem.Simple\RecommendationSystem.Simple.csproj", "{64468AE3-522C-4F18-8331-364E0FCBD942}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Naive", "RecommendationSystem.Naive\RecommendationSystem.Naive.csproj", "{64468AE3-522C-4F18-8331-364E0FCBD942}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationSystem.Svd.Foundation", "RecommendationSystem.Svd.Foundation\RecommendationSystem.Svd.Foundation.csproj", "{F7484A47-1256-4566-9C47-78CDD5F403E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,18 @@ Global
 		{64468AE3-522C-4F18-8331-364E0FCBD942}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{64468AE3-522C-4F18-8331-364E0FCBD942}.Release|x64.ActiveCfg = Release|Any CPU
 		{64468AE3-522C-4F18-8331-364E0FCBD942}.Release|x86.ActiveCfg = Release|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{F7484A47-1256-4566-9C47-78CDD5F403E2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

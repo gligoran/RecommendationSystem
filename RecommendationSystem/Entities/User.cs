@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RecommendationSystem.Entities
 {
@@ -28,18 +29,6 @@ namespace RecommendationSystem.Entities
             SignUp = signUp;
         }
         #endregion
-
-#if DEBUG
-
-        #region ToString
-        public override string ToString()
-        {
-            var s = String.Format("iAVG: {0}{1}", Ratings.Average(r => r.Value), Environment.NewLine);
-            return s /*+ Ratings.Aggregate(String.Empty, (current, rating) => current + rating.ToString())*/;
-        }
-        #endregion
-
-#endif
 
         #region IComparable
         public int CompareTo(User other)
