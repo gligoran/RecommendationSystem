@@ -44,7 +44,6 @@
     <Compile Include="DataFiles.cs" />
     <Compile Include="DataPreprocessor.cs" />
     <Compile Include="DataSpliter.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="RatingPreprocessor.cs" />
     <Compile Include="RatingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

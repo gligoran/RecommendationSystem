@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="IKnnRecommendationSystem.cs" />
     <Compile Include="KnnRecommendationSystem.cs" />
     <Compile Include="Recommendations\ContentKnnRecommender.cs" />
@@ -75,10 +76,6 @@
     <Compile Include="Users\IKnnUser.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RecommendationSystem.Data\RecommendationSystem.Data.csproj">
-      <Project>{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}</Project>
-      <Name>RecommendationSystem.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
       <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
       <Name>RecommendationSystem</Name>
