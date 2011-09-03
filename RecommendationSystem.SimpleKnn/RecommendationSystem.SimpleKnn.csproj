@@ -48,35 +48,28 @@
   <ItemGroup>
     <Compile Include="IntersectSortedExtension.cs" />
     <Compile Include="ISimpleKnnRecommendationSystem.cs" />
-    <Compile Include="SimpleKnnRecommendationSystem.cs" />
     <Compile Include="Recommendations\ContentSimpleKnnRecommender.cs" />
-    <Compile Include="Recommendations\RecommendationGeneration\FifthsRecommendationGenerator.cs" />
-    <Compile Include="Recommendations\RecommendationGeneration\EqualDescentRecommendationGenerator.cs" />
     <Compile Include="Recommendations\IContentSimpleKnnRecommender.cs" />
-    <Compile Include="Recommendations\RecommendationGeneration\IRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\ISimpleKnnRecommender.cs" />
+    <Compile Include="Similarity\ISimpleSimilarityEstimator.cs" />
+    <Compile Include="SimpleKnnRecommendationSystem.cs" />
     <Compile Include="Recommendations\SimpleKnnRecommender.cs" />
-    <Compile Include="RatingAggregation\AdjustedWeightedSumRatingAggregator.cs" />
-    <Compile Include="RatingAggregation\IRatingAggregator.cs" />
-    <Compile Include="RatingAggregation\SimpleAverageRatingAggregator.cs" />
-    <Compile Include="RatingAggregation\WeightedSumRatingAggregator.cs" />
-    <Compile Include="Recommendations\RecommendationGeneration\RatingAggregationRecommendationGenerator.cs" />
-    <Compile Include="Similarity\ContentSimilarityEstimator.cs" />
     <Compile Include="Similarity\UnionCosineSimilarityEstimator.cs" />
     <Compile Include="Similarity\UnionPearsonSimilarityEstimator.cs" />
     <Compile Include="Similarity\CosineSimilarityEstimator.cs" />
-    <Compile Include="Similarity\IContentSimilarityEstimator.cs" />
     <Compile Include="Similarity\PearsonSimilarityEstimator.cs" />
     <Compile Include="Models\ISimpleKnnModel.cs" />
     <Compile Include="Models\SimpleKnnModel.cs" />
-    <Compile Include="Similarity\SimilarUser.cs" />
     <Compile Include="Training\SimpleKnnTrainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Similarity\ISimilarityEstimator.cs" />
-    <Compile Include="Users\IKnnUser.cs" />
     <Compile Include="Users\SimpleKnnUser.cs" />
     <Compile Include="Users\ISimpleKnnUser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RecommendationSystem.Knn.Foundation\RecommendationSystem.Knn.Foundation.csproj">
+      <Project>{67BDD53F-5884-4451-AB8C-2142541B4F16}</Project>
+      <Name>RecommendationSystem.Knn.Foundation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
       <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
       <Name>RecommendationSystem</Name>

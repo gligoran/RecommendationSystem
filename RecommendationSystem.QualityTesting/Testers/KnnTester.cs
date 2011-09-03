@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RecommendationSystem.Entities;
+using RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration;
+using RecommendationSystem.Knn.Foundation.Similarity;
 using RecommendationSystem.Recommendations;
 using RecommendationSystem.SimpleKnn;
 using RecommendationSystem.SimpleKnn.Models;
-using RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration;
-using RecommendationSystem.SimpleKnn.Similarity;
+using RecommendationSystem.SimpleKnn.Users;
 using RecommendationSystem.Training;
 
 namespace RecommendationSystem.QualityTesting.Testers
@@ -24,8 +25,8 @@ namespace RecommendationSystem.QualityTesting.Testers
 
         #region Properties
         public int K { get; set; }
-        public ISimilarityEstimator Sim { get; set; }
-        public IRecommendationGenerator Rg { get; set; }
+        public ISimilarityEstimator<ISimpleKnnUser> Sim { get; set; }
+        public IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> Rg { get; set; }
         public List<IUser> TestUsers { get; set; }
         public ISimpleKnnModel SimpleKnnModel { get; set; }
         public ITrainer<ISimpleKnnModel, IUser> Trainer { get; set; }
@@ -36,7 +37,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         #region Test
         public override void Test()
         {
-            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] {Sim, Rg, K});
+            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] { Sim, Rg, K });
             TestName = string.Format("Knn-K{0}-{1}-{2}-{3}-T{4}", K, Sim, Rg, recommender, NumberOfTests);
             writeFrequency = (int)Math.Ceiling(NumberOfTests / 100d);
 
@@ -94,7 +95,7 @@ namespace RecommendationSystem.QualityTesting.Testers
                 });
 
             while (rmseBC.Sum(bc => bc.Count) != NumberOfTests)
-            {}
+            { }
 
             rbvsByRatings = new RmseBiasAndVariance[5];
             var totalRmse = new List<float>();

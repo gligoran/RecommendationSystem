@@ -1,36 +1,37 @@
 using System.Collections.Generic;
 using RecommendationSystem.Entities;
+using RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration;
+using RecommendationSystem.Knn.Foundation.Similarity;
 using RecommendationSystem.Recommendations;
 using RecommendationSystem.SimpleKnn.Models;
-using RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration;
 using RecommendationSystem.SimpleKnn.Similarity;
 using RecommendationSystem.SimpleKnn.Users;
 
 namespace RecommendationSystem.SimpleKnn.Recommendations
 {
-    public class SimpleKnnRecommender : IRecommender<ISimpleKnnModel>
+    public class SimpleKnnRecommender : ISimpleKnnRecommender
     {
-        public ISimilarityEstimator SimilarityEstimator { get; set; }
-        public IRecommendationGenerator RecommendationGenerator { get; set; }
+        public ISimilarityEstimator<ISimpleKnnUser> SimilarityEstimator { get; set; }
+        public IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> RecommendationGenerator { get; set; }
         public int NearestNeighboursCount { get; set; }
 
         #region Consturctor
         public SimpleKnnRecommender(int nearestNeighboursCount = 3)
-            : this(new CosineSimilarityEstimator(), new RatingAggregationRecommendationGenerator(), nearestNeighboursCount)
+            : this(new CosineSimilarityEstimator(), new RatingAggregationRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>(), nearestNeighboursCount)
         {}
 
-        public SimpleKnnRecommender(ISimilarityEstimator similarityEstimator, int nearestNeighboursCount = 3)
-            : this(similarityEstimator, new RatingAggregationRecommendationGenerator(), nearestNeighboursCount)
+        public SimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, int nearestNeighboursCount = 3)
+            : this(similarityEstimator, new RatingAggregationRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>(), nearestNeighboursCount)
         {}
 
-        public SimpleKnnRecommender(IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3)
-            : this(new CosineSimilarityEstimator(), recommendationGenerator, nearestNeighboursCount)
+        public SimpleKnnRecommender(IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> simpleRecommendationGenerator, int nearestNeighboursCount = 3)
+            : this(new CosineSimilarityEstimator(), simpleRecommendationGenerator, nearestNeighboursCount)
         {}
 
-        public SimpleKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3)
+        public SimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> simpleRecommendationGenerator, int nearestNeighboursCount = 3)
         {
             SimilarityEstimator = similarityEstimator;
-            RecommendationGenerator = recommendationGenerator;
+            RecommendationGenerator = simpleRecommendationGenerator;
             NearestNeighboursCount = nearestNeighboursCount;
         }
         #endregion
@@ -70,9 +71,9 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
         }
 
         #region CalculateKNearestNeighbours
-        private List<SimilarUser> CalculateKNearestNeighbours(ISimpleKnnUser user, IEnumerable<ISimpleKnnUser> users, int nearestNeighboursCount)
+        public List<SimilarUser<ISimpleKnnUser>> CalculateKNearestNeighbours(ISimpleKnnUser user, IEnumerable<ISimpleKnnUser> users, int nearestNeighboursCount)
         {
-            var neighbours = new List<SimilarUser>();
+            var neighbours = new List<SimilarUser<ISimpleKnnUser>>();
             foreach (var neighbour in users)
             {
                 if (neighbour == user)
@@ -82,7 +83,7 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
                 if (s <= 0.0)
                     continue;
 
-                neighbours.Add(new SimilarUser(neighbour, s));
+                neighbours.Add(new SimilarUser<ISimpleKnnUser>(neighbour, s));
 
                 neighbours.Sort();
                 while (neighbours.Count > nearestNeighboursCount)
@@ -94,7 +95,7 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
         #endregion
 
         #region CalculateSimilarity
-        protected virtual float CalculateSimilarity(ISimpleKnnUser user, ISimpleKnnUser neighbour)
+        public virtual float CalculateSimilarity(ISimpleKnnUser user, ISimpleKnnUser neighbour)
         {
             var s = SimilarityEstimator.GetSimilarity(user, neighbour);
             return s;

@@ -1,33 +1,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Entities;
+using RecommendationSystem.Knn.Foundation.RatingAggregation;
+using RecommendationSystem.Knn.Foundation.Similarity;
+using RecommendationSystem.Knn.Foundation.Users;
+using RecommendationSystem.Models;
 using RecommendationSystem.Recommendations;
-using RecommendationSystem.SimpleKnn.Models;
-using RecommendationSystem.SimpleKnn.RatingAggregation;
-using RecommendationSystem.SimpleKnn.Similarity;
-using RecommendationSystem.SimpleKnn.Users;
 
-namespace RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration
+namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration
 {
-    public class RatingAggregationRecommendationGenerator : IRecommendationGenerator
+    public class RatingAggregationRecommendationGenerator<TModel, TKnnUser> : IRecommendationGenerator<TModel, TKnnUser>
+        where TModel : IModel
+        where TKnnUser : IKnnUser
     {
-        public IRatingAggregator RatingAggregator { get; set; }
+        public IRatingAggregator<TKnnUser> RatingAggregator { get; set; }
 
         public RatingAggregationRecommendationGenerator()
-            : this(new SimpleAverageRatingAggregator())
+            : this(new SimpleAverageRatingAggregator<TKnnUser>())
         {}
 
-        public RatingAggregationRecommendationGenerator(IRatingAggregator ratingAggregator)
+        public RatingAggregationRecommendationGenerator(IRatingAggregator<TKnnUser> ratingAggregator)
         {
             RatingAggregator = ratingAggregator;
         }
 
-        public float PredictRatingForArtist(ISimpleKnnUser simpleKnnUser, List<SimilarUser> neighbours, ISimpleKnnModel model, List<IArtist> artists, int artistIndex)
+        public float PredictRatingForArtist(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists, int artistIndex)
         {
             return RatingAggregator.Aggregate(simpleKnnUser, neighbours, artistIndex);
         }
 
-        public IEnumerable<IRecommendation> GenerateRecommendations(ISimpleKnnUser simpleKnnUser, List<SimilarUser> neighbours, ISimpleKnnModel model, List<IArtist> artists)
+        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists)
         {
             var artistIndices = new List<int>();
             artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(simpleKnnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();

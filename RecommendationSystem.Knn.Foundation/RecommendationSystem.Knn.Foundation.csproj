@@ -45,7 +45,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RatingAggregation\AdjustedWeightedSumRatingAggregator.cs" />
+    <Compile Include="RatingAggregation\IRatingAggregator.cs" />
+    <Compile Include="RatingAggregation\SimpleAverageRatingAggregator.cs" />
+    <Compile Include="RatingAggregation\WeightedSumRatingAggregator.cs" />
+    <Compile Include="Recommendations\IContentKnnRecommender.cs" />
+    <Compile Include="Recommendations\IKnnRecommender.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\EqualDescentSimpleRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\FifthsSimpleRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\IRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\RatingAggregationRecommendationGenerator.cs" />
+    <Compile Include="Similarity\ContentSimilarityEstimator.cs" />
+    <Compile Include="Similarity\IContentSimilarityEstimator.cs" />
+    <Compile Include="Similarity\ISimilarityEstimator.cs" />
+    <Compile Include="Similarity\SimilarUser.cs" />
+    <Compile Include="Users\IKnnUser.cs" />
+    <Compile Include="Users\KnnUser.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
+      <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
+      <Name>RecommendationSystem</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

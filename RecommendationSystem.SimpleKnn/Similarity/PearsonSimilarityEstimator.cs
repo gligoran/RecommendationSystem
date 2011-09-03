@@ -4,7 +4,7 @@ using RecommendationSystem.SimpleKnn.Users;
 
 namespace RecommendationSystem.SimpleKnn.Similarity
 {
-    public class PearsonSimilarityEstimator : ISimilarityEstimator
+    public class PearsonSimilarityEstimator : ISimpleSimilarityEstimator
     {
         public float GetSimilarity(ISimpleKnnUser first, ISimpleKnnUser second)
         {

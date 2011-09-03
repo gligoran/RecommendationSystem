@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RecommendationSystem.SimpleKnn.Similarity;
-using RecommendationSystem.SimpleKnn.Users;
+using RecommendationSystem.Knn.Foundation.Similarity;
+using RecommendationSystem.Knn.Foundation.Users;
 
-namespace RecommendationSystem.SimpleKnn.RatingAggregation
+namespace RecommendationSystem.Knn.Foundation.RatingAggregation
 {
-    public class SimpleAverageRatingAggregator : IRatingAggregator
+    public class SimpleAverageRatingAggregator<TKnnUser> : IRatingAggregator<TKnnUser>
+        where TKnnUser : IKnnUser
     {
-        public float Aggregate(ISimpleKnnUser user, List<SimilarUser> neighbours, int artistIndex)
+        public float Aggregate(TKnnUser user, List<SimilarUser<TKnnUser>> neighbours, int artistIndex)
         {
             if (neighbours == null || neighbours.Count == 0)
                 return 0.0f;

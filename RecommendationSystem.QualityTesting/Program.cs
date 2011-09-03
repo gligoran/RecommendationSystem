@@ -6,12 +6,15 @@ using System.IO;
 using System.Linq;
 using RecommendationSystem.Data;
 using RecommendationSystem.Entities;
+using RecommendationSystem.Knn.Foundation.RatingAggregation;
+using RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration;
+using RecommendationSystem.Knn.Foundation.Similarity;
 using RecommendationSystem.QualityTesting.Testers;
-using RecommendationSystem.SimpleKnn.RatingAggregation;
+using RecommendationSystem.SimpleKnn.Models;
 using RecommendationSystem.SimpleKnn.Recommendations;
-using RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration;
 using RecommendationSystem.SimpleKnn.Similarity;
 using RecommendationSystem.SimpleKnn.Training;
+using RecommendationSystem.SimpleKnn.Users;
 using RecommendationSystem.SimpleSvd.Basic;
 using RecommendationSystem.SimpleSvd.Basic.Recommendations;
 using RecommendationSystem.SimpleSvd.Bias;
@@ -66,7 +69,7 @@ namespace RecommendationSystem.QualityTesting
                         var performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
                         var performContentKnnTests = argList.IndexOf("-co") >= 0;
 
-                        var sims = new List<ISimilarityEstimator>();
+                        var sims = new List<ISimilarityEstimator<ISimpleKnnUser>>();
                         var argSims = argList[argList.IndexOf("-sim") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var argSim in argSims)
                         {
@@ -87,26 +90,26 @@ namespace RecommendationSystem.QualityTesting
                             }
                         }
 
-                        var rgs = new List<IRecommendationGenerator>();
+                        var rgs = new List<IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>>();
                         var argRgs = argList[argList.IndexOf("-rg") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var argRg in argRgs)
                         {
                             switch (argRg)
                             {
                                 case "sara":
-                                    rgs.Add(new RatingAggregationRecommendationGenerator(new SimpleAverageRatingAggregator()));
+                                    rgs.Add(new RatingAggregationRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>(new SimpleAverageRatingAggregator<ISimpleKnnUser>()));
                                     break;
                                 case "wsra":
-                                    rgs.Add(new RatingAggregationRecommendationGenerator(new WeightedSumRatingAggregator()));
+                                    rgs.Add(new RatingAggregationRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>(new WeightedSumRatingAggregator<ISimpleKnnUser>()));
                                     break;
                                 case "awsra":
-                                    rgs.Add(new RatingAggregationRecommendationGenerator(new AdjustedWeightedSumRatingAggregator()));
+                                    rgs.Add(new RatingAggregationRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>(new AdjustedWeightedSumRatingAggregator<ISimpleKnnUser>()));
                                     break;
                                 case "frg":
-                                    rgs.Add(new FifthsRecommendationGenerator());
+                                    rgs.Add(new FifthsSimpleRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>());
                                     break;
                                 case "edrg":
-                                    rgs.Add(new EqualDescentRecommendationGenerator());
+                                    rgs.Add(new EqualDescentSimpleRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>());
                                     break;
                             }
                         }

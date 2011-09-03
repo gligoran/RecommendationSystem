@@ -1,5 +1,6 @@
-using RecommendationSystem.SimpleKnn.Recommendations.RecommendationGeneration;
-using RecommendationSystem.SimpleKnn.Similarity;
+using RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration;
+using RecommendationSystem.Knn.Foundation.Similarity;
+using RecommendationSystem.SimpleKnn.Models;
 using RecommendationSystem.SimpleKnn.Users;
 
 namespace RecommendationSystem.SimpleKnn.Recommendations
@@ -23,11 +24,11 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentSimpleKnnRecommender(IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : this(recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
         {}
 
-        public ContentSimpleKnnRecommender(IRecommendationGenerator recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : base(recommendationGenerator, nearestNeighboursCount)
         {
             ContentSimilarityEstimator = contentSimilarityEstimator;
@@ -35,11 +36,11 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator similarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : this(similarityEstimator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
         {}
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator similarityEstimator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : base(similarityEstimator, nearestNeighboursCount)
         {
             ContentSimilarityEstimator = contentSimilarityEstimator;
@@ -47,11 +48,11 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel,ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : this(similarityEstimator, recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
         {}
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel,ISimpleKnnUser> recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : base(similarityEstimator, recommendationGenerator, nearestNeighboursCount)
         {
             ContentSimilarityEstimator = contentSimilarityEstimator;
@@ -59,12 +60,12 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator similarityEstimator, IRecommendationGenerator recommendationGenerator, int nearestNeighboursCount = 3)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel,ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3)
             : this(similarityEstimator, recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount)
         {}
         #endregion
 
-        protected override float CalculateSimilarity(ISimpleKnnUser user, ISimpleKnnUser neighbour)
+        public override float CalculateSimilarity(ISimpleKnnUser user, ISimpleKnnUser neighbour)
         {
             return base.CalculateSimilarity(user, neighbour) * ContentSimilarityEstimator.GetSimilarity(user, neighbour);
         }

@@ -1,6 +1,6 @@
 using RecommendationSystem.Entities;
 
-namespace RecommendationSystem.SimpleKnn.Users
+namespace RecommendationSystem.Knn.Foundation.Users
 {
     public interface IKnnUser : IUser
     {

@@ -64,6 +64,10 @@
       <Project>{7B9D08A9-A495-4C57-BCF1-5047A0C4C6F7}</Project>
       <Name>RecommendationSystem.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RecommendationSystem.Knn.Foundation\RecommendationSystem.Knn.Foundation.csproj">
+      <Project>{67BDD53F-5884-4451-AB8C-2142541B4F16}</Project>
+      <Name>RecommendationSystem.Knn.Foundation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RecommendationSystem.SimpleKnn\RecommendationSystem.SimpleKnn.csproj">
       <Project>{0CC07C11-11EA-411F-AE88-B0A1BD2CF650}</Project>
       <Name>RecommendationSystem.SimpleKnn</Name>

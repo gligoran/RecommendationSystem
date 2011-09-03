@@ -1,6 +1,6 @@
 using RecommendationSystem.Entities;
 
-namespace RecommendationSystem.SimpleKnn.Similarity
+namespace RecommendationSystem.Knn.Foundation.Similarity
 {
     public interface IContentSimilarityEstimator
     {

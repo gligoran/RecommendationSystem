@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RecommendationSystem.Entities;
+using RecommendationSystem.Knn.Foundation.Users;
 
 namespace RecommendationSystem.SimpleKnn.Users
 {
