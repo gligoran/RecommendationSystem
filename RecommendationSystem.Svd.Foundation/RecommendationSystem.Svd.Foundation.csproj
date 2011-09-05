@@ -49,6 +49,8 @@
     <Compile Include="Basic\Models\IBasicSvdBiasBinsModel.cs" />
     <Compile Include="Basic\Models\IBasicSvdModel.cs" />
     <Compile Include="Basic\Prediction\BasicNewUserFeatureGenerator.cs" />
+    <Compile Include="Basic\Training\BasicSvdBiasBinsTrainerBase.cs" />
+    <Compile Include="Basic\Training\BasicSvdTrainerBase.cs" />
     <Compile Include="Bias\Models\BiasSvdBiasBinsModel.cs" />
     <Compile Include="Bias\Models\BiasSvdModelPartLoader.cs" />
     <Compile Include="Bias\Models\BiasSvdModelPartSaver.cs" />

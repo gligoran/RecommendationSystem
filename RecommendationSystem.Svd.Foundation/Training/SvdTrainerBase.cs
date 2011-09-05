@@ -40,12 +40,17 @@ namespace RecommendationSystem.Svd.Foundation.Training
 
         protected TSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
-            var model = GetNewModelInstance(users, artists, ratings);
+            var model = GetNewModelInstance();
+            InitializeNewModel(model, users, artists, ratings);
+
             CalculateFeatures(model, users, artists, ratings, trainingParameters);
             return model;
         }
 
-        protected abstract TSvdModel GetNewModelInstance(List<string> users, List<string> artists, List<IRating> ratings);
+        protected abstract TSvdModel GetNewModelInstance();
+
+        protected virtual void InitializeNewModel(TSvdModel model, List<string> users, List<string> artists, List<IRating> ratings)
+        {}
         #endregion
 
         #region CalculateFeatures
