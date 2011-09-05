@@ -37,7 +37,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         #region Test
         public override void Test()
         {
-            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] { Sim, Rg, K });
+            var recommender = (TRecommender)Activator.CreateInstance(typeof(TRecommender), new object[] {Sim, Rg, K});
             TestName = string.Format("Knn-K{0}-{1}-{2}-{3}-T{4}", K, Sim, Rg, recommender, NumberOfTests);
             writeFrequency = (int)Math.Ceiling(NumberOfTests / 100d);
 
@@ -95,7 +95,7 @@ namespace RecommendationSystem.QualityTesting.Testers
                 });
 
             while (rmseBC.Sum(bc => bc.Count) != NumberOfTests)
-            { }
+            {}
 
             rbvsByRatings = new RmseBiasAndVariance[5];
             var totalRmse = new List<float>();

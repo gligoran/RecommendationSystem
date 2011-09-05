@@ -44,7 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISvdBoostedKnnRecommendationSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RecommendationSystem.Svd.Foundation\RecommendationSystem.Svd.Foundation.csproj">
+      <Project>{F7484A47-1256-4566-9C47-78CDD5F403E2}</Project>
+      <Name>RecommendationSystem.Svd.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
+      <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>
+      <Name>RecommendationSystem</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

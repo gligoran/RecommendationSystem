@@ -5,7 +5,7 @@ using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.Svd.Foundation.Bias.Prediction
 {
-    internal class BiasNewUserFeatureGenerator : INewUserFeatureGenerator<IBiasSvdModel>
+    public class BiasNewUserFeatureGenerator : INewUserFeatureGenerator<IBiasSvdModel>
     {
         public float[] GetNewUserFeatures(IBiasSvdModel model, IUser user)
         {

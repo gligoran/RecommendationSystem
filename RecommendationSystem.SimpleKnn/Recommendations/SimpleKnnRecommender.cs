@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using RecommendationSystem.Entities;
 using RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration;
 using RecommendationSystem.Knn.Foundation.Similarity;
+using RecommendationSystem.Prediction;
 using RecommendationSystem.Recommendations;
 using RecommendationSystem.SimpleKnn.Models;
 using RecommendationSystem.SimpleKnn.Similarity;
@@ -13,6 +15,13 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
     {
         public ISimilarityEstimator<ISimpleKnnUser> SimilarityEstimator { get; set; }
         public IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> RecommendationGenerator { get; set; }
+
+        public IPredictor<ISimpleKnnModel> Predictor
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
+
         public int NearestNeighboursCount { get; set; }
 
         #region Consturctor

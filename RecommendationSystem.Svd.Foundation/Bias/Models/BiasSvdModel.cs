@@ -4,7 +4,6 @@ namespace RecommendationSystem.Svd.Foundation.Bias.Models
     {
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }
-        public float[] BiasBins { get; set; }
 
         public int FeatureCount
         {

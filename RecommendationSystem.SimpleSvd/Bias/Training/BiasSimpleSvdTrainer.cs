@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Entities;
-using RecommendationSystem.SimpleSvd.Bias.Prediction;
 using RecommendationSystem.Svd.Foundation.Bias.Models;
-using RecommendationSystem.Svd.Foundation.Prediction;
 using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd.Bias.Training
@@ -12,16 +10,13 @@ namespace RecommendationSystem.SimpleSvd.Bias.Training
     {
         #region Constructor
         public BiasSimpleSvdTrainer()
-            : this(new BiasSimpleSvdPredictor())
-        {}
-
-        public BiasSimpleSvdTrainer(ISvdPredictor<IBiasSvdModel> predictor)
-            : base(predictor)
-        {}
+        {
+            ModelSaver.ModelPartSavers.Add(new BiasSvdModelPartSaver());
+        }
         #endregion
 
         #region InitializeNewModel
-        protected override IBiasSvdModel InitializeNewModel(List<string> users, List<string> artists, List<IRating> ratings)
+        protected override IBiasSvdModel GetNewModelInstance(List<string> users, List<string> artists, List<IRating> ratings)
         {
             var model = new BiasSvdModel();
             ComputeGlobalAverageAndBiases(model, users, artists, ratings);

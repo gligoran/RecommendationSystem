@@ -51,11 +51,25 @@
     <Compile Include="Entities\Rating.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="IRecommendationSystem.cs" />
+    <Compile Include="Models\BiasBinsModelPartLoader.cs" />
+    <Compile Include="Models\BiasBinsModelPartSaver.cs" />
+    <Compile Include="Models\IBiasBinsModel.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\IModelPartLoader.cs" />
+    <Compile Include="Models\IModelPartSaver.cs" />
+    <Compile Include="Models\ModelLoader.cs" />
+    <Compile Include="Models\ModelSaver.cs" />
+    <Compile Include="Prediction\BiasBinsAdjustor.cs" />
+    <Compile Include="Training\BiasBinsCalculatorBase.cs" />
+    <Compile Include="Training\IBiasBinsCalculator.cs" />
+    <Compile Include="Prediction\IBiasBinsAdjustor.cs" />
+    <Compile Include="Prediction\IPredictor.cs" />
+    <Compile Include="Recommendations\IBiasBinsRecommender.cs" />
     <Compile Include="Recommendations\IRecommendation.cs" />
     <Compile Include="Recommendations\Recommendation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recommendations\IRecommender.cs" />
+    <Compile Include="Training\IBiasBinsTrainer.cs" />
     <Compile Include="Training\ITrainer.cs" />
   </ItemGroup>
   <ItemGroup />

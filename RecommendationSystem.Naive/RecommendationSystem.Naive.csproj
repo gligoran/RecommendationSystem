@@ -44,12 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AverageRating\AverageRatingPredictor.cs" />
     <Compile Include="AverageRating\AverageRatingRecommendationSystem.cs" />
     <Compile Include="AverageRating\AverageRatingRecommender.cs" />
     <Compile Include="AverageRating\AverageRatingTrainer.cs" />
     <Compile Include="AverageRating\IAverageRatingModel.cs" />
     <Compile Include="AverageRating\IAverageRatingRecommendationSystem.cs" />
     <Compile Include="AverageRating\AverageRatingModel.cs" />
+    <Compile Include="MedianRating\MedianRatingPredictor.cs" />
+    <Compile Include="MostCommonRating\MostCommonRatingPredictor.cs" />
     <Compile Include="MostCommonRating\IMostCommonRatingModel.cs" />
     <Compile Include="MostCommonRating\IMostCommonRatingRecommendationSystem.cs" />
     <Compile Include="MostCommonRating\MostCommonRatingRecommender.cs" />

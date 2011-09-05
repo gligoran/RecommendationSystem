@@ -9,19 +9,12 @@ namespace RecommendationSystem.Svd.Foundation.Prediction
     {
         public INewUserFeatureGenerator<TSvdModel> NewUserFeatureGenerator { get; set; }
 
-        public abstract float PredictRatingForArtist(IUser user, TSvdModel model, List<IArtist> artists, int artistIndex, bool useBiasBins);
-
-        public int GetBiasBinIndex(float predictedRating, int biasBinCount)
+        protected SvdPredictorBase(INewUserFeatureGenerator<TSvdModel> newUserFeatureGenerator)
         {
-            for (var i = 0; i < biasBinCount; i++)
-            {
-                if (predictedRating - 1.0f >= i * 4.0f / biasBinCount && predictedRating - 1.0f < (i + 1) * 4.0f / biasBinCount)
-                    return i;
-            }
-
-            //predictedRating == 5.0f
-            return biasBinCount - 1;
+            NewUserFeatureGenerator = newUserFeatureGenerator;
         }
+
+        public abstract float PredictRatingForArtist(IUser user, TSvdModel model, List<IArtist> artists, int artistIndex);
 
         protected static float CapUserRatings(float userRating)
         {

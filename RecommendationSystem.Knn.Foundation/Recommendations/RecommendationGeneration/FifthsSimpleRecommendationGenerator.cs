@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Entities;
@@ -59,7 +60,7 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
 
         public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TKnnUser model, List<IArtist> artists)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

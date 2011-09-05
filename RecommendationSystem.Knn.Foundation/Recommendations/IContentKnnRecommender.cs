@@ -4,7 +4,7 @@ using RecommendationSystem.Recommendations;
 
 namespace RecommendationSystem.Knn.Foundation.Recommendations
 {
-    public interface IContentKnnRecommender<in TKnnUser> : IRecommender<TKnnUser>
+    public interface IContentKnnRecommender<TKnnUser> : IRecommender<TKnnUser>
         where TKnnUser : IModel
     {
         IContentSimilarityEstimator ContentSimilarityEstimator { get; set; }

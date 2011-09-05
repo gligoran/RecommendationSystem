@@ -7,8 +7,5 @@ namespace RecommendationSystem.SimpleSvd
 {
     public interface ISimpleSvdRecommendationSystem<TSvdModel> : IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>>
         where TSvdModel : ISvdModel
-    {
-        void SaveModel(string filename, TSvdModel model);
-        TSvdModel LoadModel(string filename);
-    }
+    {}
 }

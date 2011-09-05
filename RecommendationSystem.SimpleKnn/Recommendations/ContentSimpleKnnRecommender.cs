@@ -48,11 +48,11 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel,ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : this(similarityEstimator, recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount, ratingSimilarityWeight, contentSimilarityWeight)
         {}
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel,ISimpleKnnUser> recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> recommendationGenerator, IContentSimilarityEstimator contentSimilarityEstimator, int nearestNeighboursCount = 3, float ratingSimilarityWeight = 0.5f, float contentSimilarityWeight = 0.5f)
             : base(similarityEstimator, recommendationGenerator, nearestNeighboursCount)
         {
             ContentSimilarityEstimator = contentSimilarityEstimator;
@@ -60,7 +60,7 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             ContentSimilarityWeight = contentSimilarityWeight / (ratingSimilarityWeight + contentSimilarityWeight);
         }
 
-        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel,ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3)
+        public ContentSimpleKnnRecommender(ISimilarityEstimator<ISimpleKnnUser> similarityEstimator, IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> recommendationGenerator, int nearestNeighboursCount = 3)
             : this(similarityEstimator, recommendationGenerator, new ContentSimilarityEstimator(), nearestNeighboursCount)
         {}
         #endregion

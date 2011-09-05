@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Data;
 using RecommendationSystem.Entities;
+using RecommendationSystem.Models;
 using RecommendationSystem.Svd.Foundation.Models;
-using RecommendationSystem.Svd.Foundation.Prediction;
 
 namespace RecommendationSystem.Svd.Foundation.Training
 {
@@ -12,9 +12,8 @@ namespace RecommendationSystem.Svd.Foundation.Training
         where TSvdModel : ISvdModel
     {
         #region Properties
-        public ISvdPredictor<TSvdModel> Predictor { get; set; }
-
         protected float[] ResidualRatingValues { get; set; }
+        protected ModelSaver ModelSaver { get; set; }
         #endregion
 
         #region Fields
@@ -22,12 +21,11 @@ namespace RecommendationSystem.Svd.Foundation.Training
         private float rmse = float.MaxValue;
         #endregion
 
-        #region Consturctor
-        protected SvdTrainerBase(ISvdPredictor<TSvdModel> predictor)
+        protected SvdTrainerBase()
         {
-            Predictor = predictor;
+            ModelSaver = new ModelSaver();
+            ModelSaver.ModelPartSavers.Add(new SvdModelPartSaver());
         }
-        #endregion
 
         #region TrainModel
         public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
@@ -37,66 +35,17 @@ namespace RecommendationSystem.Svd.Foundation.Training
 
         public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
-            var model = TrainModel(users.GetLookupTable(), artists.GetLookupTable(), ratings, trainingParameters);
-            CalculateBiasBins(model, ratings, users, artists, trainingParameters.BiasBinCount);
-            return model;
+            return TrainModel(users.GetLookupTable(), artists.GetLookupTable(), ratings, trainingParameters);
         }
 
-        public TSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
+        protected TSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
-            var model = InitializeNewModel(users, artists, ratings);
+            var model = GetNewModelInstance(users, artists, ratings);
             CalculateFeatures(model, users, artists, ratings, trainingParameters);
             return model;
         }
 
-        private void CalculateBiasBins(TSvdModel model, List<IRating> ratings, List<IUser> users, List<IArtist> artists, int biasBinCount)
-        {
-            Console.WriteLine("Calculating BiasBins...");
-
-            var biasBins = new float[biasBinCount];
-            var biasBinsPopulation = new int[biasBinCount];
-
-            var percent = users.Count / 100;
-            for (var i = 0; i < users.Count; i++)
-            {
-                var user = users[i];
-                lock (user)
-                {
-                    if (user.Ratings.Count > 1)
-                    {
-                        var originalRatings = user.Ratings;
-                        foreach (var rating in user.Ratings)
-                        {
-                            user.Ratings = originalRatings.Where(r => r != rating).ToList();
-                            var predictedRating = Predictor.PredictRatingForArtist(user, model, artists, rating.ArtistIndex);
-
-                            var error = predictedRating - rating.Value;
-                            var biasBinIndex = Predictor.GetBiasBinIndex(predictedRating, biasBinCount);
-                            biasBins[biasBinIndex] += error;
-                            biasBinsPopulation[biasBinIndex]++;
-                        }
-                        user.Ratings = originalRatings;
-                    }
-
-                    if (i % percent == 0)
-                        Console.WriteLine("BiasBins calculation at {0} ({1}%)", i, i / percent);
-                }
-            }
-
-            for (var i = 0; i < biasBinCount; i++)
-            {
-                if (biasBinsPopulation[i] > 0)
-                    biasBins[i] /= biasBinsPopulation[i];
-                else
-                    biasBins[i] = 0.0f;
-            }
-
-            model.BiasBins = biasBins;
-
-            Console.WriteLine("BiasBins calculation complete");
-        }
-
-        protected abstract TSvdModel InitializeNewModel(List<string> users, List<string> artists, List<IRating> ratings);
+        protected abstract TSvdModel GetNewModelInstance(List<string> users, List<string> artists, List<IRating> ratings);
         #endregion
 
         #region CalculateFeatures
@@ -174,6 +123,13 @@ namespace RecommendationSystem.Svd.Foundation.Training
         {
             for (var i = 0; i < ratings.Count; i++)
                 ResidualRatingValues[i] += model.UserFeatures[f, ratings[i].UserIndex] * model.ArtistFeatures[f, ratings[i].ArtistIndex];
+        }
+        #endregion
+
+        #region SaveModel
+        public void SaveModel(string filename, TSvdModel model)
+        {
+            ModelSaver.SaveModel(filename, model);
         }
         #endregion
     }

@@ -44,16 +44,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\Models\BasicSvdBiasBinsModel.cs" />
     <Compile Include="Basic\Models\BasicSvdModel.cs" />
+    <Compile Include="Basic\Models\IBasicSvdBiasBinsModel.cs" />
     <Compile Include="Basic\Models\IBasicSvdModel.cs" />
     <Compile Include="Basic\Prediction\BasicNewUserFeatureGenerator.cs" />
+    <Compile Include="Bias\Models\BiasSvdBiasBinsModel.cs" />
+    <Compile Include="Bias\Models\BiasSvdModelPartLoader.cs" />
+    <Compile Include="Bias\Models\BiasSvdModelPartSaver.cs" />
+    <Compile Include="Bias\Models\IBiasSvdBiasBinsModel.cs" />
     <Compile Include="Bias\Prediction\BiasNewUserFeatureGenerator.cs" />
+    <Compile Include="Bias\Training\BiasSvdBiasBinsTrainerBase.cs" />
+    <Compile Include="Bias\Training\BiasSvdTrainerBase.cs" />
+    <Compile Include="Models\ISvdBiasBinsModel.cs" />
+    <Compile Include="Models\SvdModelPartLoader.cs" />
+    <Compile Include="Models\SvdModelPartSaver.cs" />
     <Compile Include="Prediction\INewUserFeatureGenerator.cs" />
     <Compile Include="Bias\Models\BiasSvdModel.cs" />
     <Compile Include="Bias\Models\IBiasSvdModel.cs" />
     <Compile Include="Models\ISvdModel.cs" />
     <Compile Include="Prediction\ISvdPredictor.cs" />
     <Compile Include="Prediction\SvdPredictorBase.cs" />
+    <Compile Include="Training\ISvdBiasBinsTrainer.cs" />
+    <Compile Include="Training\SvdBiasBinsTrainerBase.cs" />
+    <Compile Include="Training\SvdBiasBinsCalculator.cs" />
     <Compile Include="Training\ISvdTrainer.cs" />
     <Compile Include="Training\SvdTrainerBase.cs" />
     <Compile Include="Training\TrainingParameters.cs" />
@@ -70,6 +84,7 @@
       <Name>RecommendationSystem</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

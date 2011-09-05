@@ -4,6 +4,5 @@ using RecommendationSystem.SimpleKnn.Models;
 namespace RecommendationSystem.SimpleKnn.Recommendations
 {
     public interface IContentSimpleKnnRecommender : IContentKnnRecommender<ISimpleKnnModel>
-    {
-    }
+    {}
 }

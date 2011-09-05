@@ -15,10 +15,11 @@ using RecommendationSystem.SimpleKnn.Recommendations;
 using RecommendationSystem.SimpleKnn.Similarity;
 using RecommendationSystem.SimpleKnn.Training;
 using RecommendationSystem.SimpleKnn.Users;
-using RecommendationSystem.SimpleSvd.Basic;
+using RecommendationSystem.SimpleSvd;
 using RecommendationSystem.SimpleSvd.Basic.Recommendations;
-using RecommendationSystem.SimpleSvd.Bias;
+using RecommendationSystem.SimpleSvd.Basic.Training;
 using RecommendationSystem.SimpleSvd.Bias.Recommendations;
+using RecommendationSystem.SimpleSvd.Bias.Training;
 using RecommendationSystem.Svd.Foundation.Basic.Models;
 using RecommendationSystem.Svd.Foundation.Bias.Models;
 using RecommendationSystem.Svd.Foundation.Training;
@@ -31,15 +32,17 @@ namespace RecommendationSystem.QualityTesting
 
         public static void Main(string[] args)
         {
+#if !DEBUG
             try
             {
+#endif
                 if (args.Length == 0)
                 {
                     Console.WriteLine("Please enter testing arguments.");
                     return;
                 }
 
-                var argList = new List<string>(args);
+                var argList = args.Select(arg => arg.ToLower()).ToList();
 
                 var mode = argList[argList.IndexOf("-mode") + 1].ToLower();
                 Console.WriteLine("Performing {0} tests...", mode.ToUpper());
@@ -191,20 +194,24 @@ namespace RecommendationSystem.QualityTesting
                                         foreach (var svdBb in svdBbs)
                                         {
                                             var trainingParameters = new TrainingParameters(svdF, svdLr, svdK, svdRi, minEpoch, maxEpoch, svdBb);
-                                            var filename = string.Format("F{0}-LR{1}-K{2}-RI{3}-E{4}-{5}-BB{6}", svdF, svdLr, svdK, svdRi, minEpoch, maxEpoch, svdBb);
+                                            var filename = string.Format(CultureInfo.InvariantCulture, "F{0}-LR{1}-K{2}-RI{3}-E{4}-{5}", svdF, svdLr, svdK, svdRi, minEpoch, maxEpoch);
 
                                             if (svdBasic)
                                             {
-                                                var rs = new BasicSimpleSvdRecommendationSystem();
-                                                var model = rs.Trainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
-                                                rs.SaveModel(string.Format(@"D:\Dataset\models\basicSvd-{0}.rs", filename), model);
+                                                var basicSimpleSvdBiasBinsTrainer = new BasicSimpleSvdBiasBinsTrainer();
+                                                var model = basicSimpleSvdBiasBinsTrainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
+                                                basicSimpleSvdBiasBinsTrainer.SaveModel(string.Format(CultureInfo.InvariantCulture, @"D:\Dataset\models\basicSvd-{0}-BB{1}.rs", filename, svdBb), model);
+
+                                                new BasicSimpleSvdTrainer().SaveModel(string.Format(CultureInfo.InvariantCulture, @"D:\Dataset\models\basicSvd-{0}.rs", filename), model);
                                             }
 
                                             if (svdBias)
                                             {
-                                                var rs = new BiasSimpleSvdRecommendationSystem();
-                                                var model = rs.Trainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
-                                                rs.SaveModel(string.Format(@"D:\Dataset\models\biasSvd-{0}.rs", filename), model);
+                                                var biasSimpleSvdBiasBinsTrainer = new BiasSimpleSvdBiasBinsTrainer();
+                                                var model = biasSimpleSvdBiasBinsTrainer.TrainModel(trainUsers, artists, trainRatings, trainingParameters);
+                                                biasSimpleSvdBiasBinsTrainer.SaveModel(string.Format(CultureInfo.InvariantCulture, @"D:\Dataset\models\biasSvd-{0}-BB{1}.rs", filename, svdBb), model);
+
+                                                new BiasSimpleSvdTrainer().SaveModel(string.Format(CultureInfo.InvariantCulture, @"D:\Dataset\models\biasSvd-{0}.rs", filename), model);
                                             }
                                         }
                                     }
@@ -223,36 +230,17 @@ namespace RecommendationSystem.QualityTesting
                         for (var i = 0; i < models.Length; i++)
                         {
                             var modelName = Path.GetFileName(models[i]);
-                            modelName = modelName != null ? modelName.Remove(modelName.Length - 3) : "unnamed model";
+                            modelName = modelName != null ? modelName.Remove(modelName.Length - 3) : "UnnamedModel";
                             Console.WriteLine("{0}) {1}", i + 1, modelName);
                         }
 
-                        Console.WriteLine("Enter numbers of models for testing (separate with comma, add BB for bias bins usage):");
+                        Console.WriteLine("Enter numbers of models for testing (separate with comma):");
                         string line;
                         while ((line = Console.ReadLine()) == null)
                         {}
-                        var selectedModels = new List<int>();
-                        var useBiasBins = new List<bool>();
-                        if (line == "all")
-                        {
-                            for (var i = 0; i < models.Length; i++)
-                            {
-                                selectedModels.Add(i);
-                                selectedModels.Add(i);
-                                useBiasBins.Add(true);
-                                useBiasBins.Add(false);
-                            }
-                        }
-                        else
-                        {
-                            var parts = line.Split(new[] {' ', ','});
 
-                            foreach (var part in parts)
-                            {
-                                selectedModels.Add(int.Parse(part.Replace("BB", string.Empty)) - 1);
-                                useBiasBins.Add(part.Contains("BB"));
-                            }
-                        }
+                        var selectedModels = new List<int>();
+                        selectedModels.AddRange(line == "all" ? models.Select((t, i) => i) : line.Split(new[] {' ', ','}).Select(part => int.Parse(part) - 1));
 
                         for (var i = 0; i < selectedModels.Count; i++)
                         {
@@ -265,36 +253,54 @@ namespace RecommendationSystem.QualityTesting
                             var testName = Path.GetFileName(modelFile);
                             testName = testName != null ? testName.Remove(testName.Length - 3) : "SvdTest";
 
-                            if (useBiasBins[i])
-                                testName += "-WithBB";
-
                             if (modelFile.Contains("basic"))
                             {
-                                var basicSvdRecommender = new BasicSimpleSimpleSvdRecommender(useBiasBins[i]);
-                                var rs = new BasicSimpleSvdRecommendationSystem(basicSvdRecommender);
-                                var svdModel = rs.LoadModel(modelFile);
-                                var basicSvdTester = new SvdTester<IBasicSvdModel>(testName, rs, svdModel, testUsers, testRatings, artists);
-                                basicSvdTester.Test();
+                                if (modelFile.Contains("BB"))
+                                {
+                                    var rs = new SimpleSvdRecommendationSystem<IBasicSvdBiasBinsModel>(new BasicSimpleSvdBiasBinsTrainer(), new BasicSimpleSvdBiasBinsRecommender());
+                                    var model = new BasicSvdBiasBinsModel();
+                                    rs.Recommender.LoadModel(model, modelFile);
+                                    new SvdTester<IBasicSvdBiasBinsModel>(testName, rs, model, testUsers, testRatings, artists).Test();
+                                }
+                                else
+                                {
+                                    var rs = new SimpleSvdRecommendationSystem<IBasicSvdModel>(new BasicSimpleSvdTrainer(), new BasicSimpleSvdRecommender());
+                                    var model = new BasicSvdModel();
+                                    rs.Recommender.LoadModel(model, modelFile);
+                                    new SvdTester<IBasicSvdModel>(testName, rs, model, testUsers, testRatings, artists).Test();
+                                }
                             }
-                            else if (models[selectedModel - 1].Contains("bias"))
+                            else if (modelFile.Contains("bias"))
                             {
-                                var biasSvdRecommender = new BiasSimpleSvdRecommender(useBiasBins[i]);
-                                var rs = new BiasSimpleSvdRecommendationSystem(biasSvdRecommender);
-                                var svdModel = rs.LoadModel(modelFile);
-                                var biasSvdTester = new SvdTester<IBiasSvdModel>(testName, rs, svdModel, testUsers, testRatings, artists);
-                                biasSvdTester.Test();
+                                if (modelFile.Contains("BB"))
+                                {
+                                    var rs = new SimpleSvdRecommendationSystem<IBiasSvdBiasBinsModel>(new BiasSimpleSvdBiasBinsTrainer(), new BiasSimpleSvdBiasBinsRecommender());
+                                    var model = new BiasSvdBiasBinsModel();
+                                    rs.Recommender.LoadModel(model, modelFile);
+                                    new SvdTester<IBiasSvdBiasBinsModel>(testName, rs, model, testUsers, testRatings, artists).Test();
+                                }
+                                else
+                                {
+                                    var rs = new SimpleSvdRecommendationSystem<IBiasSvdModel>(new BiasSimpleSvdTrainer(), new BiasSimpleSvdRecommender());
+                                    var model = new BiasSvdModel();
+                                    rs.Recommender.LoadModel(model, modelFile);
+                                    new SvdTester<IBiasSvdModel>(testName, rs, model, testUsers, testRatings, artists).Test();
+                                }
                             }
                         }
 
                         break;
                         #endregion
                 }
+#if !DEBUG
             }
             catch (Exception e)
             {
                 Console.WriteLine("{0}{1}{1}{2}", e, Environment.NewLine, e.Message);
             }
+#endif
 
+            Console.WriteLine("DONE!");
             if (args.Where(arg => arg.ToLower() == "-wait").Count() != 0)
                 Console.ReadLine();
         }

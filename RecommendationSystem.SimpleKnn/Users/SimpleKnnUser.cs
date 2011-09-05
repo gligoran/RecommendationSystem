@@ -20,7 +20,7 @@ namespace RecommendationSystem.SimpleKnn.Users
             ArtistIndices.Sort();
         }
 
-        public static new ISimpleKnnUser FromIUser(IUser user)
+        public new static ISimpleKnnUser FromIUser(IUser user)
         {
             var a = user.Ratings.ToDictionary(rating => rating.ArtistIndex);
             return new SimpleKnnUser(user.UserId, user.Ratings, a, user.SignUp, user.Gender, user.Age, user.Country);

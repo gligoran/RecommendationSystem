@@ -4,7 +4,6 @@ namespace RecommendationSystem.Svd.Foundation.Basic.Models
     {
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }
-        public float[] BiasBins { get; set; }
 
         public int FeatureCount
         {
@@ -14,11 +13,10 @@ namespace RecommendationSystem.Svd.Foundation.Basic.Models
         public BasicSvdModel()
         {}
 
-        public BasicSvdModel(float[,] userFeatures, float[,] artistFeatures, float[] biasBins)
+        public BasicSvdModel(float[,] userFeatures, float[,] artistFeatures)
         {
             UserFeatures = userFeatures;
             ArtistFeatures = artistFeatures;
-            BiasBins = biasBins;
         }
     }
 }
