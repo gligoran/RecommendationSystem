@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using RecommendationSystem.Entities;
@@ -23,10 +22,10 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
             return rating;
         }
 
-        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists)
+        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser knnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists)
         {
             var artistIndices = new List<int>();
-            artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(simpleKnnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
+            artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(knnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
 
             var recommendations = new List<Recommendation>();
             for (var i = 0; i < artistIndices.Count; i++)
@@ -56,11 +55,6 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
         public override string ToString()
         {
             return "FRG";
-        }
-
-        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TKnnUser model, List<IArtist> artists)
-        {
-            throw new NotImplementedException();
         }
     }
 }

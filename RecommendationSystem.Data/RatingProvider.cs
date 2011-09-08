@@ -31,7 +31,7 @@ namespace RecommendationSystem.Data
                 ratings.Add(new Rating(
                                 userIndex,
                                 artists.BinarySearch(parts[2]),
-                                float.Parse(parts[3], CultureInfo.CurrentCulture)
+                                float.Parse(parts[3], CultureInfo.InvariantCulture)
                                 ));
             }
 
@@ -52,7 +52,7 @@ namespace RecommendationSystem.Data
             while ((line = reader.ReadLine()) != null && limit > 0)
             {
                 var parts = line.Split(sep, StringSplitOptions.None);
-                ratings.Add(new Rating(int.Parse(parts[0]), int.Parse(parts[1]), float.Parse(parts[2], CultureInfo.CurrentCulture)));
+                ratings.Add(new Rating(int.Parse(parts[0]), int.Parse(parts[1]), float.Parse(parts[2], CultureInfo.InvariantCulture)));
                 limit--;
             }
 
@@ -71,7 +71,7 @@ namespace RecommendationSystem.Data
             TextWriter writer = new StreamWriter(filename);
 
             foreach (var rating in ratings)
-                writer.WriteLine("{0}\t{1}\t{2}", rating.UserIndex, rating.ArtistIndex, rating.Value);
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}\t{1}\t{2}", rating.UserIndex, rating.ArtistIndex, rating.Value));
 
             writer.Flush();
             writer.Close();

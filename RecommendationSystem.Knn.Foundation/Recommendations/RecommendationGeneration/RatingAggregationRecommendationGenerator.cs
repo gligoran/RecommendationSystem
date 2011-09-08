@@ -29,13 +29,13 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
             return RatingAggregator.Aggregate(simpleKnnUser, neighbours, artistIndex);
         }
 
-        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists)
+        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser knnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists)
         {
             var artistIndices = new List<int>();
-            artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(simpleKnnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
+            artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(knnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
 
             var recommendations = (from artist in artistIndices
-                                   let r = RatingAggregator.Aggregate(simpleKnnUser, neighbours, artist)
+                                   let r = RatingAggregator.Aggregate(knnUser, neighbours, artist)
                                    where r > 0.0f
                                    select new Recommendation(artists[artist], r)).Cast<IRecommendation>().ToList();
 

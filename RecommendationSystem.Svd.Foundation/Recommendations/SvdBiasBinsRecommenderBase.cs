@@ -4,14 +4,14 @@ using RecommendationSystem.Models;
 using RecommendationSystem.Prediction;
 using RecommendationSystem.Svd.Foundation.Models;
 
-namespace RecommendationSystem.SimpleSvd.Recommendation
+namespace RecommendationSystem.Svd.Foundation.Recommendations
 {
-    public abstract class SimpleSvdBiasBinsRecommenderBase<TSvdBiasBinsModel> : SimpleSvdRecommenderBase<TSvdBiasBinsModel>, ISimpleSvdBiasBinsRecommender<TSvdBiasBinsModel>
+    public abstract class SvdBiasBinsRecommenderBase<TSvdBiasBinsModel> : SvdRecommenderBase<TSvdBiasBinsModel>, ISvdBiasBinsRecommender<TSvdBiasBinsModel>
         where TSvdBiasBinsModel : ISvdBiasBinsModel
     {
         public IBiasBinsAdjustor<TSvdBiasBinsModel> BiasBinsAdjustor { get; set; }
 
-        protected SimpleSvdBiasBinsRecommenderBase(IPredictor<TSvdBiasBinsModel> predictor, IBiasBinsAdjustor<TSvdBiasBinsModel> biasBinsAdjustor)
+        protected SvdBiasBinsRecommenderBase(IPredictor<TSvdBiasBinsModel> predictor, IBiasBinsAdjustor<TSvdBiasBinsModel> biasBinsAdjustor)
             : base(predictor)
         {
             BiasBinsAdjustor = biasBinsAdjustor;

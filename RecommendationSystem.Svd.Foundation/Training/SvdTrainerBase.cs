@@ -11,39 +11,41 @@ namespace RecommendationSystem.Svd.Foundation.Training
     public abstract class SvdTrainerBase<TSvdModel> : ISvdTrainer<TSvdModel>
         where TSvdModel : ISvdModel
     {
-        #region Properties
-        protected float[] ResidualRatingValues { get; set; }
-        protected ModelSaver ModelSaver { get; set; }
-        #endregion
-
         #region Fields
         private float rmsePrev = float.MaxValue;
         private float rmse = float.MaxValue;
         #endregion
 
+        #region Properties
+        protected float[] ResidualRatingValues { get; set; }
+        protected ModelSaver ModelSaver { get; set; }
+        #endregion
+
+        #region Constructor
         protected SvdTrainerBase()
         {
             ModelSaver = new ModelSaver();
             ModelSaver.ModelPartSavers.Add(new SvdModelPartSaver());
         }
+        #endregion
 
         #region TrainModel
-        public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
+        public TSvdModel TrainModel(List<IUser> trainUsers, List<IArtist> artists, List<IRating> trainRatings)
         {
-            return TrainModel(users, artists, ratings, new TrainingParameters());
+            return TrainModel(trainUsers, artists, trainRatings, new TrainingParameters());
         }
 
-        public TSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings, TrainingParameters trainingParameters)
+        public TSvdModel TrainModel(List<IUser> trainUsers, List<IArtist> artists, List<IRating> trainRatings, TrainingParameters trainingParameters)
         {
-            return TrainModel(users.GetLookupTable(), artists.GetLookupTable(), ratings, trainingParameters);
+            return TrainModel(trainUsers.GetLookupTable(), artists.GetLookupTable(), trainRatings, trainingParameters);
         }
 
-        protected TSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
+        protected TSvdModel TrainModel(List<string> users, List<string> artists, List<IRating> trainRatings, TrainingParameters trainingParameters)
         {
             var model = GetNewModelInstance();
-            InitializeNewModel(model, users, artists, ratings);
+            InitializeNewModel(model, users, artists, trainRatings);
 
-            CalculateFeatures(model, users, artists, ratings, trainingParameters);
+            CalculateFeatures(model, users, artists, trainRatings, trainingParameters);
             return model;
         }
 
@@ -120,7 +122,10 @@ namespace RecommendationSystem.Svd.Foundation.Training
         #endregion
 
         #region PredictRatingUsingResiduals
-        protected abstract float PredictRatingUsingResiduals(TSvdModel model, int rating, int feature, List<IRating> ratings);
+        protected virtual float PredictRatingUsingResiduals(TSvdModel model, int rating, int feature, List<IRating> ratings)
+        {
+            return ResidualRatingValues[rating] + model.UserFeatures[feature, ratings[rating].UserIndex] * model.ArtistFeatures[feature, ratings[rating].ArtistIndex];
+        }
         #endregion
 
         #region CacheResidualRatings

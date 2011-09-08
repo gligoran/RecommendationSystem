@@ -4,6 +4,6 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.Naive.MostCommonRating
 {
-    public interface IMostCommonRatingRecommendationSystem : IRecommendationSystem<IMostCommonRatingModel, IUser, ITrainer<IMostCommonRatingModel, IUser>, IRecommender<IMostCommonRatingModel>>
+    public interface IMostCommonRatingRecommendationSystem : IRecommendationSystem<IMostCommonRatingModel, IUser, ITrainer<IMostCommonRatingModel>, IRecommender<IMostCommonRatingModel>>
     {}
 }

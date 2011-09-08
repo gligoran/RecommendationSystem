@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\IKnnModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RatingAggregation\AdjustedWeightedSumRatingAggregator.cs" />
     <Compile Include="RatingAggregation\IRatingAggregator.cs" />
@@ -51,7 +52,7 @@
     <Compile Include="RatingAggregation\WeightedSumRatingAggregator.cs" />
     <Compile Include="Recommendations\IContentKnnRecommender.cs" />
     <Compile Include="Recommendations\IKnnRecommender.cs" />
-    <Compile Include="Recommendations\RecommendationGeneration\EqualDescentSimpleRecommendationGenerator.cs" />
+    <Compile Include="Recommendations\RecommendationGeneration\LinearDescentSimpleRecommendationGenerator.cs" />
     <Compile Include="Recommendations\RecommendationGeneration\FifthsSimpleRecommendationGenerator.cs" />
     <Compile Include="Recommendations\RecommendationGeneration\IRecommendationGenerator.cs" />
     <Compile Include="Recommendations\RecommendationGeneration\RatingAggregationRecommendationGenerator.cs" />

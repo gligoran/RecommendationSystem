@@ -4,10 +4,9 @@ using RecommendationSystem.Models;
 
 namespace RecommendationSystem.Training
 {
-    public interface ITrainer<out TModel, TUser>
+    public interface ITrainer<out TModel>
         where TModel : IModel
-        where TUser : IUser
     {
-        TModel TrainModel(List<TUser> users, List<IArtist> artists, List<IRating> ratings);
+        TModel TrainModel(List<IUser> trainUsers, List<IArtist> artists, List<IRating> trainRatings);
     }
 }

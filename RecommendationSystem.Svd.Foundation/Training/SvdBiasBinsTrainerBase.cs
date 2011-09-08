@@ -18,15 +18,10 @@ namespace RecommendationSystem.Svd.Foundation.Training
             ModelSaver.ModelPartSavers.Add(new BiasBinsModelPartSaver());
         }
 
-        public new TBiasBinsSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
+        public new TBiasBinsSvdModel TrainModel(List<IUser> trainUsers, List<IArtist> artists, List<IRating> trainRatings, TrainingParameters trainingParameters)
         {
-            return TrainModel(users, artists, ratings, new TrainingParameters());
-        }
-
-        public new TBiasBinsSvdModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings, TrainingParameters trainingParameters)
-        {
-            var model = TrainModel(users.GetLookupTable(), artists.GetLookupTable(), ratings, trainingParameters);
-            BiasBinsCalculator.CalculateBiasBins(model, ratings, users, artists, trainingParameters.BiasBinCount);
+            var model = TrainModel(trainUsers.GetLookupTable(), artists.GetLookupTable(), trainRatings, trainingParameters);
+            BiasBinsCalculator.CalculateBiasBins(model, trainRatings, trainUsers, artists, trainingParameters.BiasBinCount);
             return model;
         }
     }

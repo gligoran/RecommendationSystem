@@ -1,5 +1,4 @@
-﻿using RecommendationSystem.Entities;
-using RecommendationSystem.Recommendations;
+﻿using RecommendationSystem.Recommendations;
 using RecommendationSystem.SimpleKnn.Models;
 using RecommendationSystem.SimpleKnn.Recommendations;
 using RecommendationSystem.SimpleKnn.Training;
@@ -9,7 +8,7 @@ namespace RecommendationSystem.SimpleKnn
 {
     public class SimpleKnnRecommendationSystem : ISimpleKnnRecommendationSystem
     {
-        public ITrainer<ISimpleKnnModel, IUser> Trainer { get; set; }
+        public ITrainer<ISimpleKnnModel> Trainer { get; set; }
         public IRecommender<ISimpleKnnModel> Recommender { get; set; }
 
         public SimpleKnnRecommendationSystem()
@@ -18,7 +17,7 @@ namespace RecommendationSystem.SimpleKnn
             Recommender = new SimpleKnnRecommender();
         }
 
-        public SimpleKnnRecommendationSystem(ITrainer<ISimpleKnnModel, IUser> trainer)
+        public SimpleKnnRecommendationSystem(ITrainer<ISimpleKnnModel> trainer)
             : this(trainer, new SimpleKnnRecommender())
         {}
 
@@ -26,7 +25,7 @@ namespace RecommendationSystem.SimpleKnn
             : this(new SimpleKnnTrainer(), recommender)
         {}
 
-        public SimpleKnnRecommendationSystem(ITrainer<ISimpleKnnModel, IUser> trainer, IRecommender<ISimpleKnnModel> recommender)
+        public SimpleKnnRecommendationSystem(ITrainer<ISimpleKnnModel> trainer, IRecommender<ISimpleKnnModel> recommender)
         {
             Trainer = trainer;
             Recommender = recommender;

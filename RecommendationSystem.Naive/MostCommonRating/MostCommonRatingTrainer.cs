@@ -4,15 +4,15 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.Naive.MostCommonRating
 {
-    public class MostCommonRatingTrainer : ITrainer<IMostCommonRatingModel, IUser>
+    public class MostCommonRatingTrainer : ITrainer<IMostCommonRatingModel>
     {
-        public IMostCommonRatingModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
+        public IMostCommonRatingModel TrainModel(List<IUser> trainUsers, List<IArtist> artists, List<IRating> trainRatings)
         {
-            if (ratings == null)
+            if (trainRatings == null)
                 return new MostCommonRatingModel(0.0f);
 
             var ratingGroups = new Dictionary<float, int>();
-            foreach (var rating in ratings)
+            foreach (var rating in trainRatings)
             {
                 if (ratingGroups.ContainsKey(rating.Value))
                     ratingGroups[rating.Value]++;

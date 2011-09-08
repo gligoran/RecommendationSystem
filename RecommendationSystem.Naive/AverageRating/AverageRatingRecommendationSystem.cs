@@ -1,4 +1,3 @@
-using RecommendationSystem.Entities;
 using RecommendationSystem.Recommendations;
 using RecommendationSystem.Training;
 
@@ -6,7 +5,7 @@ namespace RecommendationSystem.Naive.AverageRating
 {
     public class AverageRatingRecommendationSystem : IAverageRatingRecommendationSystem
     {
-        public ITrainer<IAverageRatingModel, IUser> Trainer { get; set; }
+        public ITrainer<IAverageRatingModel> Trainer { get; set; }
         public IRecommender<IAverageRatingModel> Recommender { get; set; }
 
         public AverageRatingRecommendationSystem()
@@ -15,7 +14,7 @@ namespace RecommendationSystem.Naive.AverageRating
             Recommender = new AverageRatingRecommender();
         }
 
-        public AverageRatingRecommendationSystem(ITrainer<IAverageRatingModel, IUser> trainer, IRecommender<IAverageRatingModel> recommender)
+        public AverageRatingRecommendationSystem(ITrainer<IAverageRatingModel> trainer, IRecommender<IAverageRatingModel> recommender)
         {
             Trainer = trainer;
             Recommender = recommender;

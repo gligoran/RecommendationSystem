@@ -1,11 +1,11 @@
 ﻿using RecommendationSystem.Entities;
-using RecommendationSystem.SimpleSvd.Recommendation;
 using RecommendationSystem.Svd.Foundation.Models;
+using RecommendationSystem.Svd.Foundation.Recommendations;
 using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.SimpleSvd
 {
-    public interface ISimpleSvdRecommendationSystem<TSvdModel> : IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>>
+    public interface ISimpleSvdRecommendationSystem<TSvdModel> : IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISvdRecommender<TSvdModel>>
         where TSvdModel : ISvdModel
     {}
 }

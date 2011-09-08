@@ -50,7 +50,7 @@ namespace RecommendationSystem.Svd.Foundation.Bias.Models
                 throw new ArgumentException("File is not a valid IBiasSvdModel.");
 
             for (var i = 0; i < factors.Length; i++)
-                biases[i] = float.Parse(factors[i], CultureInfo.CurrentCulture);
+                biases[i] = float.Parse(factors[i], CultureInfo.InvariantCulture);
         }
     }
 }

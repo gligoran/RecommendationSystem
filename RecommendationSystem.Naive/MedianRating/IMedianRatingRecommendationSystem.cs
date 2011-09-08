@@ -4,6 +4,6 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.Naive.MedianRating
 {
-    public interface IMedianRatingRecommendationSystem : IRecommendationSystem<IMedianRatingModel, IUser, ITrainer<IMedianRatingModel, IUser>, IRecommender<IMedianRatingModel>>
+    public interface IMedianRatingRecommendationSystem : IRecommendationSystem<IMedianRatingModel, IUser, ITrainer<IMedianRatingModel>, IRecommender<IMedianRatingModel>>
     {}
 }

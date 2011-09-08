@@ -1,13 +1,12 @@
 using System.Linq;
 using RecommendationSystem.Entities;
-using RecommendationSystem.Svd.Foundation.Basic.Models;
-using RecommendationSystem.Svd.Foundation.Prediction;
+using RecommendationSystem.Svd.Foundation.Models;
 
-namespace RecommendationSystem.Svd.Foundation.Basic.Prediction
+namespace RecommendationSystem.Svd.Foundation.Prediction
 {
-    public class BasicNewUserFeatureGenerator : INewUserFeatureGenerator<IBasicSvdModel>
+    public class NewUserFeatureGenerator : INewUserFeatureGenerator<ISvdModel>
     {
-        public float[] GetNewUserFeatures(IBasicSvdModel model, IUser user)
+        public float[] GetNewUserFeatures(ISvdModel model, IUser user)
         {
             var ratingSum = user.Ratings.Sum(r => r.Value);
 

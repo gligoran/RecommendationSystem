@@ -7,9 +7,9 @@ using RecommendationSystem.Recommendations;
 using RecommendationSystem.Svd.Foundation.Models;
 using RecommendationSystem.Svd.Foundation.Prediction;
 
-namespace RecommendationSystem.SimpleSvd.Recommendation
+namespace RecommendationSystem.Svd.Foundation.Recommendations
 {
-    public abstract class SimpleSvdRecommenderBase<TSvdModel> : ISimpleSvdRecommender<TSvdModel>
+    public abstract class SvdRecommenderBase<TSvdModel> : ISvdRecommender<TSvdModel>
         where TSvdModel : ISvdModel
     {
         public IPredictor<TSvdModel> Predictor { get; set; }
@@ -22,7 +22,7 @@ namespace RecommendationSystem.SimpleSvd.Recommendation
             ModelLoader.LoadModel(model, filename);
         }
 
-        protected SimpleSvdRecommenderBase(IPredictor<TSvdModel> predictor)
+        protected SvdRecommenderBase(IPredictor<TSvdModel> predictor)
         {
             Predictor = predictor;
 

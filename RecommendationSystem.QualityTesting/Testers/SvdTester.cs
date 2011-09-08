@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using RecommendationSystem.Entities;
-using RecommendationSystem.SimpleSvd.Recommendation;
 using RecommendationSystem.Svd.Foundation.Models;
+using RecommendationSystem.Svd.Foundation.Recommendations;
 using RecommendationSystem.Svd.Foundation.Training;
 
 namespace RecommendationSystem.QualityTesting.Testers
@@ -16,10 +17,10 @@ namespace RecommendationSystem.QualityTesting.Testers
         public List<IRating> TestRatings { get; set; }
         public List<IArtist> Artists { get; set; }
 
-        public IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>> RecommendationSystem { get; set; }
+        public IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISvdRecommender<TSvdModel>> RecommendationSystem { get; set; }
         public TSvdModel Model { get; set; }
 
-        public SvdTester(string testName, IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISimpleSvdRecommender<TSvdModel>> recommendationSystem, TSvdModel model, List<IUser> testUsers, List<IRating> testRatings, List<IArtist> artists)
+        public SvdTester(string testName, IRecommendationSystem<TSvdModel, IUser, ISvdTrainer<TSvdModel>, ISvdRecommender<TSvdModel>> recommendationSystem, TSvdModel model, List<IUser> testUsers, List<IRating> testRatings, List<IArtist> artists)
         {
             RecommendationSystem = recommendationSystem;
             Model = model;
@@ -39,9 +40,10 @@ namespace RecommendationSystem.QualityTesting.Testers
             var rb = TestRecommendationSystem(out rbsByRatings);
             Timer.Stop();
             for (var i = 0; i < rbsByRatings.Length; i++)
-                Write(string.Format("{0}\t->\tRating:{1}\t{2}.", TestName, i + 1, rbsByRatings[i]));
+                Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tRating:{1}\t{2}.", TestName, i + 1, rbsByRatings[i]));
 
-            Write(string.Format("{0}\t->\tAll ratings\t{1}\t({2}).", TestName, rb, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
+            Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tAll ratings\t{1}\t({2}).", TestName, rb, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
+            FileWriter.Close();
         }
 
         #region CompleteTestRecommendationSystem

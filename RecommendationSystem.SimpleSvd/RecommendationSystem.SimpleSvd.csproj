@@ -53,21 +53,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Basic\Prediction\BasicSimpleSvdPredictor.cs" />
-    <Compile Include="Basic\Recommendations\BasicSimpleSvdBiasBinsRecommender.cs" />
-    <Compile Include="Basic\Training\BasicSimpleSvdBiasBinsTrainer.cs" />
-    <Compile Include="Basic\Training\BasicSimpleSvdTrainer.cs" />
+    <Compile Include="Prediction\SimpleSvdPredictor.cs" />
+    <Compile Include="Recommendations\SimpleSvdBiasBinsRecommender.cs" />
+    <Compile Include="Training\SimpleSvdBiasBinsTrainer.cs" />
+    <Compile Include="Training\SimpleSvdTrainer.cs" />
     <Compile Include="Bias\Prediction\BiasSimpleSvdPredictor.cs" />
     <Compile Include="Bias\Recommendations\BiasSimpleSvdBiasBinsRecommender.cs" />
     <Compile Include="Bias\Recommendations\BiasSimpleSvdRecommender.cs" />
-    <Compile Include="Basic\Recommendations\BasicSimpleSvdRecommender.cs" />
+    <Compile Include="Recommendations\SimpleSvdRecommender.cs" />
     <Compile Include="Bias\Training\BiasSimpleSvdBiasBinsTrainer.cs" />
     <Compile Include="Bias\Training\BiasSimpleSvdTrainer.cs" />
-    <Compile Include="Recommendation\ISimpleSvdRecommender.cs" />
-    <Compile Include="Recommendation\SimpleSvdBiasBinsRecommenderBase.cs" />
-    <Compile Include="Recommendation\ISimpleSvdBiasBinsRecommender.cs" />
     <Compile Include="ISimpleSvdRecommendationSystem.cs" />
-    <Compile Include="Recommendation\SimpleSvdRecommenderBase.cs" />
     <Compile Include="SimpleSvdRecommendationSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

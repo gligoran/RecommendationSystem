@@ -1,22 +1,21 @@
 using System.Collections.Generic;
 using RecommendationSystem.Entities;
-using RecommendationSystem.Svd.Foundation.Basic.Models;
-using RecommendationSystem.Svd.Foundation.Basic.Prediction;
+using RecommendationSystem.Svd.Foundation.Models;
 using RecommendationSystem.Svd.Foundation.Prediction;
 
-namespace RecommendationSystem.SimpleSvd.Basic.Prediction
+namespace RecommendationSystem.SimpleSvd.Prediction
 {
-    public class BasicSimpleSvdPredictor : SvdPredictorBase<IBasicSvdModel>
+    public class SimpleSvdPredictor : SvdPredictorBase<ISvdModel>
     {
-        public BasicSimpleSvdPredictor()
-            : this(new BasicNewUserFeatureGenerator())
+        public SimpleSvdPredictor()
+            : this(new NewUserFeatureGenerator())
         {}
 
-        public BasicSimpleSvdPredictor(INewUserFeatureGenerator<IBasicSvdModel> newUserFeatureGenerator)
+        public SimpleSvdPredictor(INewUserFeatureGenerator<ISvdModel> newUserFeatureGenerator)
             : base(newUserFeatureGenerator)
         {}
 
-        public override float PredictRatingForArtist(IUser user, IBasicSvdModel model, List<IArtist> artists, int artistIndex)
+        public override float PredictRatingForArtist(IUser user, ISvdModel model, List<IArtist> artists, int artistIndex)
         {
             var newUserFeatures = NewUserFeatureGenerator.GetNewUserFeatures(model, user);
 

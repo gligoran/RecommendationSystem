@@ -13,6 +13,7 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
 {
     public class SimpleKnnRecommender : ISimpleKnnRecommender
     {
+        #region Properties
         public ISimilarityEstimator<ISimpleKnnUser> SimilarityEstimator { get; set; }
         public IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> RecommendationGenerator { get; set; }
 
@@ -21,6 +22,7 @@ namespace RecommendationSystem.SimpleKnn.Recommendations
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
+        #endregion
 
         public int NearestNeighboursCount { get; set; }
 

@@ -23,7 +23,6 @@ namespace RecommendationSystem.SimpleKnn.Similarity
                 rXavg += first.RatingsByArtistIndexLookupTable[artistIndex].Value;
                 rYavg += second.RatingsByArtistIndexLookupTable[artistIndex].Value;
             }
-
             rXavg /= artistIndices.Count;
             rYavg /= artistIndices.Count;
 

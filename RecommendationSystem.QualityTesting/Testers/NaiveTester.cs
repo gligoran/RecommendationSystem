@@ -70,7 +70,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         }
 
         #region CompleteTestRecommendationSystem
-        private RmseAndBias TestRecommendationSystem<TModel, TUser>(IRecommendationSystem<TModel, TUser, ITrainer<TModel, TUser>, IRecommender<TModel>> rs, IEnumerable<TUser> testUsers, TModel model, List<IArtist> artists)
+        private RmseAndBias TestRecommendationSystem<TModel, TUser>(IRecommendationSystem<TModel, TUser, ITrainer<TModel>, IRecommender<TModel>> rs, IEnumerable<TUser> testUsers, TModel model, List<IArtist> artists)
             where TModel : IModel
             where TUser : IUser
         {

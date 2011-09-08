@@ -44,13 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Basic\Models\BasicSvdBiasBinsModel.cs" />
-    <Compile Include="Basic\Models\BasicSvdModel.cs" />
-    <Compile Include="Basic\Models\IBasicSvdBiasBinsModel.cs" />
-    <Compile Include="Basic\Models\IBasicSvdModel.cs" />
-    <Compile Include="Basic\Prediction\BasicNewUserFeatureGenerator.cs" />
-    <Compile Include="Basic\Training\BasicSvdBiasBinsTrainerBase.cs" />
-    <Compile Include="Basic\Training\BasicSvdTrainerBase.cs" />
+    <Compile Include="Prediction\ISvdPredictor.cs" />
+    <Compile Include="Prediction\NewUserFeatureGenerator.cs" />
     <Compile Include="Bias\Models\BiasSvdBiasBinsModel.cs" />
     <Compile Include="Bias\Models\BiasSvdModelPartLoader.cs" />
     <Compile Include="Bias\Models\BiasSvdModelPartSaver.cs" />
@@ -58,6 +53,8 @@
     <Compile Include="Bias\Prediction\BiasNewUserFeatureGenerator.cs" />
     <Compile Include="Bias\Training\BiasSvdBiasBinsTrainerBase.cs" />
     <Compile Include="Bias\Training\BiasSvdTrainerBase.cs" />
+    <Compile Include="Models\SvdBiasBinsModel.cs" />
+    <Compile Include="Models\SvdModel.cs" />
     <Compile Include="Models\ISvdBiasBinsModel.cs" />
     <Compile Include="Models\SvdModelPartLoader.cs" />
     <Compile Include="Models\SvdModelPartSaver.cs" />
@@ -65,8 +62,11 @@
     <Compile Include="Bias\Models\BiasSvdModel.cs" />
     <Compile Include="Bias\Models\IBiasSvdModel.cs" />
     <Compile Include="Models\ISvdModel.cs" />
-    <Compile Include="Prediction\ISvdPredictor.cs" />
     <Compile Include="Prediction\SvdPredictorBase.cs" />
+    <Compile Include="Recommendations\ISvdBiasBinsRecommender.cs" />
+    <Compile Include="Recommendations\ISvdRecommender.cs" />
+    <Compile Include="Recommendations\SvdBiasBinsRecommenderBase.cs" />
+    <Compile Include="Recommendations\SvdRecommenderBase.cs" />
     <Compile Include="Training\ISvdBiasBinsTrainer.cs" />
     <Compile Include="Training\SvdBiasBinsTrainerBase.cs" />
     <Compile Include="Training\SvdBiasBinsCalculator.cs" />

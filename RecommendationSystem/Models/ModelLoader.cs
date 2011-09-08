@@ -25,14 +25,14 @@ namespace RecommendationSystem.Models
 
         private void LoadModelProperties(TModel model, TextReader reader)
         {
-            foreach (var modelPartSaver in ModelPartLoaders)
-                modelPartSaver.LoadModelProperties(model, reader);
+            foreach (var modelPartLoader in ModelPartLoaders)
+                modelPartLoader.LoadModelProperties(model, reader);
         }
 
         private void LoadModelData(TModel model, TextReader reader)
         {
-            foreach (var modelPartSaver in ModelPartLoaders)
-                modelPartSaver.LoadModelData(model, reader);
+            foreach (var modelPartLoader in ModelPartLoaders)
+                modelPartLoader.LoadModelData(model, reader);
         }
     }
 }

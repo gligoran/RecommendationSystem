@@ -5,11 +5,11 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.Naive.AverageRating
 {
-    public class AverageRatingTrainer : ITrainer<IAverageRatingModel, IUser>
+    public class AverageRatingTrainer : ITrainer<IAverageRatingModel>
     {
-        public IAverageRatingModel TrainModel(List<IUser> users, List<IArtist> artists, List<IRating> ratings)
+        public IAverageRatingModel TrainModel(List<IUser> trainUsers, List<IArtist> artists, List<IRating> trainRatings)
         {
-            return new AverageRatingModel(ratings.Average(rating => rating.Value));
+            return new AverageRatingModel(trainRatings.Average(rating => rating.Value));
         }
     }
 }

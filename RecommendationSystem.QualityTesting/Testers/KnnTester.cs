@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using RecommendationSystem.Entities;
@@ -19,7 +20,7 @@ namespace RecommendationSystem.QualityTesting.Testers
     {
         #region Fields
         private CryptoRandom rng = new CryptoRandom();
-        private IRecommendationSystem<ISimpleKnnModel, IUser, ITrainer<ISimpleKnnModel, IUser>, IRecommender<ISimpleKnnModel>> rs;
+        private IRecommendationSystem<ISimpleKnnModel, IUser, ITrainer<ISimpleKnnModel>, IRecommender<ISimpleKnnModel>> rs;
         private int writeFrequency;
         #endregion
 
@@ -29,7 +30,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         public IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser> Rg { get; set; }
         public List<IUser> TestUsers { get; set; }
         public ISimpleKnnModel SimpleKnnModel { get; set; }
-        public ITrainer<ISimpleKnnModel, IUser> Trainer { get; set; }
+        public ITrainer<ISimpleKnnModel> Trainer { get; set; }
         public List<IArtist> Artists { get; set; }
         public int NumberOfTests { get; set; }
         #endregion
@@ -56,13 +57,13 @@ namespace RecommendationSystem.QualityTesting.Testers
 
                 Write("------------------------------------------------------", false);
                 for (var i = 0; i < rbvsByRatings.Length; i++)
-                    Write(string.Format("{0}\t->\tRating:{1}\t{2}.", TestName, i + 1, rbvsByRatings[i]));
+                    Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tRating:{1}\t{2}.", TestName, i + 1, rbvsByRatings[i]));
 
-                Write(string.Format("{0}\t->\tAll ratings\t{1}\t({2}).", TestName, rbv, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
+                Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tAll ratings\t{1}\t({2}).", TestName, rbv, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
             }
             catch (Exception e)
             {
-                Write(string.Format("{0}{1}{1}{2}", e, Environment.NewLine, e.Message));
+                Write(string.Format(CultureInfo.InvariantCulture, "{0}{1}{1}{2}", e, Environment.NewLine, e.Message));
             }
 
             FileWriter.Close();

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CryptoRandom.cs" />
+    <Compile Include="Testers\SvdBoostedKnnTester.cs" />
     <Compile Include="Testers\RmseAndBias.cs" />
     <Compile Include="Testers\NaiveTester.cs" />
     <Compile Include="Testers\ITester.cs" />
@@ -83,6 +84,10 @@
     <ProjectReference Include="..\RecommendationSystem.Svd.Foundation\RecommendationSystem.Svd.Foundation.csproj">
       <Project>{F7484A47-1256-4566-9C47-78CDD5F403E2}</Project>
       <Name>RecommendationSystem.Svd.Foundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RecommendationSystem.SvdBoostedKnn\RecommendationSystem.SvdBoostedKnn.csproj">
+      <Project>{BCC87BB4-472A-4B75-8F94-A30691253CE2}</Project>
+      <Name>RecommendationSystem.SvdBoostedKnn</Name>
     </ProjectReference>
     <ProjectReference Include="..\RecommendationSystem\RecommendationSystem.csproj">
       <Project>{D06E40A7-652F-4D3B-8F5B-8E4F3B841E7E}</Project>

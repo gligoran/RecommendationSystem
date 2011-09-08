@@ -60,10 +60,10 @@
     <Compile Include="Models\ModelLoader.cs" />
     <Compile Include="Models\ModelSaver.cs" />
     <Compile Include="Prediction\BiasBinsAdjustor.cs" />
+    <Compile Include="Prediction\IPredictor.cs" />
     <Compile Include="Training\BiasBinsCalculatorBase.cs" />
     <Compile Include="Training\IBiasBinsCalculator.cs" />
     <Compile Include="Prediction\IBiasBinsAdjustor.cs" />
-    <Compile Include="Prediction\IPredictor.cs" />
     <Compile Include="Recommendations\IBiasBinsRecommender.cs" />
     <Compile Include="Recommendations\IRecommendation.cs" />
     <Compile Include="Recommendations\Recommendation.cs" />

@@ -12,6 +12,6 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
         where TKnnUser : IKnnUser
     {
         float PredictRatingForArtist(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists, int artistIndex);
-        IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists);
+        IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser knnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists);
     }
 }

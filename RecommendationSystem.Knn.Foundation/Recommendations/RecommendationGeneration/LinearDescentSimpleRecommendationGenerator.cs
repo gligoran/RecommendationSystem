@@ -8,11 +8,11 @@ using RecommendationSystem.Recommendations;
 
 namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGeneration
 {
-    public class EqualDescentSimpleRecommendationGenerator<TModel, TKnnUSer> : IRecommendationGenerator<TModel, TKnnUSer>
+    public class LinearDescentSimpleRecommendationGenerator<TModel, TKnnUser> : IRecommendationGenerator<TModel, TKnnUser>
         where TModel : IModel
-        where TKnnUSer : IKnnUser
+        where TKnnUser : IKnnUser
     {
-        public float PredictRatingForArtist(TKnnUSer simpleKnnUser, List<SimilarUser<TKnnUSer>> neighbours, TModel model, List<IArtist> artists, int artistIndex)
+        public float PredictRatingForArtist(TKnnUser simpleKnnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists, int artistIndex)
         {
             var recommendations = GenerateRecommendations(simpleKnnUser, neighbours, model, artists);
             var rating = recommendations.Where(r => r.Artist == artists[artistIndex]).Select(r => r.Value).FirstOrDefault();
@@ -22,10 +22,10 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
             return rating;
         }
 
-        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUSer simpleKnnUser, List<SimilarUser<TKnnUSer>> neighbours, TModel model, List<IArtist> artists)
+        public IEnumerable<IRecommendation> GenerateRecommendations(TKnnUser knnUser, List<SimilarUser<TKnnUser>> neighbours, TModel model, List<IArtist> artists)
         {
             var artistIndices = new List<int>();
-            artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(simpleKnnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
+            artistIndices = neighbours.Aggregate((IEnumerable<int>)artistIndices, (current, neighbour) => current.Union(neighbour.User.Ratings.Select(rating => rating.ArtistIndex))).Except(knnUser.Ratings.Select(rating => rating.ArtistIndex)).ToList();
 
             var recommendations = new List<Recommendation>();
             for (var i = 0; i < artistIndices.Count; i++)

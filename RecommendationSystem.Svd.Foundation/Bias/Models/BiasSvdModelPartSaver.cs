@@ -18,7 +18,7 @@ namespace RecommendationSystem.Svd.Foundation.Bias.Models
             if (biasSvdModel == null)
                 return;
 
-            writer.WriteLine("GlobalAverage={0}", biasSvdModel.GlobalAverage.ToString(CultureInfo.InvariantCulture));
+            writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "GlobalAverage={0}", biasSvdModel.GlobalAverage));
         }
 
         public void SaveModelData(IModel model, TextWriter writer)

@@ -1,6 +1,6 @@
-namespace RecommendationSystem.Svd.Foundation.Basic.Models
+namespace RecommendationSystem.Svd.Foundation.Models
 {
-    public class BasicSvdModel : IBasicSvdModel
+    public class SvdModel : ISvdModel
     {
         public float[,] UserFeatures { get; set; }
         public float[,] ArtistFeatures { get; set; }
@@ -10,10 +10,10 @@ namespace RecommendationSystem.Svd.Foundation.Basic.Models
             get { return UserFeatures.GetUpperBound(0) + 1; }
         }
 
-        public BasicSvdModel()
+        public SvdModel()
         {}
 
-        public BasicSvdModel(float[,] userFeatures, float[,] artistFeatures)
+        public SvdModel(float[,] userFeatures, float[,] artistFeatures)
         {
             UserFeatures = userFeatures;
             ArtistFeatures = artistFeatures;

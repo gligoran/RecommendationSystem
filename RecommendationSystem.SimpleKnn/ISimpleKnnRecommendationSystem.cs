@@ -5,6 +5,6 @@ using RecommendationSystem.Training;
 
 namespace RecommendationSystem.SimpleKnn
 {
-    public interface ISimpleKnnRecommendationSystem : IRecommendationSystem<ISimpleKnnModel, IUser, ITrainer<ISimpleKnnModel, IUser>, IRecommender<ISimpleKnnModel>>
+    public interface ISimpleKnnRecommendationSystem : IRecommendationSystem<ISimpleKnnModel, IUser, ITrainer<ISimpleKnnModel>, IRecommender<ISimpleKnnModel>>
     {}
 }
