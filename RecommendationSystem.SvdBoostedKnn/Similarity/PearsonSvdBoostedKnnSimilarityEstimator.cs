@@ -1,12 +1,12 @@
 using System;
+using RecommendationSystem.Knn.Foundation.Similarity;
 using RecommendationSystem.SvdBoostedKnn.Users;
 
 namespace RecommendationSystem.SvdBoostedKnn.Similarity
 {
-    public class PearsonSvdBoostedKnnSimilarityEstimator<TSvdBoostedKnnUser> : ISvdBoostedKnnSimilarityEstimator<TSvdBoostedKnnUser>
-        where TSvdBoostedKnnUser : ISvdBoostedKnnUser
+    public class PearsonSvdBoostedKnnSimilarityEstimator : ISimilarityEstimator<ISvdBoostedKnnUser>
     {
-        public float GetSimilarity(TSvdBoostedKnnUser first, TSvdBoostedKnnUser second)
+        public float GetSimilarity(ISvdBoostedKnnUser first, ISvdBoostedKnnUser second)
         {
             float sumNum = 0.0f,
                   sumX = 0.0f,

@@ -4,8 +4,8 @@ using RecommendationSystem.Recommendations;
 
 namespace RecommendationSystem.Knn.Foundation.Recommendations
 {
-    public interface IContentKnnRecommender<TKnnUser> : IRecommender<TKnnUser>
-        where TKnnUser : IModel
+    public interface IContentKnnRecommender<TModel> : IRecommender<TModel>
+        where TModel : IModel
     {
         IContentSimilarityEstimator ContentSimilarityEstimator { get; set; }
         float RatingSimilarityWeight { get; set; }

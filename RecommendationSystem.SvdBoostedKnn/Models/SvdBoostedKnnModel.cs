@@ -1,18 +1,11 @@
 using System.Collections.Generic;
+using RecommendationSystem.Svd.Foundation.Models;
 using RecommendationSystem.SvdBoostedKnn.Users;
 
 namespace RecommendationSystem.SvdBoostedKnn.Models
 {
-    public class SvdBoostedKnnModel : ISvdBoostedKnnModel
+    public class SvdBoostedKnnModel : SvdModel, ISvdBoostedKnnModel
     {
-        public float[,] UserFeatures { get; set; }
-        public float[,] ArtistFeatures { get; set; }
-
-        public int FeatureCount
-        {
-            get { return UserFeatures.GetUpperBound(0) + 1; }
-        }
-
         public List<ISvdBoostedKnnUser> Users { get; set; }
 
         public SvdBoostedKnnModel()
@@ -21,9 +14,8 @@ namespace RecommendationSystem.SvdBoostedKnn.Models
         }
 
         public SvdBoostedKnnModel(float[,] userFeatures, float[,] artistFeatures, List<ISvdBoostedKnnUser> users)
+            : base(userFeatures, artistFeatures)
         {
-            UserFeatures = userFeatures;
-            ArtistFeatures = artistFeatures;
             Users = users;
         }
     }

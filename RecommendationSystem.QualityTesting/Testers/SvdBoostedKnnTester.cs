@@ -5,16 +5,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using RecommendationSystem.Entities;
+using RecommendationSystem.SvdBoostedKnn;
 using RecommendationSystem.SvdBoostedKnn.Models;
-using RecommendationSystem.SvdBoostedKnn.Recommendations;
-using RecommendationSystem.SvdBoostedKnn.Training;
-using RecommendationSystem.SvdBoostedKnn.Users;
 
 namespace RecommendationSystem.QualityTesting.Testers
 {
-    public class SvdBoostedKnnTester<TSvdBoostedKnnModel, TSvdBoostedKnnUser> : TesterBase
+    public class SvdBoostedKnnTester<TSvdBoostedKnnModel> : TesterBase
         where TSvdBoostedKnnModel : ISvdBoostedKnnModel
-        where TSvdBoostedKnnUser : ISvdBoostedKnnUser
     {
         #region Fields
         private CryptoRandom rng = new CryptoRandom();
@@ -22,7 +19,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         #endregion
 
         #region Properties
-        public IRecommendationSystem<TSvdBoostedKnnModel, TSvdBoostedKnnUser, ISvdBoostedKnnTrainer<TSvdBoostedKnnModel>, ISvdBoostedKnnRecommender<TSvdBoostedKnnModel, TSvdBoostedKnnUser>> RecommendationSystem { get; set; }
+        public ISvdBoostedKnnRecommendationSystem<TSvdBoostedKnnModel> RecommendationSystem { get; set; }
         public TSvdBoostedKnnModel Model { get; set; }
         public List<IUser> TestUsers { get; set; }
         public List<IRating> TestRatings { get; set; }
@@ -30,7 +27,7 @@ namespace RecommendationSystem.QualityTesting.Testers
         public int NumberOfTests { get; set; }
         #endregion
 
-        public SvdBoostedKnnTester(string testName, IRecommendationSystem<TSvdBoostedKnnModel, TSvdBoostedKnnUser, ISvdBoostedKnnTrainer<TSvdBoostedKnnModel>, ISvdBoostedKnnRecommender<TSvdBoostedKnnModel, TSvdBoostedKnnUser>> recommendationSystem, TSvdBoostedKnnModel model, List<IUser> testUsers, List<IRating> testRatings, List<IArtist> artists, int numberOfTests)
+        public SvdBoostedKnnTester(string testName, ISvdBoostedKnnRecommendationSystem<TSvdBoostedKnnModel> recommendationSystem, TSvdBoostedKnnModel model, List<IUser> testUsers, List<IRating> testRatings, List<IArtist> artists, int numberOfTests)
         {
             TestName = testName;
             RecommendationSystem = recommendationSystem;

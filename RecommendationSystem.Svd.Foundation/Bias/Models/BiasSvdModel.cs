@@ -1,15 +1,9 @@
+using RecommendationSystem.Svd.Foundation.Models;
+
 namespace RecommendationSystem.Svd.Foundation.Bias.Models
 {
-    public class BiasSvdModel : IBiasSvdModel
+    public class BiasSvdModel : SvdModel, IBiasSvdModel
     {
-        public float[,] UserFeatures { get; set; }
-        public float[,] ArtistFeatures { get; set; }
-
-        public int FeatureCount
-        {
-            get { return UserFeatures.GetUpperBound(0) + 1; }
-        }
-
         public float GlobalAverage { get; set; }
         public float[] UserBias { get; set; }
         public float[] ArtistBias { get; set; }
@@ -18,9 +12,8 @@ namespace RecommendationSystem.Svd.Foundation.Bias.Models
         {}
 
         public BiasSvdModel(float[,] userFeatures, float[,] artistFeatures, float globalAverage, float[] userBias, float[] artistBias)
+            : base(userFeatures, artistFeatures)
         {
-            UserFeatures = userFeatures;
-            ArtistFeatures = artistFeatures;
             GlobalAverage = globalAverage;
             UserBias = userBias;
             ArtistBias = artistBias;

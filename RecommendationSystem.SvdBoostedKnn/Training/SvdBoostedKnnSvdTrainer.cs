@@ -1,14 +1,10 @@
-using RecommendationSystem.Svd.Foundation.Prediction;
+﻿using RecommendationSystem.Svd.Foundation.Training;
 using RecommendationSystem.SvdBoostedKnn.Models;
 
 namespace RecommendationSystem.SvdBoostedKnn.Training
 {
-    public class SvdBoostedKnnTrainer : SvdBoostedKnnTrainerBase<ISvdBoostedKnnModel>
+    public class SvdBoostedKnnSvdTrainer : SvdTrainerBase<ISvdBoostedKnnModel>
     {
-        public SvdBoostedKnnTrainer()
-            : base(new NewUserFeatureGenerator())
-        {}
-
         protected override ISvdBoostedKnnModel GetNewModelInstance()
         {
             return new SvdBoostedKnnModel();

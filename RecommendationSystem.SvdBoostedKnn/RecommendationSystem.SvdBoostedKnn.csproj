@@ -44,18 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bias\Models\BiasSvdBoostedKnnModel.cs" />
+    <Compile Include="Bias\Training\BiasKnnTrainerForSvdModels.cs" />
+    <Compile Include="Bias\Training\BiasSvdBoostedKnnSvdTrainer.cs" />
     <Compile Include="ISvdBoostedKnnRecommendationSystem.cs" />
+    <Compile Include="Bias\Models\IBiasSvdBoostedKnnModel.cs" />
     <Compile Include="Models\ISvdBoosteKnnModel.cs" />
     <Compile Include="Models\SvdBoostedKnnModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recommendations\ISvdBoostedKnnRecommender.cs" />
     <Compile Include="Recommendations\SvdBoostedKnnRecommender.cs" />
     <Compile Include="Similarity\CosineSvdBoostedKnnSimilarityEstimator.cs" />
-    <Compile Include="Similarity\ISvdBoostedKnnSimilarityEstimator.cs" />
     <Compile Include="Similarity\PearsonSvdBoostedKnnSimilarityEstimator.cs" />
     <Compile Include="SvdBoostedKnnRecommendationSystem.cs" />
-    <Compile Include="Training\SvdBoostedKnnTrainer.cs" />
-    <Compile Include="Training\SvdBoostedKnnTrainerBase.cs" />
+    <Compile Include="Training\SvdBoostedKnnSvdTrainer.cs" />
+    <Compile Include="Training\IKnnTrainerForSvdModels.cs" />
+    <Compile Include="Training\KnnTrainerForSvdModels.cs" />
+    <Compile Include="Training\KnnTrainerForSvdModelsBase.cs" />
     <Compile Include="Users\ISvdBostedKnnUser.cs" />
     <Compile Include="Users\SvdBoostedKnnUser.cs" />
   </ItemGroup>

@@ -21,10 +21,13 @@ using RecommendationSystem.SimpleSvd.Bias.Training;
 using RecommendationSystem.SimpleSvd.Recommendations;
 using RecommendationSystem.SimpleSvd.Training;
 using RecommendationSystem.Svd.Foundation.Bias.Models;
+using RecommendationSystem.Svd.Foundation.Bias.Prediction;
 using RecommendationSystem.Svd.Foundation.Models;
 using RecommendationSystem.Svd.Foundation.Prediction;
 using RecommendationSystem.Svd.Foundation.Training;
 using RecommendationSystem.SvdBoostedKnn;
+using RecommendationSystem.SvdBoostedKnn.Bias.Models;
+using RecommendationSystem.SvdBoostedKnn.Bias.Training;
 using RecommendationSystem.SvdBoostedKnn.Models;
 using RecommendationSystem.SvdBoostedKnn.Recommendations;
 using RecommendationSystem.SvdBoostedKnn.Similarity;
@@ -62,7 +65,12 @@ namespace RecommendationSystem.QualityTesting
             LoadData(out trainUsers, out trainRatings, out testUsers, out testRatings, out artists);
 
             List<int> selectedModels;
-            string[] models;
+            List<string> models;
+
+            int numberOfTests;
+            List<int> ks;
+            bool performNoContentKnnTests;
+            bool performContentKnnTests;
 
             switch (mode)
             {
@@ -77,14 +85,13 @@ namespace RecommendationSystem.QualityTesting
                 case "knn":
 
                     #region kNN
-                    var ks = argList[argList.IndexOf("-k") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
-                    var numberOfTests = int.Parse(argList[argList.IndexOf("-t") + 1].ToLower());
-                    var performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
-                    var performContentKnnTests = argList.IndexOf("-co") >= 0;
+                    ks = argList[argList.IndexOf("-k") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+                    numberOfTests = int.Parse(argList[argList.IndexOf("-t") + 1]);
+                    performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
+                    performContentKnnTests = argList.IndexOf("-co") >= 0;
 
                     var sims = new List<ISimilarityEstimator<ISimpleKnnUser>>();
-                    var argSims = argList[argList.IndexOf("-sim") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var argSim in argSims)
+                    foreach (var argSim in argList[argList.IndexOf("-sim") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
                     {
                         switch (argSim)
                         {
@@ -104,8 +111,7 @@ namespace RecommendationSystem.QualityTesting
                     }
 
                     var rgs = new List<IRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>>();
-                    var argRgs = argList[argList.IndexOf("-rg") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var argRg in argRgs)
+                    foreach (var argRg in argList[argList.IndexOf("-rg") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
                     {
                         switch (argRg)
                         {
@@ -237,12 +243,12 @@ namespace RecommendationSystem.QualityTesting
 
                     #region SVD/MF Prediction
                     selectedModels = new List<int>();
-                    models = Directory.GetFiles(@"D:\Dataset\models\", "*svd*.rs", SearchOption.TopDirectoryOnly);
+                    models = Directory.GetFiles(@"D:\Dataset\models\", "*svd*.rs", SearchOption.TopDirectoryOnly).ToList();
                     if (argList.Contains("-all"))
                         selectedModels.AddRange(models.Select((t, i) => i));
                     else
                     {
-                        for (var i = 0; i < models.Length; i++)
+                        for (var i = 0; i < models.Count; i++)
                         {
                             var modelName = Path.GetFileName(models[i]);
                             modelName = modelName != null ? modelName.Remove(modelName.Length - 3) : "UnnamedModel";
@@ -260,7 +266,7 @@ namespace RecommendationSystem.QualityTesting
                     for (var i = 0; i < selectedModels.Count; i++)
                     {
                         var selectedModel = selectedModels[i];
-                        if (selectedModel >= models.Length)
+                        if (selectedModel >= models.Count)
                             continue;
 
                         var modelFile = models[selectedModel];
@@ -310,13 +316,69 @@ namespace RecommendationSystem.QualityTesting
                 case "sbk":
 
                     #region SVD boosted kNN
+
+                    #region CLI argument parsin
+                    numberOfTests = int.Parse(argList[argList.IndexOf("-t") + 1]);
+
+                    //TODO: implement support
+                    performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
+                    performContentKnnTests = argList.IndexOf("-co") >= 0;
+
+                    ks = argList[argList.IndexOf("-k") + 1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+                    var sbkSims = new List<ISimilarityEstimator<ISvdBoostedKnnUser>>();
+                    foreach (var argSim in argList[argList.IndexOf("-sim") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        switch (argSim)
+                        {
+                            case "pse":
+                                sbkSims.Add(new PearsonSvdBoostedKnnSimilarityEstimator());
+                                break;
+                            case "cse":
+                                sbkSims.Add(new CosineSvdBoostedKnnSimilarityEstimator());
+                                break;
+                                //TODO: implement
+                                //case "upse":
+                                //    sims.Add(new UnionPearsonSimilarityEstimator());
+                                //    break;
+                                //case "ucse":
+                                //    sims.Add(new UnionCosineSimilarityEstimator());
+                                //    break;
+                        }
+                    }
+
+                    var sbkRgs = new List<IRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>>();
+                    foreach (var argRg in argList[argList.IndexOf("-rg") + 1].ToLower().Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        switch (argRg)
+                        {
+                            case "sara":
+                                sbkRgs.Add(new RatingAggregationRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>(new SimpleAverageRatingAggregator<ISvdBoostedKnnUser>()));
+                                break;
+                            case "wsra":
+                                sbkRgs.Add(new RatingAggregationRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>(new WeightedSumRatingAggregator<ISvdBoostedKnnUser>()));
+                                break;
+                            case "awsra":
+                                sbkRgs.Add(new RatingAggregationRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>(new AdjustedWeightedSumRatingAggregator<ISvdBoostedKnnUser>()));
+                                break;
+                            case "frg":
+                                sbkRgs.Add(new FifthsSimpleRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>());
+                                break;
+                            case "edrg":
+                                sbkRgs.Add(new LinearDescentSimpleRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>());
+                                break;
+                        }
+                    }
+                    #endregion
+
+                    #region Model selection
                     selectedModels = new List<int>();
-                    models = Directory.GetFiles(@"D:\Dataset\models\", "*svd*.rs", SearchOption.TopDirectoryOnly);
+                    models = Directory.GetFiles(@"D:\Dataset\models\", "*svd*.rs", SearchOption.TopDirectoryOnly).Where(m => !m.Contains("BB")).ToList();
                     if (argList.Contains("-all"))
                         selectedModels.AddRange(models.Select((t, i) => i));
                     else
                     {
-                        for (var i = 0; i < models.Length; i++)
+                        for (var i = 0; i < models.Count; i++)
                         {
                             var modelName = Path.GetFileName(models[i]);
                             modelName = modelName != null ? modelName.Remove(modelName.Length - 3) : "UnnamedModel";
@@ -330,39 +392,101 @@ namespace RecommendationSystem.QualityTesting
 
                         selectedModels.AddRange(line == "all" ? models.Select((t, i) => i) : line.Split(new[] {' ', ','}).Select(part => int.Parse(part) - 1));
                     }
+                    #endregion
 
-                    for (var i = 0; i < selectedModels.Count; i++)
+                    #region Testing
+                    foreach (var k in ks)
                     {
-                        var selectedModel = selectedModels[i];
-                        if (selectedModel >= models.Length)
-                            continue;
-
-                        var modelFile = models[selectedModel];
-
-                        var testName = Path.GetFileName(modelFile);
-                        testName = testName != null ? string.Format("SBK-{0}", testName.Remove(testName.Length - 3)) : "SvdBoostedKnnTest";
-
-                        if (modelFile.Contains("basic"))
+                        foreach (var sbkSim in sbkSims)
                         {
-                            if (modelFile.Contains("BB"))
-                                throw new NotImplementedException();
-                            else
+                            foreach (var sbkRg in sbkRgs)
                             {
-                                var sbkRs = new SvdBoostedKnnRecommendationSystem<ISvdBoostedKnnModel, ISvdBoostedKnnUser>(new SvdBoostedKnnTrainer(), new SvdBoostedKnnRecommender(new PearsonSvdBoostedKnnSimilarityEstimator<ISvdBoostedKnnUser>(), new LinearDescentSimpleRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>(), new NewUserFeatureGenerator(), 100));
-                                var sbkModel = sbkRs.Trainer.TrainSvdBoostedKnnModelFromSvdModel(modelFile, trainUsers);
+                                for (var i = 0; i < selectedModels.Count; i++)
+                                {
+                                    var selectedModel = selectedModels[i];
+                                    if (selectedModel >= models.Count)
+                                        continue;
 
-                                var sbkTester = new SvdBoostedKnnTester<ISvdBoostedKnnModel, ISvdBoostedKnnUser>(testName, sbkRs, sbkModel, testUsers, testRatings, artists, 1000);
-                                sbkTester.Test();
+                                    var modelFile = models[selectedModel];
+                                    var testName = Path.GetFileName(modelFile);
+                                    testName = testName != null ? testName.Remove(testName.Length - 3) : "SvdBoostedKnnTest";
+
+                                    if (modelFile.Contains("basic"))
+                                    {
+                                        if (performNoContentKnnTests)
+                                        {
+                                            var sbkRs = new SvdBoostedKnnRecommendationSystem<ISvdBoostedKnnModel>(new SvdBoostedKnnSvdTrainer(),
+                                                                                                                   new KnnTrainerForSvdModels(),
+                                                                                                                   new SvdBoostedKnnRecommender<ISvdBoostedKnnModel>(sbkSim,
+                                                                                                                                                                     sbkRg,
+                                                                                                                                                                     new NewUserFeatureGenerator(),
+                                                                                                                                                                     k));
+
+                                            var sbkModel = sbkRs.KnnTrainerForSvdModels.TrainKnnModel(modelFile, trainUsers);
+
+                                            testName = string.Format("SBK-(k{0}-{1}-{2}-{3}-T{4})-{5}", k, sbkSim, sbkRg, sbkRs.Recommender, numberOfTests, testName);
+                                            var sbkTester = new SvdBoostedKnnTester<ISvdBoostedKnnModel>(testName, sbkRs, sbkModel, testUsers, testRatings, artists, numberOfTests);
+                                            sbkTester.Test();
+                                        }
+
+                                        if (performContentKnnTests)
+                                        {
+                                            var sbkRs = new SvdBoostedKnnRecommendationSystem<ISvdBoostedKnnModel>(new SvdBoostedKnnSvdTrainer(),
+                                                                                                                   new KnnTrainerForSvdModels(),
+                                                                                                                   new ContentSvdBoostedKnnRecommender<ISvdBoostedKnnModel>(sbkSim,
+                                                                                                                                                                            sbkRg,
+                                                                                                                                                                            new NewUserFeatureGenerator(),
+                                                                                                                                                                            new ContentSimilarityEstimator(),
+                                                                                                                                                                            k));
+
+                                            var sbkModel = sbkRs.KnnTrainerForSvdModels.TrainKnnModel(modelFile, trainUsers);
+
+                                            testName = string.Format("SBK-(k{0}-{1}-{2}-{3}-T{4})-{5}", k, sbkSim, sbkRg, sbkRs.Recommender, numberOfTests, testName);
+                                            var sbkTester = new SvdBoostedKnnTester<ISvdBoostedKnnModel>(testName, sbkRs, sbkModel, testUsers, testRatings, artists, numberOfTests);
+                                            sbkTester.Test();
+                                        }
+                                    }
+                                    else if (modelFile.Contains("bias"))
+                                    {
+                                        if (performNoContentKnnTests)
+                                        {
+                                            var sbkRs = new SvdBoostedKnnRecommendationSystem<IBiasSvdBoostedKnnModel>(new BiasSvdBoostedKnnSvdTrainer(),
+                                                                                                                       new BiasKnnTrainerForSvdModels(),
+                                                                                                                       new SvdBoostedKnnRecommender<IBiasSvdBoostedKnnModel>(sbkSim,
+                                                                                                                                                                             sbkRg,
+                                                                                                                                                                             new BiasNewUserFeatureGenerator(),
+                                                                                                                                                                             k));
+
+                                            var sbkModel = sbkRs.KnnTrainerForSvdModels.TrainKnnModel(modelFile, trainUsers);
+
+                                            testName = string.Format("SBK-(k{0}-{1}-{2}-{3}-T{4})-{5}", k, sbkSim, sbkRg, sbkRs.Recommender, numberOfTests, testName);
+                                            var sbkTester = new SvdBoostedKnnTester<IBiasSvdBoostedKnnModel>(testName, sbkRs, sbkModel, testUsers, testRatings, artists, numberOfTests);
+                                            sbkTester.Test();
+                                        }
+
+                                        if (performContentKnnTests)
+                                        {
+                                            var sbkRs = new SvdBoostedKnnRecommendationSystem<IBiasSvdBoostedKnnModel>(new BiasSvdBoostedKnnSvdTrainer(),
+                                                                                                                       new BiasKnnTrainerForSvdModels(),
+                                                                                                                       new ContentSvdBoostedKnnRecommender<IBiasSvdBoostedKnnModel>(sbkSim,
+                                                                                                                                                                                    sbkRg,
+                                                                                                                                                                                    new BiasNewUserFeatureGenerator(),
+                                                                                                                                                                                    new ContentSimilarityEstimator(),
+                                                                                                                                                                                    k));
+
+                                            var sbkModel = sbkRs.KnnTrainerForSvdModels.TrainKnnModel(modelFile, trainUsers);
+
+                                            testName = string.Format("SBK-(k{0}-{1}-{2}-{3}-T{4})-{5}", k, sbkSim, sbkRg, sbkRs.Recommender, numberOfTests, testName);
+                                            var sbkTester = new SvdBoostedKnnTester<IBiasSvdBoostedKnnModel>(testName, sbkRs, sbkModel, testUsers, testRatings, artists, numberOfTests);
+                                            sbkTester.Test();
+                                        }
+                                    }
+                                }
                             }
                         }
-                        else if (modelFile.Contains("bias"))
-                        {
-                            if (modelFile.Contains("BB"))
-                                throw new NotImplementedException();
-                            else
-                                throw new NotImplementedException();
-                        }
                     }
+                    #endregion
+
                     break;
                     #endregion
             }
