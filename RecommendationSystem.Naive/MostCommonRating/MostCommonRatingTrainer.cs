@@ -20,10 +20,10 @@ namespace RecommendationSystem.Naive.MostCommonRating
                     ratingGroups.Add(rating.Value, 1);
             }
 
-            var mostCommon = float.MinValue;
+            var mostCommon = 1.0f;
             foreach (var ratingGroup in ratingGroups)
             {
-                if (ratingGroup.Value > mostCommon)
+                if (ratingGroup.Value > ratingGroups[mostCommon])
                     mostCommon = ratingGroup.Key;
             }
 

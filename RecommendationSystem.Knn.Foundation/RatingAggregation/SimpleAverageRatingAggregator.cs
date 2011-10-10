@@ -13,17 +13,28 @@ namespace RecommendationSystem.Knn.Foundation.RatingAggregation
             if (neighbours == null || neighbours.Count == 0)
                 return 0.0f;
 
+            var count = 0;
             var r = 0.0f;
             foreach (var neighbour in neighbours)
             {
                 var rating = neighbour.User.Ratings.FirstOrDefault(nr => nr.ArtistIndex == artistIndex);
-                if (rating == null)
-                    r += 1.0f;
-                else
+                //if (rating == null)
+                //    r += 1.0f;
+                //else
+                //    r += rating.Value;
+
+                if (rating != null)
+                {
+                    count++;
                     r += rating.Value;
+                }
             }
 
-            return r / neighbours.Count;
+            //return r / neighbours.Count;
+            if (count == 0)
+                return 1.0f;
+
+            return r / count;
         }
 
         public override string ToString()

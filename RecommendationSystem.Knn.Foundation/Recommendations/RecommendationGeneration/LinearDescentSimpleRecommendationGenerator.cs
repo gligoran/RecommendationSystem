@@ -56,7 +56,7 @@ namespace RecommendationSystem.Knn.Foundation.Recommendations.RecommendationGene
 
         public override string ToString()
         {
-            return "EDRG";
+            return "LDRG";
         }
     }
 }

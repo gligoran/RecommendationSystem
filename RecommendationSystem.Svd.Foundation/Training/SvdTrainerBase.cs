@@ -52,15 +52,15 @@ namespace RecommendationSystem.Svd.Foundation.Training
         protected abstract TSvdModel GetNewModelInstance();
 
         protected virtual void InitializeNewModel(TSvdModel model, List<string> users, List<string> artists, List<IRating> ratings)
-        {}
+        { }
         #endregion
 
         #region CalculateFeatures
         protected void CalculateFeatures(TSvdModel model, List<string> users, List<string> artists, List<IRating> ratings, TrainingParameters trainingParameters)
         {
             //init
-            model.UserFeatures = new float[trainingParameters.FeatureCount,users.Count];
-            model.ArtistFeatures = new float[trainingParameters.FeatureCount,artists.Count];
+            model.UserFeatures = new float[trainingParameters.FeatureCount, users.Count];
+            model.ArtistFeatures = new float[trainingParameters.FeatureCount, artists.Count];
 
             ResidualRatingValues = new float[ratings.Count];
             model.UserFeatures.Populate(0.1f);
@@ -72,7 +72,7 @@ namespace RecommendationSystem.Svd.Foundation.Training
             //MAIN LOOP - loops through features
             for (var f = 0; f < trainingParameters.FeatureCount; f++)
             {
-                Console.WriteLine("Training feature {0} ({1})", f, DateTime.Now);
+                Console.WriteLine("Training feature {0} ({1})", f + 1, DateTime.Now);
 
                 ConvergeFeature(model, f, ratings, trainingParameters);
                 CacheResidualRatings(model, f, ratings);
@@ -93,7 +93,7 @@ namespace RecommendationSystem.Svd.Foundation.Training
                 rmseImprovment = Math.Abs(rmse - rmsePrev) / (rmse + rmsePrev);
 
                 count++;
-                Console.WriteLine("Pass {0}/{1}:\trmse = {2}\trmseImpr = {3}", f, count, rmse, rmseImprovment);
+                Console.WriteLine("F{0}/P{1}:\trmse = {2}\trmseImpr = {3}", f + 1, count, rmse, rmseImprovment);
             }
 
             rmsePrev = rmse;

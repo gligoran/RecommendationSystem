@@ -36,7 +36,7 @@ namespace RecommendationSystem.QualityTesting.Testers
             base.Test();
 
             Timer.Restart();
-            RmseAndBias[] rbsByRatings;
+            MaeAndBias[] rbsByRatings;
             var rb = TestRecommendationSystem(out rbsByRatings);
             Timer.Stop();
             for (var i = 0; i < rbsByRatings.Length; i++)
@@ -47,11 +47,11 @@ namespace RecommendationSystem.QualityTesting.Testers
         }
 
         #region CompleteTestRecommendationSystem
-        private RmseAndBias TestRecommendationSystem(out RmseAndBias[] rvsByRatings)
+        private MaeAndBias TestRecommendationSystem(out MaeAndBias[] rvsByRatings)
         {
-            var rmseBC = new BlockingCollection<float>[5];
-            for (var i = 0; i < rmseBC.Length; i++)
-                rmseBC[i] = new BlockingCollection<float>();
+            var maeBC = new BlockingCollection<float>[5];
+            for (var i = 0; i < maeBC.Length; i++)
+                maeBC[i] = new BlockingCollection<float>();
 
             var biasBC = new BlockingCollection<float>[5];
             for (var i = 0; i < biasBC.Length; i++)
@@ -70,54 +70,54 @@ namespace RecommendationSystem.QualityTesting.Testers
                         {
                             user.Ratings = originalRatings.Where(r => r != rating).ToList();
                             var predictedRating = RecommendationSystem.Recommender.PredictRatingForArtist(user, Model, Artists, rating.ArtistIndex);
-
-                            //Write(string.Format("{0}\t{1}", Math.Round(predictedRating * 2.0, 0) / 2.0f, rating.Value), false);
-
+                            
                             var error = predictedRating - rating.Value;
                             biasBC[(int)rating.Value - 1].Add(error);
-                            rmseBC[(int)rating.Value - 1].Add((float)Math.Sqrt(error * error));
+                            maeBC[(int)rating.Value - 1].Add(Math.Abs(error));
+                            
+                            Write(string.Format("{0}\t{1}", predictedRating, rating.Value), false);
                         }
                         user.Ratings = originalRatings;
                     }
                 }
 
                 if (i % percent == 0)
-                    Write(string.Format("{0} at {1} ({2}%) with {3}", TestName, i, i / percent, GetRmseAndBias(biasBC, rmseBC)), toFile: false);
+                    Write(string.Format("{0} {1}% with {2}", TestName, i / percent, GetMaeAndBias(biasBC, maeBC)), toFile: false);
             }
 
-            return GetRmseAndBias(out rvsByRatings, biasBC, rmseBC);
+            return GetMaeAndBias(out rvsByRatings, biasBC, maeBC);
         }
 
-        private static RmseAndBias GetRmseAndBias(BlockingCollection<float>[] biasBC, BlockingCollection<float>[] rmseBC)
+        private static MaeAndBias GetMaeAndBias(BlockingCollection<float>[] biasBC, BlockingCollection<float>[] maeBC)
         {
-            var totalRmse = new List<float>();
+            var totalMae = new List<float>();
             var totalBias = new List<float>();
-            for (var i = 0; i < rmseBC.Length; i++)
+            for (var i = 0; i < maeBC.Length; i++)
             {
-                totalRmse.AddRange(rmseBC[i].ToList());
+                totalMae.AddRange(maeBC[i].ToList());
                 totalBias.AddRange(biasBC[i].ToList());
             }
 
-            return new RmseAndBias(totalRmse, totalBias);
+            return new MaeAndBias(totalMae, totalBias);
         }
 
-        private static RmseAndBias GetRmseAndBias(out RmseAndBias[] rbsByRatings, BlockingCollection<float>[] biasBC, BlockingCollection<float>[] rmseBC)
+        private static MaeAndBias GetMaeAndBias(out MaeAndBias[] rbsByRatings, BlockingCollection<float>[] biasBC, BlockingCollection<float>[] maeBC)
         {
-            rbsByRatings = new RmseAndBias[5];
-            var totalRmse = new List<float>();
+            rbsByRatings = new MaeAndBias[5];
+            var totalMae = new List<float>();
             var totalBias = new List<float>();
-            for (var i = 0; i < rmseBC.Length; i++)
+            for (var i = 0; i < maeBC.Length; i++)
             {
-                if (rmseBC[i].Count > 0)
-                    rbsByRatings[i] = new RmseAndBias(rmseBC[i].ToList(), biasBC[i].ToList());
+                if (maeBC[i].Count > 0)
+                    rbsByRatings[i] = new MaeAndBias(maeBC[i].ToList(), biasBC[i].ToList());
                 else
-                    rbsByRatings[i] = new RmseAndBias();
+                    rbsByRatings[i] = new MaeAndBias();
 
-                totalRmse.AddRange(rmseBC[i].ToList());
+                totalMae.AddRange(maeBC[i].ToList());
                 totalBias.AddRange(biasBC[i].ToList());
             }
 
-            return new RmseAndBias(totalRmse, totalBias);
+            return new MaeAndBias(totalMae, totalBias);
         }
         #endregion
     }

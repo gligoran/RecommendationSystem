@@ -32,7 +32,7 @@ namespace RecommendationSystem.SvdBoostedKnn.Similarity
                 sumY += rY * rY;
             }
 
-            var r = sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY));
+            var r = sumNum / (float)(Math.Sqrt(sumX * sumY));
 
             return Math.Abs(r);
         }

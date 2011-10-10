@@ -51,15 +51,15 @@ namespace RecommendationSystem.QualityTesting.Testers
 
                 rs = new SimpleKnnRecommendationSystem(Trainer, recommender);
                 Timer.Restart();
-                RmseBiasAndVariance[] rbvsByRatings;
-                var rbv = TestRecommendationSystem(out rbvsByRatings);
+                MaeBiasAndVariance[] mbvsByRatings;
+                var mbv = TestRecommendationSystem(out mbvsByRatings);
                 Timer.Stop();
 
                 Write("------------------------------------------------------", false);
-                for (var i = 0; i < rbvsByRatings.Length; i++)
-                    Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tRating:{1}\t{2}.", TestName, i + 1, rbvsByRatings[i]));
+                for (var i = 0; i < mbvsByRatings.Length; i++)
+                    Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tRating:{1}\t{2}.", TestName, i + 1, mbvsByRatings[i]));
 
-                Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tAll ratings\t{1}\t({2}).", TestName, rbv, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
+                Write(string.Format(CultureInfo.InvariantCulture, "{0}\t->\tAll ratings\t{1}\t({2}).", TestName, mbv, TimeSpan.FromMilliseconds(Timer.ElapsedMilliseconds)));
             }
             catch (Exception e)
             {
@@ -71,11 +71,11 @@ namespace RecommendationSystem.QualityTesting.Testers
         #endregion
 
         #region TestRecommendationSystem
-        private RmseBiasAndVariance TestRecommendationSystem(out RmseBiasAndVariance[] rbvsByRatings)
+        private MaeBiasAndVariance TestRecommendationSystem(out MaeBiasAndVariance[] mbvsByRatings)
         {
-            var rmseBC = new BlockingCollection<float>[5];
-            for (var i = 0; i < rmseBC.Length; i++)
-                rmseBC[i] = new BlockingCollection<float>();
+            var maeBC = new BlockingCollection<float>[5];
+            for (var i = 0; i < maeBC.Length; i++)
+                maeBC[i] = new BlockingCollection<float>();
 
             var biasBC = new BlockingCollection<float>[5];
             for (var i = 0; i < biasBC.Length; i++)
@@ -91,69 +91,63 @@ namespace RecommendationSystem.QualityTesting.Testers
 
                     lock (user)
                     {
-                        GetError(rmseBC, biasBC, user);
+                        var ratingIndex = rng.Next(user.Ratings.Count);
+                        var rating = user.Ratings[ratingIndex];
+
+                        var originalRatings = user.Ratings;
+                        user.Ratings = user.Ratings.Where(r => r != rating).ToList();
+
+                        var predictedRating = rs.Recommender.PredictRatingForArtist(user, SimpleKnnModel, Artists, rating.ArtistIndex);
+                        var error = predictedRating - rating.Value;
+                        biasBC[(int)rating.Value - 1].Add(error);
+                        maeBC[(int)rating.Value - 1].Add(Math.Abs(error));
+
+                        user.Ratings = originalRatings;
+
+                        Write(string.Format("{0}\t{1}", predictedRating, rating.Value), false);
+
+                        if (maeBC.Sum(bc => bc.Count) % writeFrequency == 0)
+                            Write(string.Format("Test {0} with {1} ({2})", TestName, GetMaeBiasAndVariance(biasBC, maeBC), DateTime.Now), toFile: false);
                     }
                 });
 
-            while (rmseBC.Sum(bc => bc.Count) != NumberOfTests)
+            while (maeBC.Sum(bc => bc.Count) != NumberOfTests)
             {}
 
-            rbvsByRatings = new RmseBiasAndVariance[5];
-            var totalRmse = new List<float>();
-            var totalBias = new List<float>();
-            for (var i = 0; i < rmseBC.Length; i++)
-            {
-                if (rmseBC[i].Count > 0)
-                    rbvsByRatings[i] = new RmseBiasAndVariance(rmseBC[i].ToList(), biasBC[i].ToList());
-                else
-                    rbvsByRatings[i] = new RmseBiasAndVariance();
+            return GetMaeBiasAndVariance(out mbvsByRatings, biasBC, maeBC);
+        }
+        #endregion
 
-                totalRmse.AddRange(rmseBC[i].ToList());
+        #region GetMaeBiasAndVariance
+        private static MaeBiasAndVariance GetMaeBiasAndVariance(BlockingCollection<float>[] biasBC, BlockingCollection<float>[] maeBC)
+        {
+            var totalMae = new List<float>();
+            var totalBias = new List<float>();
+            for (var i = 0; i < maeBC.Length; i++)
+            {
+                totalMae.AddRange(maeBC[i].ToList());
                 totalBias.AddRange(biasBC[i].ToList());
             }
-            return new RmseBiasAndVariance(totalRmse, totalBias);
+
+            return new MaeBiasAndVariance(totalMae, totalBias);
         }
-        #endregion
 
-        #region GetError
-        private void GetError(BlockingCollection<float>[] rmseBC, BlockingCollection<float>[] biasBC, IUser user)
+        private static MaeBiasAndVariance GetMaeBiasAndVariance(out MaeBiasAndVariance[] mbvsByRatings, BlockingCollection<float>[] biasBC, BlockingCollection<float>[] maeBC)
         {
-            var ratingIndex = rng.Next(user.Ratings.Count);
-            var rating = user.Ratings[ratingIndex];
-
-            var originalRatings = user.Ratings;
-            user.Ratings = user.Ratings.Where(r => r != rating).ToList();
-
-            var predictedRating = rs.Recommender.PredictRatingForArtist(user, SimpleKnnModel, Artists, rating.ArtistIndex);
-            var error = predictedRating - rating.Value;
-            biasBC[(int)rating.Value - 1].Add(error);
-            rmseBC[(int)rating.Value - 1].Add((float)Math.Sqrt(error * error));
-
-            user.Ratings = originalRatings;
-
-            Write(string.Format("{0}\t{1}", predictedRating, rating.Value), false);
-
-            if (rmseBC.Sum(bc => bc.Count) % writeFrequency == 0)
-                Write(string.Format("Test {0} at {1} ({2})", TestName, rmseBC.Sum(bc => bc.Count), DateTime.Now), toFile: false);
-        }
-        #endregion
-
-        #region GetCompleteError
-        private void GetCompleteError(BlockingCollection<float> rmseList, IUser user)
-        {
-            foreach (var rating in user.Ratings)
+            mbvsByRatings = new MaeBiasAndVariance[5];
+            var totalMae = new List<float>();
+            var totalBias = new List<float>();
+            for (var i = 0; i < maeBC.Length; i++)
             {
-                var originalRatings = user.Ratings;
-                user.Ratings = user.Ratings.Where(r => r != rating).ToList();
+                if (maeBC[i].Count > 0)
+                    mbvsByRatings[i] = new MaeBiasAndVariance(maeBC[i].ToList(), biasBC[i].ToList());
+                else
+                    mbvsByRatings[i] = new MaeBiasAndVariance();
 
-                var error = rating.Value - rs.Recommender.PredictRatingForArtist(user, SimpleKnnModel, Artists, rating.ArtistIndex);
-                rmseList.Add((float)Math.Sqrt(error * error));
-
-                user.Ratings = originalRatings;
-
-                if (rmseList.Count % writeFrequency == 0)
-                    Write(string.Format("Test {0} at {1} in {2}ms with RMSE {3} ({4})", TestName, rmseList.Count, Timer.ElapsedMilliseconds, rmseList.Average(), DateTime.Now));
+                totalMae.AddRange(maeBC[i].ToList());
+                totalBias.AddRange(biasBC[i].ToList());
             }
+            return new MaeBiasAndVariance(totalMae, totalBias);
         }
         #endregion
     }

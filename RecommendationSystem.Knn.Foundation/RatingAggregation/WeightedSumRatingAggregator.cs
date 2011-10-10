@@ -18,16 +18,30 @@ namespace RecommendationSystem.Knn.Foundation.RatingAggregation
 
             foreach (var neighbour in neighbours)
             {
-                k += neighbour.Similarity;
-
+                //k += neighbour.Similarity;
                 var rating = neighbour.User.Ratings.FirstOrDefault(nr => nr.ArtistIndex == artistIndex);
-                if (rating == null)
-                    r += neighbour.Similarity * 1.0f;
-                else
+                //if (rating == null)
+                //    r += neighbour.Similarity * 1.0f;
+                //else
+                //    r += neighbour.Similarity * rating.Value;
+
+                if (rating != null)
+                {
+                    k += neighbour.Similarity;
                     r += neighbour.Similarity * rating.Value;
+                }
             }
 
-            return r / k;
+            r /= k;
+
+            if (r < 1.0f)
+                r = 1.0f;
+            if (r > 5.0f)
+                return 5.0f;
+            if (float.IsNaN(r))
+                return 1.0f;
+
+            return r;
         }
 
         public override string ToString()

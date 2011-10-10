@@ -44,19 +44,19 @@ namespace RecommendationSystem.QualityTesting.Testers
                                 var arrs = new AverageRatingRecommendationSystem();
                                 var arModel = arrs.Trainer.TrainModel(TrainUsers, Artists, TrainRatings);
                                 var rv = TestRecommendationSystem(arrs, TestUsers, arModel, Artists);
-                                Write(string.Format("AverageRating: {0}", rv));
+                                Write(string.Format("AverageRating: {0} ({1})", rv, arModel.AverageRating));
                                 break;
                             case "mr":
                                 var mrrs = new MedianRatingRecommendationSystem();
                                 var mrModel = mrrs.Trainer.TrainModel(TrainUsers, Artists, TrainRatings);
                                 rv = TestRecommendationSystem(mrrs, TestUsers, mrModel, Artists);
-                                Write(string.Format("MedianRating: {0}", rv));
+                                Write(string.Format("MedianRating: {0} ({1})", rv, mrModel.MedianRating));
                                 break;
                             case "mcr":
                                 var mcrrs = new MostCommonRatingRecommendationSystem();
                                 var mcrModel = mcrrs.Trainer.TrainModel(TrainUsers, Artists, TrainRatings);
                                 rv = TestRecommendationSystem(mcrrs, TestUsers, mcrModel, Artists);
-                                Write(string.Format("MostCommonRating: {0}", rv));
+                                Write(string.Format("MostCommonRating: {0} ({1})", rv, mcrModel.MostCommonRating));
                                 break;
                         }
                     });
@@ -70,11 +70,11 @@ namespace RecommendationSystem.QualityTesting.Testers
         }
 
         #region CompleteTestRecommendationSystem
-        private RmseAndBias TestRecommendationSystem<TModel, TUser>(IRecommendationSystem<TModel, TUser, ITrainer<TModel>, IRecommender<TModel>> rs, IEnumerable<TUser> testUsers, TModel model, List<IArtist> artists)
+        private MaeAndBias TestRecommendationSystem<TModel, TUser>(IRecommendationSystem<TModel, TUser, ITrainer<TModel>, IRecommender<TModel>> rs, IEnumerable<TUser> testUsers, TModel model, List<IArtist> artists)
             where TModel : IModel
             where TUser : IUser
         {
-            var rmseList = new List<float>();
+            var maeList = new List<float>();
             var biasList = new List<float>();
             foreach (var user in TestUsers)
             {
@@ -87,13 +87,13 @@ namespace RecommendationSystem.QualityTesting.Testers
                         var predictedRating = rs.Recommender.PredictRatingForArtist(user, model, artists, rating.ArtistIndex);
                         var error = predictedRating - rating.Value;
                         biasList.Add(error);
-                        rmseList.Add((float)Math.Sqrt(error * error));
+                        maeList.Add((float)Math.Sqrt(error * error));
                     }
                     user.Ratings = originalRatings;
                 }
             }
 
-            return new RmseAndBias(rmseList, biasList);
+            return new MaeAndBias(maeList, biasList);
         }
         #endregion
     }

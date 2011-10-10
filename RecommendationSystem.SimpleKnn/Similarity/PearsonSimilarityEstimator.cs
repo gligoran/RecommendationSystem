@@ -37,7 +37,7 @@ namespace RecommendationSystem.SimpleKnn.Similarity
             }
 
             var mass = artistIndices.Count * 2.0f / (first.Ratings.Count + second.Ratings.Count);
-            var r = sumNum / (float)(Math.Sqrt(sumX) * Math.Sqrt(sumY)) * (mass);
+            var r = sumNum / (float)(Math.Sqrt(sumX * sumY)) * (mass);
 
             if (float.IsNaN(r))
                 return 0.0f;

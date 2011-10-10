@@ -75,6 +75,7 @@ namespace RecommendationSystem.QualityTesting
             switch (mode)
             {
                 case "simple":
+                case "naive":
 
                     #region Simple
                     var simpleTester = new NaiveTester(trainUsers, artists, trainRatings, testUsers);
@@ -127,7 +128,7 @@ namespace RecommendationSystem.QualityTesting
                             case "frg":
                                 rgs.Add(new FifthsSimpleRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>());
                                 break;
-                            case "edrg":
+                            case "ldrg":
                                 rgs.Add(new LinearDescentSimpleRecommendationGenerator<ISimpleKnnModel, ISimpleKnnUser>());
                                 break;
                         }
@@ -317,10 +318,9 @@ namespace RecommendationSystem.QualityTesting
 
                     #region SVD boosted kNN
 
-                    #region CLI argument parsin
+                    #region CLI argument parsing
                     numberOfTests = int.Parse(argList[argList.IndexOf("-t") + 1]);
 
-                    //TODO: implement support
                     performNoContentKnnTests = argList.IndexOf("-noco") >= 0;
                     performContentKnnTests = argList.IndexOf("-co") >= 0;
 
@@ -337,13 +337,6 @@ namespace RecommendationSystem.QualityTesting
                             case "cse":
                                 sbkSims.Add(new CosineSvdBoostedKnnSimilarityEstimator());
                                 break;
-                                //TODO: implement
-                                //case "upse":
-                                //    sims.Add(new UnionPearsonSimilarityEstimator());
-                                //    break;
-                                //case "ucse":
-                                //    sims.Add(new UnionCosineSimilarityEstimator());
-                                //    break;
                         }
                     }
 
@@ -364,7 +357,7 @@ namespace RecommendationSystem.QualityTesting
                             case "frg":
                                 sbkRgs.Add(new FifthsSimpleRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>());
                                 break;
-                            case "edrg":
+                            case "ldrg":
                                 sbkRgs.Add(new LinearDescentSimpleRecommendationGenerator<ISvdBoostedKnnModel, ISvdBoostedKnnUser>());
                                 break;
                         }
@@ -374,8 +367,10 @@ namespace RecommendationSystem.QualityTesting
                     #region Model selection
                     selectedModels = new List<int>();
                     models = Directory.GetFiles(@"D:\Dataset\models\", "*svd*.rs", SearchOption.TopDirectoryOnly).Where(m => !m.Contains("BB")).ToList();
-                    if (argList.Contains("-all"))
+                    if (argList.Contains("-all") || models.Count == 1)
+                    {
                         selectedModels.AddRange(models.Select((t, i) => i));
+                    }
                     else
                     {
                         for (var i = 0; i < models.Count; i++)
@@ -388,9 +383,9 @@ namespace RecommendationSystem.QualityTesting
                         Console.WriteLine("Enter numbers of models for testing (separate with comma):");
                         string line;
                         while ((line = Console.ReadLine()) == null)
-                        {}
+                        { }
 
-                        selectedModels.AddRange(line == "all" ? models.Select((t, i) => i) : line.Split(new[] {' ', ','}).Select(part => int.Parse(part) - 1));
+                        selectedModels.AddRange(line == "all" ? models.Select((t, i) => i) : line.Split(new[] { ' ', ',' }).Select(part => int.Parse(part) - 1));
                     }
                     #endregion
 
